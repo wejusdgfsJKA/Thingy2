@@ -13,6 +13,11 @@ public class Navigation
             return Vector3.Distance(tr.position, Destination.Value);
         }
     }
+    public Navigation(Transform tr, float speed)
+    {
+        this.tr = tr;
+        Speed = speed;
+    }
     public void Update(float deltaTime)
     {
         if (Destination != null)

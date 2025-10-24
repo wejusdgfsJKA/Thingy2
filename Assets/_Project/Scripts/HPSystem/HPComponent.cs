@@ -38,7 +38,7 @@ namespace HP
             //add damage binding for this entity
             EventBus<TakeDamage>.AddActions(transform.root.GetInstanceID(), TakeDamage);
         }
-        protected void OnEnable()
+        protected virtual void OnEnable()
         {
             CurrentHealth = MaxHealth;
         }
