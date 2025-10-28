@@ -12,10 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c02c2e870f951fe4db6befa99074bef2, type: 3}
   m_Name: AsteroidBasic
   m_EditorClassIdentifier: Assembly-CSharp::Environment.ResourceData
-  Floor: 1
-  Ceiling: 10
+  ExpirationTime: 5
   Resources:
-  - Resource: 0
-    Weight: 1
-    Floor: 0
-    Ceiling: 10
+  - Probability: 1
+    Resource: 0
+    Min: 1
+    Max: 9
+  - Probability: 0.5
+    Resource: 1
+    Min: 1
+    Max: 5

@@ -1,15 +1,18 @@
+using UnityEngine;
+
 namespace Environment
 {
-    public enum Resource : byte
+    public enum Resource : byte //one byte should be more than enough for this thing
     {
         Metal,
         Fuel
     }
     [System.Serializable]
-    public struct ResourceValue
+    public struct ResourceGen
     {
-        public float Probability;
+        [Tooltip("The odds that the container will have this resource.")] public float Probability;
         public Resource Resource;
-        public int Min, Max;
+        [Tooltip("Minimum amount of the resource if generated.")] public int Min;
+        [Tooltip("Minimum amount of the resource if generated.")] public int Max;
     }
 }

@@ -1,14 +1,22 @@
-using UnityEngine;
+﻿using UnityEngine;
 
+public enum TrackableType
+{
+    Container
+}
 public class Trackable : MonoBehaviour
 {
-    [SerializeField] Sprite sprite;
-    private void OnEnable()
+    [field: SerializeField] public MeshRenderer MeshRenderer { get; protected set; }
+    [field: SerializeField] public float TextSizeCoefficient { get; protected set; } = 5;
+    [SerializeField] protected TrackableType type;
+    public System.Action<Trackable> UpdateString;
+    protected virtual void Awake() => MeshRenderer = GetComponentInChildren<MeshRenderer>();
+    protected virtual void OnEnable()
     {
-        BoundingBoxManager.Instance?.Register(transform, sprite);
+        ComponentManager<Trackable>.Register(this);
     }
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
-        BoundingBoxManager.Instance?.DeRegister(transform);
+        ComponentManager<Trackable>.DeRegister(transform);
     }
 }

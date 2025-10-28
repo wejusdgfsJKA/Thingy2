@@ -1,15 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 namespace Environment
 {
-    public class ResourceContainer : MonoBehaviour
+    public class ResourceContainer : Trackable
     {
         [SerializeField] protected ResourceData data;
-        public readonly Dictionary<Resource, int> Resources = new();
-        protected void OnEnable()
+        public Dictionary<Resource, int> Resources { get; } = new();
+        public bool Empty
+        {
+            get
+            {
+                return Resources.Count == 0;
+            }
+        }
+        protected override void OnEnable()
         {
             RegenerateResources();
+            base.OnEnable();
         }
         protected void RegenerateResources()
         {
@@ -20,7 +27,7 @@ namespace Environment
                 {
                     var res = data.Resources[i];
                     float p = Random.Range(0.0f, 1.0f);
-                    if (p < res.Probability)
+                    if (p <= res.Probability)
                     {
                         var value = Random.Range(res.Min, res.Max);
                         Resources[res.Resource] = value;
@@ -28,22 +35,36 @@ namespace Environment
                 }
             }
         }
-        public int Extract(Resource resource, int amount)
+        public List<(Resource resource, int amount)> Extract(
+            Dictionary<Resource, int> demand)
         {
-            if (Resources.ContainsKey(resource))
+            List<(Resource, int)> result = new();
+            foreach (var kvp in demand)
             {
-                int value = Mathf.Max(Resources[resource], amount);
-                Resources[resource] -= value;
-                if (Resources[resource] == 0) Resources.Remove(resource);
-                if (Resources.Count == 0 && data.ExpirationTime >= 0) StartCoroutine(Deactivate());
-                return value;
+                if (Empty) break;
+                var res = kvp.Key;
+                if (kvp.Value > 0 && Resources.ContainsKey(res))
+                {
+                    int amount = Mathf.Min(kvp.Value, Resources[res]);
+                    Resources[res] -= amount;
+                    result.Add((res, amount));
+                    if (Resources[res] == 0) Resources.Remove(res);
+                }
             }
-            return 0;
+            UpdateString?.Invoke(this);
+            return result;
         }
-        protected IEnumerator Deactivate()
+        public override string ToString()
         {
-            yield return new WaitForSeconds(data.ExpirationTime);
-            gameObject.SetActive(false);
+            string s = "";
+            foreach (var a in Resources)
+            {
+                for (int i = 0; i < a.Value; i++)
+                {
+                    s += $"<color={GlobalSettings.ResourceColors[a.Key]}>●</color>";
+                }
+            }
+            return s;
         }
     }
 }

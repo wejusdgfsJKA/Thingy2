@@ -6,7 +6,6 @@ namespace Environment
     [CreateAssetMenu(menuName = "ScriptableObjects/ResourceData")]
     public class ResourceData : ScriptableObject
     {
-        public float ExpirationTime = 5;
-        public List<ResourceValue> Resources = new();
+        public List<ResourceGen> Resources = new();
     }
 }
