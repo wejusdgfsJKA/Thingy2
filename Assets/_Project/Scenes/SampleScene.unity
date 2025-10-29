@@ -155,8 +155,8 @@ Camera:
   m_GameObject: {fileID: 669746139}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 2
-  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
+  m_ClearFlags: 1
+  m_BackGroundColor: {r: 0.31764707, g: 0.31764707, b: 0.31764707, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -211,7 +211,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1436924720}
-  m_Father: {fileID: 733246225}
+  m_Father: {fileID: 1571911603}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &669746143
 MonoBehaviour:
@@ -240,6 +240,7 @@ GameObject:
   m_Component:
   - component: {fileID: 733246225}
   - component: {fileID: 733246226}
+  - component: {fileID: 733246227}
   m_Layer: 0
   m_Name: PlayerShip
   m_TagString: Untagged
@@ -260,7 +261,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 669746142}
+  - {fileID: 1571911603}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &733246226
@@ -278,6 +279,25 @@ MonoBehaviour:
   range: 1
   extractionCooldown: 1
   extracting: 0
+--- !u!114 &733246227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 733246224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d23552e8480b8eb4d9f6c046fad2e530, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Player.CameraController
+  cameraZoomSpeed: 1
+  cameraRotSpeed: 50
+  smoothCameraRotation: 0
+  cameraSmoothingFactor: 25
+  camPivot: {fileID: 1571911603}
+  cam: {fileID: 669746142}
+  inputReader: {fileID: 11400000, guid: a2a4835c863bea1479d168fb092a25b1, type: 2}
 --- !u!1 &877554731
 GameObject:
   m_ObjectHideFlags: 0
@@ -507,6 +527,38 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!1 &1571911602
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1571911603}
+  m_Layer: 0
+  m_Name: CamPivot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1571911603
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1571911602}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 669746142}
+  m_Father: {fileID: 733246225}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1769772179
 GameObject:
   m_ObjectHideFlags: 0
