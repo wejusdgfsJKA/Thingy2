@@ -8,10 +8,11 @@ namespace Player
         float currentYAngle;
 
         public float cameraZoomSpeed = 1, cameraRotSpeed = 50f;
+        public Vector3 defaultCamPos = new(0, 0, 1);
         public bool smoothCameraRotation;
         [Range(1f, 50f)] public float cameraSmoothingFactor = 25f;
         [SerializeField] Transform camPivot, cam;
-        [SerializeField] CameraInputReader inputReader;
+        [SerializeField] InputReader inputReader;
         #endregion
 
         void Awake()
@@ -25,6 +26,7 @@ namespace Player
             Cursor.visible = false;
             inputReader.EnablePlayerActions();
             inputReader.Zoom += OnZoom;
+            inputReader.Reset += OnReset;
         }
         private void OnDisable()
         {
@@ -32,13 +34,20 @@ namespace Player
             Cursor.visible = true;
             inputReader.DisablePlayerActions();
             inputReader.Zoom -= OnZoom;
+            inputReader.Reset -= OnReset;
         }
 
         void OnZoom(float zoom)
         {
-            var oldZ = cam.transform.localPosition.z;
-            cam.transform.localPosition = new Vector3(cam.transform.localPosition.x,
-                cam.transform.localPosition.y, oldZ + zoom * cameraZoomSpeed);
+            var oldZ = cam.localPosition.z;
+            cam.localPosition = new Vector3(cam.localPosition.x,
+                cam.localPosition.y, oldZ + zoom * cameraZoomSpeed);
+        }
+
+        void OnReset()
+        {
+            camPivot.localRotation = Quaternion.identity;
+            cam.localPosition = defaultCamPos;
         }
 
         void Update()

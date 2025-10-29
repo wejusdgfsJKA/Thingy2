@@ -19,17 +19,20 @@ public class TrackableDisplay : MonoBehaviour
     #region Parameters
     [SerializeField] TextMeshProUGUI textPrefab;
     [SerializeField] float trackingRange = 10;
-    [SerializeField] LayerMask trackableMask = 1 << 6;
+    [SerializeField] float minTextScale = 1, maxTextScale = 10;
     #endregion 
     protected Camera cam;
     protected Canvas canvas;
+    protected SphereCollider triggerCollider;
     protected readonly Dictionary<Transform, TrackableData> toTrack = new();
     protected readonly Stack<TextMeshProUGUI> textPool = new();
-    protected static Collider[] nonAllocBuffer = new Collider[30];
     #endregion
     #region Setup
     protected void Awake()
     {
+        triggerCollider = GetComponentInChildren<SphereCollider>();
+        triggerCollider.radius = trackingRange;
+        triggerCollider.isTrigger = true;
         cam = GetComponentInChildren<Camera>();
         canvas = cam.transform.GetComponentInChildren<Canvas>();
     }
@@ -55,6 +58,7 @@ public class TrackableDisplay : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         var t = ComponentManager<Trackable>.Get(other.transform);
+        Debug.Log(t.transform);
         if (t) AddTrackable(t);
     }
     private void OnTriggerExit(Collider other)
@@ -97,45 +101,51 @@ public class TrackableDisplay : MonoBehaviour
             text = textPool.Pop();
             text.gameObject.SetActive(true);
         }
-        text.rectTransform.anchorMax = text.rectTransform.anchorMin = Vector2.zero;
         return text;
     }
     #endregion
     #region UI
-    private void Update()
+    private void LateUpdate()
     {
-        CheckForTrackables();
-        HandleBoundingBoxes();
+        HandleDisplay();
     }
-    void CheckForTrackables()
+    void HandleDisplay()
     {
-        int count = Physics.OverlapSphereNonAlloc(transform.root.position, trackingRange, nonAllocBuffer, trackableMask);
-        for (int i = 0; i < count; i++)
-        {
-            var t = ComponentManager<Trackable>.Get(nonAllocBuffer[i].transform);
-            if (t) AddTrackable(t);
-        }
-    }
-    void HandleBoundingBoxes()
-    {
-        Stack<Trackable> toRemove = new();
         foreach (var a in toTrack)
         {
             if (a.Key == null) continue;
 
-            if (Vector3.Distance(transform.root.position, a.Key.position) > trackingRange)
+            Vector3 worldPos = a.Key.position;
+
+            // Convert world position to viewport coordinates (0..1)
+            Vector3 viewportPos = cam.WorldToViewportPoint(worldPos);
+
+            // If behind the camera, hide the label
+            if (viewportPos.z <= 0)
             {
-                toRemove.Push(a.Value.Trackable);
-                continue;
+                a.Value.Text.gameObject.SetActive(false);
+                return;
             }
-            var dist = Vector3.Distance(cam.transform.position, a.Key.position);
-            a.Value.RectTransform.anchoredPosition = cam.WorldToScreenPoint(a.Key.position);
-            a.Value.RectTransform.localScale = (a.Value.Trackable.TextSizeCoefficient /
-                (dist + 0.00001f)) * Vector3.one;
-        }
-        while (toRemove.TryPop(out var tr))
-        {
-            RemoveTrackable(tr);
+
+            // Set active
+            a.Value.Text.gameObject.SetActive(true);
+
+            // Map viewport (0..1) to canvas local position
+            RectTransform canvasRect = a.Value.RectTransform.parent as RectTransform;
+            Vector2 canvasPos = new Vector2(
+                (viewportPos.x - 0.5f) * canvasRect.sizeDelta.x,
+                (viewportPos.y - 0.5f) * canvasRect.sizeDelta.y
+            );
+
+            // Assign the position
+            a.Value.RectTransform.anchoredPosition = canvasPos;
+
+            // Optional: scale based on distance
+            float dist = Vector3.Distance(cam.transform.position, worldPos);
+            var textSize = Mathf.Clamp(a.Value.Trackable.TextSizeCoefficient / (dist + 0.00001f),
+                minTextScale, maxTextScale);
+            a.Value.RectTransform.sizeDelta = new Vector2(20, 20) * textSize;
+            a.Value.Text.fontSize = textSize * 5;
         }
     }
     #endregion
