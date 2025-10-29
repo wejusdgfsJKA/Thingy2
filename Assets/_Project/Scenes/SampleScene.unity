@@ -628,7 +628,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TrackableManager
   textPrefab: {fileID: 6541527687650043547, guid: 26fd1ea6e9416e64998bdfb95aad338f, type: 3}
   trackingRange: 10
-  minTextScale: 0.1
+  minTextScale: 1
   maxTextScale: 10
 --- !u!135 &1571911605
 SphereCollider:
