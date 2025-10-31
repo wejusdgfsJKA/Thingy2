@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Environment
+namespace Resources
 {
     public enum Resource : byte //one byte should be more than enough for this thing
     {

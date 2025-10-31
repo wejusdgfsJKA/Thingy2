@@ -12,7 +12,7 @@ namespace Player
         public bool smoothCameraRotation;
         [Range(1f, 50f)] public float cameraSmoothingFactor = 25f;
         [SerializeField] Transform camPivot, cam;
-        [SerializeField] InputReader inputReader;
+        [SerializeField] CameraInputReader cameraInputReader;
         #endregion
 
         void Awake()
@@ -24,17 +24,18 @@ namespace Player
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
-            inputReader.EnablePlayerActions();
-            inputReader.Zoom += OnZoom;
-            inputReader.Reset += OnReset;
+            cameraInputReader.EnablePlayerActions();
+            cameraInputReader.Zoom += OnZoom;
+            cameraInputReader.Reset += OnReset;
+            OnReset();
         }
         private void OnDisable()
         {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
-            inputReader.DisablePlayerActions();
-            inputReader.Zoom -= OnZoom;
-            inputReader.Reset -= OnReset;
+            cameraInputReader.DisablePlayerActions();
+            cameraInputReader.Zoom -= OnZoom;
+            cameraInputReader.Reset -= OnReset;
         }
 
         void OnZoom(float zoom)
@@ -52,7 +53,7 @@ namespace Player
 
         void Update()
         {
-            RotateCamera(inputReader.LookDirection.x, -inputReader.LookDirection.y);
+            RotateCamera(cameraInputReader.LookDirection.x, -cameraInputReader.LookDirection.y);
         }
 
         void RotateCamera(float horizontalInput, float verticalInput)

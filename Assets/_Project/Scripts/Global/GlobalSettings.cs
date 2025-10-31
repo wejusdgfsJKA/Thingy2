@@ -1,4 +1,4 @@
-using Environment;
+using Resources;
 using System.Collections.Generic;
 
 public static class GlobalSettings

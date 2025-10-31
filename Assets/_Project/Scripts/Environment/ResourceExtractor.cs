@@ -1,89 +1,71 @@
-using Environment;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public class ResourceExtractor : MonoBehaviour
+namespace Resources
 {
-    protected class StorageCell
+    public class ResourceExtractor : ResourceStorage
     {
-        public readonly int MaxAmount;
-        public int Amount { get; set; }
-        public int CapacityLeft
-        {
-            get => MaxAmount - Amount;
-        }
-        public StorageCell(int maxAmount, int amount = 0)
-        {
-            MaxAmount = maxAmount;
-            Amount = amount;
-        }
-    }
-    [SerializeField] protected float range;
-    LayerMask layerMask = 1 << 6;
-    protected Dictionary<Resource, StorageCell> storage;
-    protected Dictionary<Resource, int> extraction = new() { { Resource.Metal, 1 },
+        #region Fields
+        [SerializeField] protected float range = 5;
+        protected Dictionary<Resource, int> extraction = new() { { Resource.Metal, 1 },
         { Resource.Fuel,1} };
-    protected static Collider[] nonAllocBuffer = new Collider[5];
-    protected int count;
-    [SerializeField] protected float extractionCooldown = 1;
-    protected Coroutine coroutine;
-    public bool extracting;
-    protected void OnEnable()
-    {
-        storage = new();
-        foreach (var resType in (Resource[])Enum.GetValues(typeof(Resource)))
+        readonly HashSet<Collider> colliders = new();
+        [SerializeField] protected float extractionCooldown = 1;
+        protected Coroutine coroutine;
+        public bool Extracting { get; protected set; }
+        SphereCollider coll;
+        #endregion        
+        private void Awake()
         {
-            storage.Add(resType, new(10));
+            coll = GetComponent<SphereCollider>();
+            coll.isTrigger = true;
+            coll.radius = range;
         }
-    }
-    protected void Update()
-    {
-        Extract();
-    }
-    protected void OnDisable()
-    {
-        if (coroutine != null) StopCoroutine(coroutine);
-    }
-    protected void Extract()
-    {
-        if (!extracting && Physics.CheckSphere(transform.position, range, layerMask))
+        protected override void OnEnable()
         {
-            coroutine = StartCoroutine(ExtractionCoroutine());
+            base.OnEnable();
+            Extracting = false;
         }
-    }
-    protected IEnumerator ExtractionCoroutine()
-    {
-        extracting = true;
-        while (extracting)
+        private void OnTriggerEnter(Collider other)
         {
-            yield return new WaitForSeconds(extractionCooldown);
-            count = Physics.OverlapSphereNonAlloc(transform.position, range,
-                nonAllocBuffer, layerMask);
-            extracting = false;
-            for (int i = 0; i < count; i++)
+            colliders.Add(other);
+            if (!Extracting)
             {
-                var c = nonAllocBuffer[i];
-                if (c == null) continue;
-                var container = ComponentManager<Trackable>.Get(c.transform) as ResourceContainer;
-                if (container == null || container.Empty) continue;
-                extracting = true;
-                var list = container.Extract(extraction);
-                for (int j = 0; j < list.Count; j++)
-                {
-                    storage[list[j].resource].Amount += list[j].amount;
-                    var prevExt = extraction[list[j].resource];
-                    extraction[list[j].resource] = Mathf.Min(prevExt, storage[list[j].resource].CapacityLeft);
-                }
+                coroutine = StartCoroutine(ExtractionCoroutine());
             }
-            if (extracting)
+        }
+        private void OnTriggerExit(Collider other)
+        {
+            colliders.Remove(other);
+        }
+        protected void OnDisable()
+        {
+            colliders.Clear();
+            if (coroutine != null) StopCoroutine(coroutine);
+        }
+        protected IEnumerator ExtractionCoroutine()
+        {
+            Extracting = true;
+            while (Extracting)
             {
-                string s = "";
-                foreach (var kvp in storage)
+                yield return new WaitForSeconds(extractionCooldown);
+                if (colliders.Count > 0)
                 {
-                    s += $"{kvp.Key} {kvp.Value.Amount}/{kvp.Value.MaxAmount}\n";
+                    foreach (var c in colliders)
+                    {
+                        if (c == null) continue;
+                        var container = ComponentManager<Trackable>.Get(c.transform) as ResourceContainer;
+                        if (container == null || container.Empty) continue;
+                        Extracting = true;
+                        var list = container.Extract(extraction);
+                        for (int j = 0; j < list.Count; j++)
+                        {
+                            storage[list[j].resource].Amount += list[j].amount;
+                            var prevExt = extraction[list[j].resource];
+                            extraction[list[j].resource] = Mathf.Min(prevExt, storage[list[j].resource].CapacityLeft);
+                        }
+                    }
                 }
-                Debug.Log(s);
             }
         }
     }

@@ -1,8 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+public abstract class Registerable : MonoBehaviour
+{
 
-public static class ComponentManager<T> where T : MonoBehaviour
+}
+public static class ComponentManager<T> where T : Registerable
 {
     static readonly Dictionary<Transform, T> dict = new();
 

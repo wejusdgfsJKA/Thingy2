@@ -36,14 +36,8 @@ public class TrackableDisplay : MonoBehaviour
         cam = GetComponentInChildren<Camera>();
         canvas = cam.transform.GetComponentInChildren<Canvas>();
     }
-    private void OnEnable()
-    {
-        ComponentManager<Trackable>.OnDeRegister += RemoveTrackable;
-    }
-    private void OnDisable()
-    {
-        ComponentManager<Trackable>.OnDeRegister -= RemoveTrackable;
-    }
+    private void OnEnable() => ComponentManager<Trackable>.OnDeRegister += RemoveTrackable;
+    private void OnDisable() => ComponentManager<Trackable>.OnDeRegister -= RemoveTrackable;
     #endregion
     #region Misc
     protected void UpdateString(Trackable obj)

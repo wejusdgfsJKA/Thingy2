@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-namespace Environment
+namespace Resources
 {
     public class ResourceContainer : Trackable
     {

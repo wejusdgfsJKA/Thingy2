@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Environment
+namespace Resources
 {
     [CreateAssetMenu(menuName = "ScriptableObjects/ResourceData")]
     public class ResourceData : ScriptableObject
