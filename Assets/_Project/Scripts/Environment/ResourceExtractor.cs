@@ -6,42 +6,35 @@ namespace Resources
     public class ResourceExtractor : ResourceStorage
     {
         #region Fields
-        [SerializeField] protected float range = 5;
-        protected Dictionary<Resource, int> extraction = new() { { Resource.Metal, 1 },
+        [SerializeField] protected float extractionRange = 5;
+        protected Dictionary<Resource, int> extractionAmounts = new() { { Resource.Metal, 1 },
         { Resource.Fuel,1} };
-        readonly HashSet<Collider> colliders = new();
         [SerializeField] protected float extractionCooldown = 1;
+        [field: SerializeField] public bool Extracting { get; protected set; }
+        #region Implementation
+        LayerMask resourceMask = 1 << 6;
         protected Coroutine coroutine;
-        public bool Extracting { get; protected set; }
-        SphereCollider coll;
-        #endregion        
-        private void Awake()
-        {
-            coll = GetComponent<SphereCollider>();
-            coll.isTrigger = true;
-            coll.radius = range;
-        }
+        int count;
+        static readonly Collider[] nonAllocBuffer = new Collider[5];
+        #endregion
+        #endregion
+        #region Setup
         protected override void OnEnable()
         {
             base.OnEnable();
             Extracting = false;
         }
-        private void OnTriggerEnter(Collider other)
+        protected void OnDisable()
         {
-            colliders.Add(other);
-            if (!Extracting)
+            if (coroutine != null) StopCoroutine(coroutine);
+        }
+        #endregion
+        private void Update()
+        {
+            if (!Extracting && Physics.CheckSphere(transform.position, extractionRange, resourceMask))
             {
                 coroutine = StartCoroutine(ExtractionCoroutine());
             }
-        }
-        private void OnTriggerExit(Collider other)
-        {
-            colliders.Remove(other);
-        }
-        protected void OnDisable()
-        {
-            colliders.Clear();
-            if (coroutine != null) StopCoroutine(coroutine);
         }
         protected IEnumerator ExtractionCoroutine()
         {
@@ -49,21 +42,21 @@ namespace Resources
             while (Extracting)
             {
                 yield return new WaitForSeconds(extractionCooldown);
-                if (colliders.Count > 0)
+                count = Physics.OverlapSphereNonAlloc(transform.position, extractionRange,
+                    nonAllocBuffer, resourceMask);
+                for (int i = 0; i < count; i++)
                 {
-                    foreach (var c in colliders)
+                    var c = nonAllocBuffer[i];
+                    if (c == null || !c.gameObject.activeSelf) continue;
+                    var container = ComponentManager<Trackable>.Get(c.transform) as ResourceContainer;
+                    if (container == null || container.Empty) continue;
+                    Extracting = true;
+                    var list = container.Extract(extractionAmounts);
+                    for (int j = 0; j < list.Count; j++)
                     {
-                        if (c == null) continue;
-                        var container = ComponentManager<Trackable>.Get(c.transform) as ResourceContainer;
-                        if (container == null || container.Empty) continue;
-                        Extracting = true;
-                        var list = container.Extract(extraction);
-                        for (int j = 0; j < list.Count; j++)
-                        {
-                            storage[list[j].resource].Amount += list[j].amount;
-                            var prevExt = extraction[list[j].resource];
-                            extraction[list[j].resource] = Mathf.Min(prevExt, storage[list[j].resource].CapacityLeft);
-                        }
+                        storage[list[j].resource].Amount += list[j].amount;
+                        var prevExt = extractionAmounts[list[j].resource];
+                        extractionAmounts[list[j].resource] = Mathf.Min(prevExt, storage[list[j].resource].CapacityLeft);
                     }
                 }
             }
