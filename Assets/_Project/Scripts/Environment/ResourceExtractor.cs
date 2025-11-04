@@ -46,18 +46,18 @@ namespace Resources
                     nonAllocBuffer, resourceMask);
                 for (int i = 0; i < count; i++)
                 {
-                    var c = nonAllocBuffer[i];
-                    if (c == null || !c.gameObject.activeSelf) continue;
-                    var container = ComponentManager<Trackable>.Get(c.transform) as ResourceContainer;
-                    if (container == null || container.Empty) continue;
-                    Extracting = true;
-                    var list = container.Extract(extractionAmounts);
-                    for (int j = 0; j < list.Count; j++)
-                    {
-                        storage[list[j].resource].Amount += list[j].amount;
-                        var prevExt = extractionAmounts[list[j].resource];
-                        extractionAmounts[list[j].resource] = Mathf.Min(prevExt, storage[list[j].resource].CapacityLeft);
-                    }
+                    //var c = nonAllocBuffer[i];
+                    //if (c == null || !c.gameObject.activeSelf) continue;
+                    //var container = ComponentManager<Trackable>.Get(c.transform) as ResourceContainer;
+                    //if (container == null || container.Empty) continue;
+                    //Extracting = true;
+                    //var list = container.Extract(extractionAmounts);
+                    //for (int j = 0; j < list.Count; j++)
+                    //{
+                    //    storage[list[j].resource].Amount += list[j].amount;
+                    //    var prevExt = extractionAmounts[list[j].resource];
+                    //    extractionAmounts[list[j].resource] = Mathf.Min(prevExt, storage[list[j].resource].CapacityLeft);
+                    //}
                 }
             }
         }

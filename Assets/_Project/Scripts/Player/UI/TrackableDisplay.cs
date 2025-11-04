@@ -19,7 +19,6 @@ public class TrackableDisplay : MonoBehaviour
     #region Parameters
     [SerializeField] TextMeshProUGUI textPrefab;
     [SerializeField] float trackingRange = 10;
-    [SerializeField] float minTextScale = 1, maxTextScale = 10;
     #endregion 
     protected Camera cam;
     protected Canvas canvas;
@@ -36,8 +35,6 @@ public class TrackableDisplay : MonoBehaviour
         cam = GetComponentInChildren<Camera>();
         canvas = cam.transform.GetComponentInChildren<Canvas>();
     }
-    private void OnEnable() => ComponentManager<Trackable>.OnDeRegister += RemoveTrackable;
-    private void OnDisable() => ComponentManager<Trackable>.OnDeRegister -= RemoveTrackable;
     #endregion
     #region Misc
     protected void UpdateString(Trackable obj)
@@ -49,23 +46,12 @@ public class TrackableDisplay : MonoBehaviour
     }
     #endregion
     #region Collection management
-    private void OnTriggerEnter(Collider other)
-    {
-        var t = ComponentManager<Trackable>.Get(other.transform);
-        Debug.Log(t.transform);
-        if (t) AddTrackable(t);
-    }
-    private void OnTriggerExit(Collider other)
-    {
-        var t = ComponentManager<Trackable>.Get(other.transform);
-        if (t) RemoveTrackable(t);
-    }
     protected void AddTrackable(Trackable obj)
     {
         if (!toTrack.ContainsKey(obj.transform))
         {
-            obj.MeshRenderer.enabled = true;
-            obj.UpdateString += UpdateString;
+            //obj.MeshRenderer.enabled = true;
+            //obj.UpdateString += UpdateString;
             var text = GetTextObject();
             text.text = obj.ToString();
             text.rectTransform.anchoredPosition = cam.ScreenToWorldPoint(obj.transform.position);
@@ -76,8 +62,8 @@ public class TrackableDisplay : MonoBehaviour
     {
         if (toTrack.TryGetValue(obj.transform, out var data))
         {
-            obj.MeshRenderer.enabled = false;
-            obj.UpdateString -= UpdateString;
+            //obj.MeshRenderer.enabled = false;
+            //obj.UpdateString -= UpdateString;
             textPool.Push(data.Text);
             data.RectTransform.gameObject.SetActive(false);
             toTrack.Remove(obj.transform);
@@ -136,10 +122,10 @@ public class TrackableDisplay : MonoBehaviour
 
             // Optional: scale based on distance
             float dist = Vector3.Distance(cam.transform.position, worldPos);
-            var textSize = Mathf.Clamp(a.Value.Trackable.TextSizeCoefficient / (dist + 0.00001f),
-                minTextScale, maxTextScale);
-            a.Value.RectTransform.sizeDelta = new Vector2(20, 20) * textSize;
-            a.Value.Text.fontSize = textSize * 5;
+            //var textSize = Mathf.Clamp(a.Value.Trackable.TextSizeCoefficient / (dist + 0.00001f),
+            //    minTextScale, maxTextScale);
+            //a.Value.RectTransform.sizeDelta = new Vector2(20, 20) * textSize;
+            //a.Value.Text.fontSize = textSize * 5;
         }
     }
     #endregion

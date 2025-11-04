@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 namespace Spawning.Pooling
@@ -12,6 +13,8 @@ namespace Spawning.Pooling
         /// Holds all the pooled objects.
         /// </summary>
         protected Dictionary<ID, Stack<IDPoolable<ID>>> multiPool = new();
+        public Dictionary<ID, int> ActiveEntityCounts = new();
+
         public override void ReturnToPool(Poolable poolable)
         {
             var p = poolable as IDPoolable<ID>;
@@ -22,12 +25,27 @@ namespace Spawning.Pooling
                     pool = new();
                     multiPool.Add(p.ID, pool);
                 }
+                if (ActiveEntityCounts.TryGetValue(p.ID, out int count))
+                {
+                    if (count > 0) ActiveEntityCounts[p.ID]--;
+                }
                 pool.Push(p);
             }
             else
             {
                 Debug.LogError($"{this} received invalid IDPoolable {poolable}!");
             }
+        }
+        public override Spawnable Spawn(SpawnableData objectData, Vector3 position, Quaternion rotation, Action<Spawnable> executeBeforeSpawn = null)
+        {
+            var s = base.Spawn(objectData, position, rotation, executeBeforeSpawn);
+            if (s)
+            {
+                var id = ((IDPoolableData<ID>)objectData).ID;
+                if (!ActiveEntityCounts.ContainsKey(id)) ActiveEntityCounts[id] = 0;
+                ActiveEntityCounts[id]++;
+            }
+            return s;
         }
         protected override Poolable GetFromPool(SpawnableData objectData)
         {

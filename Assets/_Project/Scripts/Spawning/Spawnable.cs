@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Events;
 namespace Spawning
 {
     /// <summary>
@@ -7,15 +6,13 @@ namespace Spawning
     /// </summary>
     public class Spawnable : MonoBehaviour
     {
-        [Header("On Init")]//these exist bc unity has a bug with protected serialized fields
-        [SerializeField] protected UnityEvent init;
         /// <summary>
         /// Fires right after instantiation.
         /// </summary>
         /// <param name="data">Data to initialize with.</param>
         public virtual void Initialize(SpawnableData data)
         {
-            init?.Invoke();
+
         }
     }
 }

@@ -13,10 +13,9 @@ namespace Resources
                 return Resources.Count == 0;
             }
         }
-        protected override void OnEnable()
+        protected void OnEnable()
         {
             RegenerateResources();
-            base.OnEnable();
         }
         protected void RegenerateResources()
         {
@@ -34,6 +33,7 @@ namespace Resources
                     }
                 }
             }
+            else Debug.LogError($"Asteroid {transform} has no resource data at {System.DateTime.Now}.");
         }
         public List<(Resource resource, int amount)> Extract(
             Dictionary<Resource, int> demand)
@@ -51,7 +51,6 @@ namespace Resources
                     if (Resources[res] == 0) Resources.Remove(res);
                 }
             }
-            UpdateString?.Invoke(this);
             return result;
         }
         public override string ToString()
