@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0678c619ddc68914994e9b04667d49e9, type: 3}
   m_Name: AsteroidData
   m_EditorClassIdentifier: Assembly-CSharp::TrackableData
-  Prefab: {fileID: 6568727541733549172, guid: 7340d5061fee1524690bebaf742c576c, type: 3}
+  Prefab: {fileID: -373046780154148752, guid: 7340d5061fee1524690bebaf742c576c, type: 3}
   ID: 0

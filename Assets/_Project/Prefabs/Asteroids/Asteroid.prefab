@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 5743061977483925296}
   - component: {fileID: 1782223923829659643}
   - component: {fileID: 456333871908105232}
-  - component: {fileID: 6568727541733549172}
   - component: {fileID: 1953853550757852380}
+  - component: {fileID: -373046780154148752}
   m_Layer: 6
   m_Name: Asteroid
   m_TagString: Untagged
@@ -92,23 +92,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &6568727541733549172
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2373219665424826308}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c88478735d3c29f41b19290261184333, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Trackable
-  <ID>k__BackingField: 0
-  detectionState: 0
-  mainRenderer: {fileID: 456333871908105232}
-  dotRenderer: {fileID: 7710301591132769275}
-  <Signature>k__BackingField: 0
 --- !u!54 &1953853550757852380
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -136,6 +119,23 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!114 &-373046780154148752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2373219665424826308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07836386a82466044af4230852560da7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InertTrackable
+  <ID>k__BackingField: 0
+  detectionState: 0
+  mainRenderer: {fileID: 456333871908105232}
+  dotRenderer: {fileID: 7710301591132769275}
+  <Signature>k__BackingField: 0
 --- !u!1 &2911921801420701506
 GameObject:
   m_ObjectHideFlags: 0

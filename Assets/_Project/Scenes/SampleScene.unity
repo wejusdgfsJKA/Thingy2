@@ -356,7 +356,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   asteroidIntendedCount: 10
   asteroidData: {fileID: 11400000, guid: 85ada1f2a8a70434d9371f4607a2d46d, type: 2}
-  checkInterval: 0.2
 --- !u!1 &946940978
 GameObject:
   m_ObjectHideFlags: 0
@@ -632,7 +631,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
