@@ -1,87 +1,81 @@
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 public class TrackableDisplay : MonoBehaviour
 {
     #region Fields
-    protected struct TrackableData
+    public static TrackableDisplay Instance { get; private set; }
+    protected readonly struct TrackableData
     {
-        public RectTransform RectTransform;
-        public TextMeshProUGUI Text;
-        public Trackable Trackable;
-        public TrackableData(TextMeshProUGUI text, Trackable trackable)
+        public readonly RectTransform RectTransform;
+        public readonly Image Image;
+        public readonly Trackable Trackable;
+        public readonly Vector3 ScreenPosition
         {
-            RectTransform = text.rectTransform;
-            Text = text;
+            get => RectTransform.position;
+            set => RectTransform.position = value;
+        }
+        public readonly GameObject GameObject { get => RectTransform.gameObject; }
+        public TrackableData(Image image, Trackable trackable)
+        {
+            RectTransform = image.rectTransform;
+            this.Image = image;
             Trackable = trackable;
         }
     }
     #region Parameters
-    [SerializeField] TextMeshProUGUI textPrefab;
-    [SerializeField] float trackingRange = 10;
-    #endregion 
+    [SerializeField] Image iconPrefab;
+    [SerializeField] float minTextScale, maxTextScale;
+    #endregion
     protected Camera cam;
     protected Canvas canvas;
-    protected SphereCollider triggerCollider;
     protected readonly Dictionary<Transform, TrackableData> toTrack = new();
-    protected readonly Stack<TextMeshProUGUI> textPool = new();
+    protected readonly Stack<Image> iconPool = new();
     #endregion
     #region Setup
     protected void Awake()
     {
-        triggerCollider = GetComponentInChildren<SphereCollider>();
-        triggerCollider.radius = trackingRange;
-        triggerCollider.isTrigger = true;
+        Instance = this;
         cam = GetComponentInChildren<Camera>();
         canvas = cam.transform.GetComponentInChildren<Canvas>();
     }
     #endregion
-    #region Misc
-    protected void UpdateString(Trackable obj)
-    {
-        if (toTrack.TryGetValue(obj.transform, out var value))
-        {
-            value.Text.text = obj.ToString();
-        }
-    }
-    #endregion
     #region Collection management
-    protected void AddTrackable(Trackable obj)
+    public void AddTrackable(Trackable obj)
     {
+        if (obj.Icon == null) return;
         if (!toTrack.ContainsKey(obj.transform))
         {
-            //obj.MeshRenderer.enabled = true;
-            //obj.UpdateString += UpdateString;
-            var text = GetTextObject();
-            text.text = obj.ToString();
-            text.rectTransform.anchoredPosition = cam.ScreenToWorldPoint(obj.transform.position);
-            toTrack.Add(obj.transform, new(text, obj));
+            var img = GetIcon(obj.Icon);
+            img.rectTransform.anchoredPosition = cam.ScreenToWorldPoint(obj.transform.position);
+            toTrack.Add(obj.transform, new(img, obj));
         }
     }
-    protected void RemoveTrackable(Trackable obj)
+    public void RemoveTrackable(Trackable obj)
     {
         if (toTrack.TryGetValue(obj.transform, out var data))
         {
-            //obj.MeshRenderer.enabled = false;
-            //obj.UpdateString -= UpdateString;
-            textPool.Push(data.Text);
+            iconPool.Push(data.Image);
             data.RectTransform.gameObject.SetActive(false);
             toTrack.Remove(obj.transform);
         }
     }
-    protected TextMeshProUGUI GetTextObject()
+    protected Image GetIcon(Sprite sprite)
     {
-        TextMeshProUGUI text;
-        if (textPool.Count == 0)
+        Image icon;
+        if (iconPool.Count == 0)
         {
-            text = Instantiate(textPrefab, canvas.transform);
+            icon = Instantiate(iconPrefab, canvas.transform);
+            icon.sprite = sprite;
+            icon.fillCenter = false;
         }
         else
         {
-            text = textPool.Pop();
-            text.gameObject.SetActive(true);
+            icon = iconPool.Pop();
+            icon.sprite = sprite;
+            icon.gameObject.SetActive(true);
         }
-        return text;
+        return icon;
     }
     #endregion
     #region UI
@@ -100,15 +94,14 @@ public class TrackableDisplay : MonoBehaviour
             // Convert world position to viewport coordinates (0..1)
             Vector3 viewportPos = cam.WorldToViewportPoint(worldPos);
 
-            // If behind the camera, hide the label
+            // If behind the camera, hide the icon
             if (viewportPos.z <= 0)
             {
-                a.Value.Text.gameObject.SetActive(false);
-                return;
+                a.Value.Image.gameObject.SetActive(false);
+                continue;
             }
 
-            // Set active
-            a.Value.Text.gameObject.SetActive(true);
+            a.Value.Image.gameObject.SetActive(true);
 
             // Map viewport (0..1) to canvas local position
             RectTransform canvasRect = a.Value.RectTransform.parent as RectTransform;
@@ -117,15 +110,13 @@ public class TrackableDisplay : MonoBehaviour
                 (viewportPos.y - 0.5f) * canvasRect.sizeDelta.y
             );
 
-            // Assign the position
             a.Value.RectTransform.anchoredPosition = canvasPos;
 
-            // Optional: scale based on distance
+            //scale based on distance
             float dist = Vector3.Distance(cam.transform.position, worldPos);
-            //var textSize = Mathf.Clamp(a.Value.Trackable.TextSizeCoefficient / (dist + 0.00001f),
-            //    minTextScale, maxTextScale);
-            //a.Value.RectTransform.sizeDelta = new Vector2(20, 20) * textSize;
-            //a.Value.Text.fontSize = textSize * 5;
+            var size = Mathf.Clamp(a.Value.Trackable.IconSizeCoefficient / (dist + 0.00001f),
+                minTextScale, maxTextScale);
+            a.Value.RectTransform.sizeDelta = new Vector2(20, 20) * size;
         }
     }
     #endregion

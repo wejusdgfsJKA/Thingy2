@@ -1,110 +1,38 @@
-using Spawning.Pooling;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-public enum ObjectType : byte
-{
-    Asteroid,
-    Ship
-}
-public class GameManager : MultiManager<ObjectType>
-{
-    [Tooltip("Min. nr. of asteroids to be active at any given time.")][SerializeField] int asteroidIntendedCount = 2;
-    readonly Dictionary<Transform, Trackable> trackables = new();
-    [SerializeField] IDPoolableData<ObjectType> asteroidData;
-    #region Technical
-    Transform player;
-    readonly float checkInterval = .2f;
-    WaitForSeconds wait;
-    readonly Stack<Trackable> toRemove = new();
-    Coroutine coroutine;
-    #endregion
-    #region Setup
-    private void Awake()
-    {
-        var objectTypes = (ObjectType[])ObjectType.GetValues(typeof(ObjectType));
-        foreach (var objectType in objectTypes)
-        {
-            ActiveEntityCounts[objectType] = 0;
-        }
-        wait = new WaitForSeconds(checkInterval);
-        player = transform.root;
-    }
-    private void OnEnable()
-    {
-        coroutine = StartCoroutine(UpdateCoroutine());
-    }
-    private void OnDisable()
-    {
-        if (coroutine != null) StopCoroutine(coroutine);
-    }
-    #endregion
-    Trackable SpawnAsteroid()
-    {
-        //pick a position
-        float dist = GlobalSettings.PlayerTrackingRange + (GlobalSettings.UpdateRange - GlobalSettings.PlayerTrackingRange) / 2;
-        Vector3 pos = Random.onUnitSphere * dist;
-        //pick an inertia
-        float inertiaMagnitude = Random.Range(GlobalSettings.AsteroidInertia.Item1,
-            GlobalSettings.AsteroidInertia.Item2);
-        Vector3 inertia = Random.onUnitSphere * inertiaMagnitude;
-        var asteroid = Spawn(asteroidData, pos) as InertTrackable;
-        if (asteroid == null)
-        {
-            Debug.LogError($"Unable to convert Spawnable to InertTrackable when attempting to spawn asteroid at {System.DateTime.Now}.");
-            return null;
-        }
-        asteroid.Inertia = inertia;
-        trackables.Add(asteroid.transform, asteroid);
-        ActiveEntityCounts[ObjectType.Asteroid]++;
+using UnityEngine.SceneManagement;
 
-        return asteroid;
-    }
-    void DeactivateObject(Trackable trackable)
+public static class GameManager
+{
+    static Transform player;
+    public static Transform Player
     {
-        trackable.gameObject.SetActive(false);
-        ActiveEntityCounts[trackable.ID]--;
-        trackables.Remove(trackable.transform);
-    }
-    public void UpdateExisting()
-    {
-        foreach (var t in trackables)
+        get => player;
+        set
         {
-            var tr = t.Key;
-            var trk = t.Value;
-            var dist = Mathf.Max(Vector3.Distance(player.position, tr.position) - trk.Signature, 0.1f);
-
-            if (dist > GlobalSettings.UpdateRange)
+            if (player != value)
             {
-                //remove this object
-                toRemove.Push(trk);
-                continue;
+                player = value;
+                if (player == null) EndMission();
             }
-
-            if (dist <= GlobalSettings.PlayerSpottingRange)
-                trk.DetectionState = DetectionState.Identified;
-            else if (dist <= GlobalSettings.PlayerTrackingRange)
-                trk.DetectionState = DetectionState.Tracked;
-            else trk.DetectionState = DetectionState.Hidden;
-        }
-        while (toRemove.Count > 0) DeactivateObject(toRemove.Pop());
-    }
-    public void HandleSpawning()
-    {
-        ActiveEntityCounts.TryGetValue(ObjectType.Asteroid, out int count);
-        count = asteroidIntendedCount - count;
-        if (count > 0)
-        {
-            for (int i = 0; i < count; i++) SpawnAsteroid();
         }
     }
-    public IEnumerator UpdateCoroutine()
+    public static Mission CurrentMission { get; set; }
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+    public static void Setup()
     {
-        while (true)
+        SceneManager.sceneLoaded += (s1, s2) =>
         {
-            yield return wait;
-            UpdateExisting();
-            HandleSpawning();
-        }
+            if (CurrentMission != null)
+            {
+                ObjectManager.Instance.SpawnPlayer();
+                CurrentMission?.Initialize();
+            }
+        };
+    }
+    public static void EndMission()
+    {
+        var score = CurrentMission.GetScore();
+        Debug.Log($"Score: {score}.");
+        CurrentMission = null;
     }
 }

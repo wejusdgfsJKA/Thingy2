@@ -2,29 +2,47 @@ using UnityEngine;
 
 public class Navigation
 {
-    public Vector3? Destination { get; protected set; }
+    protected Vector3? destination;
+    public Vector3? Destination
+    {
+        get => destination;
+        set
+        {
+            if (destination != value)
+            {
+                destination = value;
+                Rigidbody.linearVelocity = destination != null ?
+                    (destination.Value - Transform.position).normalized * Speed :
+                    Vector3.zero;
+            }
+        }
+    }
     public float Speed { get; set; }
-    public Transform tr { get; set; }
+    public Transform Transform { get; set; }
+    public Rigidbody Rigidbody { get; set; }
     public float RemainingDistance
     {
         get
         {
-            if (!Destination.HasValue) return 0;
-            return Vector3.Distance(tr.position, Destination.Value);
+            return Destination.HasValue ? Vector3.Distance(Transform.position, Destination.Value) : 0;
         }
     }
     public Navigation(Transform tr, float speed)
     {
-        this.tr = tr;
+        Transform = tr;
+        Rigidbody = tr.GetComponent<Rigidbody>();
         Speed = speed;
     }
-    public void Update(float deltaTime)
+    public void Update()
     {
         if (Destination != null)
         {
-            Vector3 dir = (Destination.Value - tr.position).normalized;
-
-            tr.Translate(dir);
+            var dir = Destination.Value - Transform.position;
+            if (dir.magnitude <= Speed)
+            {
+                Transform.position = Destination.Value;
+                Destination = null;
+            }
         }
     }
 }

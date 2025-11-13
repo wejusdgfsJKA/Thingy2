@@ -14,7 +14,6 @@ namespace Spawning.Pooling
         /// </summary>
         protected Dictionary<ID, Stack<IDPoolable<ID>>> multiPool = new();
         public Dictionary<ID, int> ActiveEntityCounts = new();
-
         public override void ReturnToPool(Poolable poolable)
         {
             var p = poolable as IDPoolable<ID>;
@@ -41,9 +40,14 @@ namespace Spawning.Pooling
             var s = base.Spawn(objectData, position, rotation, executeBeforeSpawn);
             if (s)
             {
-                var id = ((IDPoolableData<ID>)objectData).ID;
-                if (!ActiveEntityCounts.ContainsKey(id)) ActiveEntityCounts[id] = 0;
-                ActiveEntityCounts[id]++;
+                var p = objectData as IDPoolableData<ID>;
+                if (p != null)
+                {
+                    var id = p.ID;
+                    if (!ActiveEntityCounts.ContainsKey(id)) ActiveEntityCounts[id] = 0;
+                    ActiveEntityCounts[id]++;
+                }
+                else Debug.LogError($"MultiManager {this} received object data {objectData} which it could not convert to IDPoolable.");
             }
             return s;
         }

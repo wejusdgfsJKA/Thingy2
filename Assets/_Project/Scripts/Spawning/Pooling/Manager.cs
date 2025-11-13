@@ -1,3 +1,6 @@
+
+using UnityEngine;
+
 namespace Spawning.Pooling
 {
     /// <summary>
@@ -23,13 +26,13 @@ namespace Spawning.Pooling
             if (s != null)
             {
                 s.ResetObject();
+                return s;
             }
-            else
-            {
-                s = (Poolable)base.Obtain(objectData);
-                s.Manager = this;
-            }
-            return s;
+            var s2 = base.Obtain(objectData);
+            s = s2 as Poolable;
+            if (s) s.Manager = this;
+            else Debug.LogError($"Manager {this} received spawnable data {objectData} which it could not convert to a poolable.");
+            return s2;
         }
         /// <summary>
         /// Obtain an object from the pool based on its data.
