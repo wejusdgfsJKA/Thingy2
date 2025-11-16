@@ -9,6 +9,7 @@ public class TrackableDisplay : MonoBehaviour
     {
         public readonly RectTransform RectTransform;
         public readonly Image Image;
+        public readonly Button Button;
         public readonly Trackable Trackable;
         public readonly Vector3 ScreenPosition
         {
@@ -16,21 +17,25 @@ public class TrackableDisplay : MonoBehaviour
             set => RectTransform.position = value;
         }
         public readonly GameObject GameObject { get => RectTransform.gameObject; }
-        public TrackableData(Image image, Trackable trackable)
+        public TrackableData(Image image, Trackable trackable, Button button)
         {
             RectTransform = image.rectTransform;
-            this.Image = image;
+            Image = image;
             Trackable = trackable;
+            Button = button;
         }
     }
     #region Parameters
     [SerializeField] Image iconPrefab;
     [SerializeField] float minTextScale, maxTextScale;
     #endregion
+    #region Implementation
+    [field: SerializeField] public Trackable CurrentTarget { get; protected set; }
     protected Camera cam;
     protected Canvas canvas;
     protected readonly Dictionary<Transform, TrackableData> toTrack = new();
-    protected readonly Stack<Image> iconPool = new();
+    protected readonly Stack<(Image, Button)> iconPool = new();
+    #endregion
     #endregion
     #region Setup
     protected void Awake()
@@ -46,36 +51,40 @@ public class TrackableDisplay : MonoBehaviour
         if (obj.Icon == null) return;
         if (!toTrack.ContainsKey(obj.transform))
         {
-            var img = GetIcon(obj.Icon);
+            Image img; Button btn;
+            (img, btn) = GetIcon(obj.Icon);
+            btn.onClick.AddListener(() => CurrentTarget = obj);
             img.rectTransform.anchoredPosition = cam.ScreenToWorldPoint(obj.transform.position);
-            toTrack.Add(obj.transform, new(img, obj));
+            toTrack.Add(obj.transform, new(img, obj, btn));
         }
     }
     public void RemoveTrackable(Trackable obj)
     {
         if (toTrack.TryGetValue(obj.transform, out var data))
         {
-            iconPool.Push(data.Image);
+            data.Button.onClick.RemoveAllListeners();
+            iconPool.Push((data.Image, data.Button));
             data.RectTransform.gameObject.SetActive(false);
             toTrack.Remove(obj.transform);
         }
     }
-    protected Image GetIcon(Sprite sprite)
+    protected (Image, Button) GetIcon(Sprite sprite)
     {
-        Image icon;
+        Image icon; Button btn;
         if (iconPool.Count == 0)
         {
             icon = Instantiate(iconPrefab, canvas.transform);
+            btn = icon.GetComponent<Button>();
             icon.sprite = sprite;
             icon.fillCenter = false;
         }
         else
         {
-            icon = iconPool.Pop();
+            (icon, btn) = iconPool.Pop();
             icon.sprite = sprite;
             icon.gameObject.SetActive(true);
         }
-        return icon;
+        return (icon, btn);
     }
     #endregion
     #region UI
@@ -119,5 +128,6 @@ public class TrackableDisplay : MonoBehaviour
             a.Value.RectTransform.sizeDelta = new Vector2(20, 20) * size;
         }
     }
+    public void ClearTarget() => CurrentTarget = null;
     #endregion
 }

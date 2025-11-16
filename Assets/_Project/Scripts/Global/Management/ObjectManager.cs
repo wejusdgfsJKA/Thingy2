@@ -47,8 +47,8 @@ public class ObjectManager : MultiManager<ObjectType>
     Trackable SpawnAsteroid()
     {
         //pick a position
-        float dist = GlobalSettings.PlayerTrackingRange + (GlobalSettings.UpdateRange - GlobalSettings.PlayerTrackingRange) / 2;
-        Vector3 pos = Random.onUnitSphere * dist;
+        float dist = GlobalSettings.PlayerTrackingRange - 1; //+ (GlobalSettings.UpdateRange + GlobalSettings.PlayerTrackingRange) / 2;
+        Vector3 pos = GameManager.Player.position + Random.onUnitSphere * dist;
         //pick an inertia
         float inertiaMagnitude = Random.Range(GlobalSettings.AsteroidInertia.Item1,
             GlobalSettings.AsteroidInertia.Item2);

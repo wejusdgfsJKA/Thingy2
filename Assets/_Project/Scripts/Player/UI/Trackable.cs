@@ -64,7 +64,7 @@ public class Trackable : IDPoolable<ObjectType>
     }
     protected void DeRegisterIconFromDisplay()
     {
-        TrackableDisplay.Instance?.RemoveTrackable(this);
+        TrackableDisplay.Instance.RemoveTrackable(this);
     }
     protected override void OnDisable()
     {

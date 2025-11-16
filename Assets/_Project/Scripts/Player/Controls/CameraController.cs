@@ -22,8 +22,8 @@ namespace Player
         }
         private void OnEnable()
         {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            //Cursor.lockState = CursorLockMode.Locked;
+            //Cursor.visible = false;
             cameraInputReader.EnablePlayerActions();
             cameraInputReader.Zoom += OnZoom;
             cameraInputReader.Reset += OnReset;
