@@ -11,12 +11,11 @@ public abstract class Mission
 }
 public class PlanetDefenseMission : Mission
 {
-    int planetCount;
-    public PlanetDefenseMission() => planetCount = 1;
-    public PlanetDefenseMission(int planetCount) => this.planetCount = planetCount;
+    readonly int initialPlanetCount;
+    public PlanetDefenseMission(int planetCount = 1) => initialPlanetCount = planetCount;
     public override void Initialize()
     {
-        for (int i = 0; i < planetCount; i++)
+        for (int i = 0; i < initialPlanetCount; i++)
         {
             ObjectManager.Instance.SpawnPlanet(Random.onUnitSphere * 10);
         }

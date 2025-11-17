@@ -7,7 +7,8 @@ namespace Player
         float currentXAngle;
         float currentYAngle;
 
-        public float cameraZoomSpeed = 1, cameraRotSpeed = 50f;
+        [SerializeField] protected float cameraZoomSpeed = 1, cameraDefaultRotSpeed = 50f;
+        [SerializeField] protected float cameraRotSpeed;
         public Vector3 defaultCamPos = new(0, 0, 1);
         public bool smoothCameraRotation;
         [Range(1f, 50f)] public float cameraSmoothingFactor = 25f;
@@ -22,20 +23,30 @@ namespace Player
         }
         private void OnEnable()
         {
-            //Cursor.lockState = CursorLockMode.Locked;
-            //Cursor.visible = false;
+            DisableCursor();
             cameraInputReader.EnablePlayerActions();
             cameraInputReader.Zoom += OnZoom;
             cameraInputReader.Reset += OnReset;
             OnReset();
+            cameraInputReader.OnCursorDisabled += DisableCursor;
+            cameraInputReader.OnCursorEnabled += EnableCursor;
         }
         private void OnDisable()
         {
+            EnableCursor();
+            cameraInputReader.DisablePlayerActions();
+        }
+        void DisableCursor()
+        {
+            cameraRotSpeed = cameraDefaultRotSpeed;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+        void EnableCursor()
+        {
+            cameraRotSpeed = 0;
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
-            cameraInputReader.DisablePlayerActions();
-            cameraInputReader.Zoom -= OnZoom;
-            cameraInputReader.Reset -= OnReset;
         }
 
         void OnZoom(float zoom)

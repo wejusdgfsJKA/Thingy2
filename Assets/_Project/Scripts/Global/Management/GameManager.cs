@@ -12,7 +12,7 @@ public static class GameManager
             if (player != value)
             {
                 player = value;
-                if (player == null) EndMission();
+                if (player == null && CurrentMission != null) AutoResolve();
             }
         }
     }
@@ -25,14 +25,16 @@ public static class GameManager
             if (CurrentMission != null)
             {
                 ObjectManager.Instance.SpawnPlayer();
-                CurrentMission?.Initialize();
+                CurrentMission.Initialize();
             }
         };
     }
     public static void EndMission()
     {
+        if (CurrentMission == null) return;
         var score = CurrentMission.GetScore();
         Debug.Log($"Score: {score}.");
         CurrentMission = null;
     }
+    static void AutoResolve() => EndMission();
 }

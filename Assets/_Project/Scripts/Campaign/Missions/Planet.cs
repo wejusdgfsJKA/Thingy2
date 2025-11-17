@@ -1,3 +1,4 @@
+using Player;
 public class Planet : Trackable
 {
     static int count = 0;
@@ -20,8 +21,8 @@ public class Planet : Trackable
     }
     protected override void OnDisable()
     {
-        Count--;
         TrackableDisplay.Instance.RemoveTrackable(this);
+        Count--;
         base.OnDisable();
     }
 }
