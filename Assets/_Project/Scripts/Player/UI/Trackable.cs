@@ -56,6 +56,7 @@ public class Trackable : IDPoolable<ObjectType>
     /// If true, this object will not despawn when exiting update range.
     /// </summary>
     [field: SerializeField] public bool Persistent { get; set; } = false;
+    [field: SerializeField] public bool Selectable { get; set; } = true;
     public override void ResetObject()
     {
         base.ResetObject();

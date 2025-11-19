@@ -33,6 +33,7 @@ namespace Player
         #endregion
         #region Implementation
         [field: SerializeField] public Trackable CurrentTarget { get; protected set; }
+        [SerializeField] protected Sprite defaultSprite;
         protected Camera cam;
         protected Canvas canvas;
         protected readonly Dictionary<Transform, TrackableData> toTrack = new();
@@ -50,18 +51,22 @@ namespace Player
         #region Collection management
         public void AddTrackable(Trackable obj)
         {
-            if (obj.Icon == null) return;
             if (!toTrack.ContainsKey(obj.transform))
             {
                 Image img; Button btn;
                 (img, btn) = GetIcon(obj.Icon);
-                btn.onClick.AddListener(() => CurrentTarget = obj);
+                btn.enabled = img.raycastTarget = obj.Selectable;
+                if (obj.Selectable)
+                {
+                    btn.onClick.AddListener(() => CurrentTarget = obj);
+                }
                 img.rectTransform.anchoredPosition = cam.ScreenToWorldPoint(obj.transform.position);
                 toTrack.Add(obj.transform, new(img, obj, btn));
             }
         }
         public void RemoveTrackable(Trackable obj)
         {
+            if (CurrentTarget == obj) ClearTarget();
             if (toTrack.TryGetValue(obj.transform, out var data))
             {
                 data.Button.onClick.RemoveAllListeners();
@@ -72,6 +77,7 @@ namespace Player
         }
         protected (Image, Button) GetIcon(Sprite sprite)
         {
+            if (sprite == null) sprite = defaultSprite;
             Image icon; Button btn;
             if (iconPool.Count == 0)
             {
@@ -130,7 +136,7 @@ namespace Player
                 a.Value.RectTransform.sizeDelta = new Vector2(20, 20) * size;
             }
         }
-        public void ClearTarget() => CurrentTarget = null;
         #endregion
+        public void ClearTarget() => CurrentTarget = null;
     }
 }

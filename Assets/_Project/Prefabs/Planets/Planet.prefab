@@ -124,7 +124,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b737c27fb2ee8924dbf4148ca41eebb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Planet
-  <ID>k__BackingField: 0
+  <ID>k__BackingField: 2
   detectionState: 0
   mainRenderer: {fileID: 8963309553407482164}
   dotRenderer: {fileID: 8963309553407482164}
@@ -132,3 +132,4 @@ MonoBehaviour:
   <Icon>k__BackingField: {fileID: 0}
   <IconSizeCoefficient>k__BackingField: 300
   <Persistent>k__BackingField: 1
+  <Selectable>k__BackingField: 0
