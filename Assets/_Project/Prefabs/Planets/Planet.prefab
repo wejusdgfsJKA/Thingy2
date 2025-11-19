@@ -130,6 +130,7 @@ MonoBehaviour:
   dotRenderer: {fileID: 8963309553407482164}
   <Signature>k__BackingField: 0
   <Icon>k__BackingField: {fileID: 0}
+  <Material>k__BackingField: {fileID: 2100000, guid: cfcc96d004a62b64f8a6d7931a10d493, type: 2}
   <IconSizeCoefficient>k__BackingField: 300
   <Persistent>k__BackingField: 1
   <Selectable>k__BackingField: 0

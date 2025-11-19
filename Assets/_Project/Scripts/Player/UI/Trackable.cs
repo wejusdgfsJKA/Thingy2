@@ -51,6 +51,7 @@ public class Trackable : IDPoolable<ObjectType>
     /// </summary>
     [field: SerializeField] public float Signature { get; protected set; } = 0;
     [field: SerializeField] public Sprite Icon { get; protected set; }
+    [field: SerializeField] public Material Material { get; protected set; }
     [field: SerializeField] public float IconSizeCoefficient { get; protected set; } = 200;
     /// <summary>
     /// If true, this object will not despawn when exiting update range.

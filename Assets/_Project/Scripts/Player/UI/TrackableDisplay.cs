@@ -56,6 +56,7 @@ namespace Player
                 Image img; Button btn;
                 (img, btn) = GetIcon(obj.Icon);
                 btn.enabled = img.raycastTarget = obj.Selectable;
+                img.material = obj.Material;
                 if (obj.Selectable)
                 {
                     btn.onClick.AddListener(() => CurrentTarget = obj);
