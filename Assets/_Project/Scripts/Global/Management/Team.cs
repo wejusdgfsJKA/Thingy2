@@ -101,6 +101,7 @@ public class Team
     }
     DetectionState GetDetectionState(Object obj)
     {
+        DetectionState state = DetectionState.Hidden;
         foreach (var member in members)
         {
             float distance = Vector3.Distance(member.Transform.position, obj.Transform.position) - obj.Signature;
@@ -110,10 +111,10 @@ public class Team
             }
             if (distance <= member.ScanRange)
             {
-                return DetectionState.Tracked;
+                state = DetectionState.Tracked;
             }
         }
-        return DetectionState.Hidden;
+        return state;
     }
     public void Clear()
     {

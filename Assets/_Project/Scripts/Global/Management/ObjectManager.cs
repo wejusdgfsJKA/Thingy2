@@ -4,6 +4,7 @@ using Spawning.Pooling;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 public enum Teams : byte
 {
     Player,
@@ -13,6 +14,12 @@ public class ObjectManager : MultiManager<ObjectType>
 {
     [Tooltip("Min. nr. of asteroids to be active at any given time.")][SerializeField] int asteroidIntendedCount = 2;
     public HashSet<Object> Objects { get; } = new();
+    Dictionary<ObjectType, string> addresses = new()
+    {
+        { ObjectType.Planet,"Planet"},
+        {ObjectType.Asteroid,"Asteroid" },
+        {ObjectType.Player,"Player"  }
+    };
     [SerializeField] ObjectData asteroidData;
     [SerializeField] ObjectData planetData;
     [SerializeField] SpawnableData playerData;
@@ -112,9 +119,9 @@ public class ObjectManager : MultiManager<ObjectType>
         }
     }
     #endregion
-    public void SpawnShip(ObjectType type, Teams team)
+    public void SpawnShip(ObjectType type, Teams team, Vector3 position)
     {
-        Ship ship = null;
+        Ship ship = Spawn(friend1, position) as Ship;
         if (team == Teams.Player)
         {
             PlayerTeam.AddMember(ship);
@@ -130,10 +137,11 @@ public class ObjectManager : MultiManager<ObjectType>
         //s.Initialize(playerData);
         PlayerTeam.AddMember(Spawn(playerData, Vector3.zero) as PlayerShip);
     }
-    public void SpawnPlanet(Vector3 position)
+    public async void SpawnPlanet(Vector3 position)
     {
         //var s = Instantiate(planetData.Prefab, position, Quaternion.identity);
         //s.Initialize(planetData);
+        var planetData = await Addressables.LoadAssetAsync<ObjectData>(addresses[ObjectType.Planet]).Task;
         Spawn(planetData, position);
     }
 }

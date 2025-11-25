@@ -100,7 +100,6 @@ GameObject:
   - component: {fileID: 5459109952282142041}
   - component: {fileID: 7182413594234247016}
   - component: {fileID: 8963309553407482164}
-  - component: {fileID: 2119490157547784771}
   - component: {fileID: 5025484537030251637}
   m_Layer: 6
   m_Name: Planet
@@ -181,27 +180,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &2119490157547784771
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7935156352786863229}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &5025484537030251637
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -215,7 +193,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Planet
   <ID>k__BackingField: 4
-  <Signature>k__BackingField: 0
+  <Signature>k__BackingField: 500
   <Persistent>k__BackingField: 1
   <Selectable>k__BackingField: 0
   <AlwaysVisible>k__BackingField: 1
