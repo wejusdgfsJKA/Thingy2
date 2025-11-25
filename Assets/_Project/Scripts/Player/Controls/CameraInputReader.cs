@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 using static PlayerControls;
 namespace Player
 {
-    [CreateAssetMenu(fileName = "CameraInputReader", menuName = "ScriptableObjects/Player/CameraInputReader")]
+    [CreateAssetMenu(fileName = "CameraInputReader", menuName = "ScriptableObjects/PlayerShip/CameraInputReader")]
     public class CameraInputReader : InputReader, ICameraActions
     {
         public event UnityAction<Vector2> Move;

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1782223923829659643}
   - component: {fileID: 456333871908105232}
   - component: {fileID: 1953853550757852380}
-  - component: {fileID: -373046780154148752}
+  - component: {fileID: 3210247950582903740}
   m_Layer: 6
   m_Name: Asteroid
   m_TagString: Untagged
@@ -119,7 +119,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!114 &-373046780154148752
+--- !u!114 &3210247950582903740
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -128,16 +128,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 2373219665424826308}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07836386a82466044af4230852560da7, type: 3}
+  m_Script: {fileID: 11500000, guid: 1f70e528bf12f7e469a9f7f51d60bbdb, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InertTrackable
+  m_EditorClassIdentifier: Assembly-CSharp::Asteroid
   <ID>k__BackingField: 0
-  detectionState: 0
-  mainRenderer: {fileID: 456333871908105232}
-  dotRenderer: {fileID: 7710301591132769275}
   <Signature>k__BackingField: 0
-  <Icon>k__BackingField: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  <IconSizeCoefficient>k__BackingField: 200
+  <Persistent>k__BackingField: 0
+  <Selectable>k__BackingField: 0
+  <AlwaysVisible>k__BackingField: 0
+  <Icon>k__BackingField: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  <Material>k__BackingField: {fileID: 0}
+  <IconSizeCoefficient>k__BackingField: 300
+  <IdentifiedRenderer>k__BackingField: {fileID: 456333871908105232}
+  <TrackedRenderer>k__BackingField: {fileID: 7710301591132769275}
 --- !u!1 &2911921801420701506
 GameObject:
   m_ObjectHideFlags: 0

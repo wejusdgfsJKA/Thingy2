@@ -1,10 +1,10 @@
+using Player;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
 public static class GameManager
 {
-    static Transform player;
-    public static Transform Player
+    static PlayerShip player;
+    public static PlayerShip Player
     {
         get => player;
         set

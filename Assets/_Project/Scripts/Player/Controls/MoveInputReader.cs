@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 using static PlayerControls;
 namespace Player
 {
-    [CreateAssetMenu(fileName = "MoveInputReader", menuName = "ScriptableObjects/Player/MoveInputReader")]
+    [CreateAssetMenu(fileName = "MoveInputReader", menuName = "ScriptableObjects/PlayerShip/MoveInputReader")]
     public class MoveInputReader : InputReader, IMovementActions
     {
         public event System.Action<Vector3> Strafe, Rotate;

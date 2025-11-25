@@ -1,3 +1,4 @@
+using Timers;
 using UnityEngine;
 
 namespace Weapons
@@ -5,29 +6,23 @@ namespace Weapons
     public abstract class WeaponBase : MonoBehaviour
     {
         [SerializeField] protected float shotCooldown;
-        /// <summary>
-        /// If true, the weapon will fire every frame it is off cooldown.
-        /// </summary>
-        [field: SerializeField] public bool Firing { get; set; }
-        /// <summary>
-        /// When did we last shoot? Used for cooldown system.
-        /// </summary>
-        protected float timeLastShot;
-        protected void Update()
+        protected IntervalTimer shotTimer;
+        public bool Firing
         {
-            if (Firing)
+            get => shotTimer.IsRunning;
+            set
             {
-                if (Time.time - timeLastShot >= shotCooldown)
+                if (value)
                 {
-                    timeLastShot = Time.time;
-                    Fire();
+                    if (!shotTimer.IsRunning) shotTimer.Start();
                 }
+                else shotTimer.Stop();
             }
         }
-        protected virtual void OnEnable()
+        protected virtual void Awake()
         {
-            timeLastShot = -1;
-            Firing = false;
+            shotTimer = new(float.PositiveInfinity, shotCooldown);
+            shotTimer.OnInterval += Fire;
         }
         protected abstract void Fire();
     }

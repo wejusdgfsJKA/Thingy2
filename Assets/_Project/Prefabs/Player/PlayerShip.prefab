@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 980278194129036036}
   - component: {fileID: 674643753362803008}
   - component: {fileID: 994382936165222397}
-  - component: {fileID: 9215163652810730097}
-  - component: {fileID: 4857406747044046668}
+  - component: {fileID: 6915140122644198231}
+  - component: {fileID: 3018586782381239914}
   m_Layer: 8
   m_Name: PlayerShip
   m_TagString: Untagged
@@ -117,8 +117,7 @@ MonoBehaviour:
   minTextScale: 1
   maxTextScale: 1000
   <CurrentTarget>k__BackingField: {fileID: 0}
-  defaultSprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
---- !u!114 &9215163652810730097
+--- !u!114 &6915140122644198231
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -127,10 +126,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 558959981058532373}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e76167db81fcf7141ab7c7cd7c2b00fa, type: 3}
+  m_Script: {fileID: 11500000, guid: af69b7e86ab945b4fa6c0bc813871986, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Spawning.Spawnable
---- !u!114 &4857406747044046668
+  m_EditorClassIdentifier: Assembly-CSharp::HP.HullComponent
+  <MaxHullPoints>k__BackingField: 0
+  OnHullChanged:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &3018586782381239914
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -139,16 +142,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 558959981058532373}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f67abffa5f0c6b43849d0986daed719, type: 3}
+  m_Script: {fileID: 11500000, guid: 715ec9d7c7329c340bad9685e596640a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Player.Player
-  <MaxHealth>k__BackingField: 5
-  OnDamageTaken:
-    m_PersistentCalls:
-      m_Calls: []
-  OnDeath:
-    m_PersistentCalls:
-      m_Calls: []
+  m_EditorClassIdentifier: Assembly-CSharp::Player.PlayerShip
+  <ID>k__BackingField: 1
+  <Signature>k__BackingField: 0
+  <Persistent>k__BackingField: 0
+  <Selectable>k__BackingField: 1
+  <AlwaysVisible>k__BackingField: 0
+  <Icon>k__BackingField: {fileID: 0}
+  <Material>k__BackingField: {fileID: 0}
+  <IconSizeCoefficient>k__BackingField: 300
+  <IdentifiedRenderer>k__BackingField: {fileID: 0}
+  <TrackedRenderer>k__BackingField: {fileID: 0}
+  <ScanRange>k__BackingField: 30
 --- !u!1 &979960682532813935
 GameObject:
   m_ObjectHideFlags: 0
@@ -637,7 +644,7 @@ Camera:
   m_GameObject: {fileID: 5309504132273285419}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
+  m_ClearFlags: 2
   m_BackGroundColor: {r: 0.31764707, g: 0.31764707, b: 0.31764707, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2

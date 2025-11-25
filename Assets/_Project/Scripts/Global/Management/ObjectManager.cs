@@ -1,38 +1,40 @@
+using Player;
 using Spawning;
 using Spawning.Pooling;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public enum ObjectType : byte
+public enum Teams : byte
 {
-    Asteroid,
-    Ship,
-    Planet
+    Player,
+    Enemy
 }
 public class ObjectManager : MultiManager<ObjectType>
 {
     [Tooltip("Min. nr. of asteroids to be active at any given time.")][SerializeField] int asteroidIntendedCount = 2;
-    readonly Dictionary<Transform, Trackable> toTrack = new();
-    [SerializeField] TrackableData asteroidData;
-    [SerializeField] TrackableData planetData;
+    public HashSet<Object> Objects { get; } = new();
+    [SerializeField] ObjectData asteroidData;
+    [SerializeField] ObjectData planetData;
     [SerializeField] SpawnableData playerData;
+    [SerializeField] ObjectData friend1;
     public static ObjectManager Instance { get; protected set; }
+    public readonly Team PlayerTeam = new(), EnemyTeam = new();
     #region Technical
     readonly float checkInterval = .2f;
     WaitForSeconds wait;
-    readonly Stack<Trackable> toRemove = new();
+    readonly Stack<Object> toRemove = new();
     Coroutine coroutine;
     #endregion
     #region Setup
     private void Awake()
     {
+        wait = new WaitForSeconds(checkInterval);
+        Instance = this;
         var objectTypes = (ObjectType[])ObjectType.GetValues(typeof(ObjectType));
         foreach (var objectType in objectTypes)
         {
             ActiveEntityCounts[objectType] = 0;
         }
-        wait = new WaitForSeconds(checkInterval);
-        Instance = this;
     }
     private void OnEnable()
     {
@@ -44,53 +46,47 @@ public class ObjectManager : MultiManager<ObjectType>
     }
     #endregion
     #region Object updates
-    Trackable SpawnAsteroid()
+    Asteroid SpawnAsteroid()
     {
         //pick a position
-        float dist = GlobalSettings.PlayerTrackingRange - 1; //+ (GlobalSettings.UpdateRange + GlobalSettings.PlayerTrackingRange) / 2;
-        Vector3 pos = GameManager.Player.position + Random.onUnitSphere * dist;
+        float dist = GameManager.Player.ScanRange + 1; //+ (GlobalSettings.UpdateRange + GlobalSettings.PlayerTrackingRange) / 2;
+        Vector3 pos = GameManager.Player.Transform.position + Random.onUnitSphere * dist;
         //pick an inertia
         float inertiaMagnitude = Random.Range(GlobalSettings.AsteroidInertia.Item1,
             GlobalSettings.AsteroidInertia.Item2);
         Vector3 inertia = Random.onUnitSphere * inertiaMagnitude;
-        var asteroid = Spawn(asteroidData, pos) as InertTrackable;
+        var asteroid = Spawn(asteroidData, pos) as Asteroid;
         if (asteroid == null)
         {
             Debug.LogError($"Unable to convert Spawnable to InertTrackable when attempting to spawn asteroid at {System.DateTime.Now}.");
             return null;
         }
         asteroid.Inertia = inertia;
-        toTrack.Add(asteroid.transform, asteroid);
+
         ActiveEntityCounts[ObjectType.Asteroid]++;
 
         return asteroid;
     }
-    void DeactivateObject(Trackable trackable)
+    void DeactivateObject(Object obj)
     {
-        trackable.gameObject.SetActive(false);
-        ActiveEntityCounts[trackable.ID]--;
-        toTrack.Remove(trackable.transform);
+        obj.gameObject.SetActive(false);
+        ActiveEntityCounts[obj.ID]--;
+        Objects.Remove(obj);
     }
     public void UpdateExisting()
     {
-        foreach (var t in toTrack)
+        foreach (var obj in Objects)
         {
-            var tr = t.Key;
-            var trk = t.Value;
-            var dist = Mathf.Max(Vector3.Distance(GameManager.Player.position, tr.position) - trk.Signature, 0.1f);
+            if (obj.Persistent) continue;
 
-            if (!trk.Persistent && dist > GlobalSettings.UpdateRange)
+            var dist = Mathf.Max(Vector3.Distance(GameManager.Player.Transform.position,
+                obj.Transform.position) - obj.Signature, 0.1f);
+
+            if (dist > GlobalSettings.UpdateRange)
             {
                 //remove this object
-                toRemove.Push(trk);
-                continue;
+                toRemove.Push(obj);
             }
-
-            if (dist <= GlobalSettings.PlayerSpottingRange)
-                trk.DetectionState = DetectionState.Identified;
-            else if (dist <= GlobalSettings.PlayerTrackingRange)
-                trk.DetectionState = DetectionState.Tracked;
-            else trk.DetectionState = DetectionState.Hidden;
         }
         while (toRemove.Count > 0) DeactivateObject(toRemove.Pop());
     }
@@ -111,14 +107,28 @@ public class ObjectManager : MultiManager<ObjectType>
             yield return wait;
             UpdateExisting();
             HandleSpawning();
+            PlayerTeam.Update();
+            EnemyTeam.Update();
         }
     }
     #endregion
+    public void SpawnShip(ObjectType type, Teams team)
+    {
+        Ship ship = null;
+        if (team == Teams.Player)
+        {
+            PlayerTeam.AddMember(ship);
+        }
+        else if (team == Teams.Enemy)
+        {
+            EnemyTeam.AddMember(ship);
+        }
+    }
     public void SpawnPlayer()
     {
         //var s = Instantiate(playerData.Prefab, Vector3.zero, Quaternion.identity);
         //s.Initialize(playerData);
-        Spawn(playerData, Vector3.zero);
+        PlayerTeam.AddMember(Spawn(playerData, Vector3.zero) as PlayerShip);
     }
     public void SpawnPlanet(Vector3 position)
     {

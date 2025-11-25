@@ -1,5 +1,6 @@
 using Player;
-public class Planet : Trackable
+
+public class Planet : Object
 {
     static int count = 0;
     public static int Count
@@ -14,14 +15,15 @@ public class Planet : Trackable
             }
         }
     }
-    protected void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
         Count++;
-        TrackableDisplay.Instance.AddTrackable(this);
+        ObjectDisplay.Instance.AddIdentified(this);
     }
     protected override void OnDisable()
     {
-        TrackableDisplay.Instance.RemoveTrackable(this);
+        ObjectDisplay.Instance.RemoveObject(this);
         Count--;
         base.OnDisable();
     }
