@@ -1,6 +1,5 @@
 using Player;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 public static class GameManager
 {
     static PlayerShip player;
@@ -17,18 +16,7 @@ public static class GameManager
         }
     }
     public static Mission CurrentMission { get; set; }
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-    public static void Setup()
-    {
-        SceneManager.sceneLoaded += (s1, s2) =>
-        {
-            if (CurrentMission != null)
-            {
-                ObjectManager.Instance.SpawnPlayer();
-                CurrentMission.Initialize();
-            }
-        };
-    }
+
     public static void EndMission()
     {
         if (CurrentMission == null) return;

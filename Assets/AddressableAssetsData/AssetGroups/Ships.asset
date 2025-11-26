@@ -16,11 +16,11 @@ MonoBehaviour:
   m_GUID: b4e1c30e6d5b84246b580ddc14c409f7
   m_SerializeEntries:
   - m_GUID: 4531c3f883f2fb14789368cc36660809
-    m_Address: Friend1
+    m_Address: FriendStation
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 7fd62a51085ffe74b94cd67bab291ea2
+  - m_GUID: 65939905b96f4984ebe04b363831a03b
     m_Address: Player
     m_ReadOnly: 0
     m_SerializedLabels: []

@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: PlanetData
   m_EditorClassIdentifier: Assembly-CSharp::TrackableData
   Prefab: {fileID: 5025484537030251637, guid: de88057f39ca5e34785e1acd56240413, type: 3}
-  ID: 2
+  ID: 5

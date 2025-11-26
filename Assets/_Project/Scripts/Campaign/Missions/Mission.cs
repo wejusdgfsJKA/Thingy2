@@ -14,8 +14,9 @@ public class PlanetDefenseMission : Mission
         initialPlanetCount = planetCount;
         this.enemyShipCount = enemyShipCount;
     }
-    public override void Initialize()
+    public override async void Initialize()
     {
+        ObjectManager.Instance.SpawnPlayer();
         List<Vector3> planetPositions = new();
         for (int i = 0; i < initialPlanetCount; i++)
         {
@@ -27,14 +28,14 @@ public class PlanetDefenseMission : Mission
         for (int i = 0; i < initialPlanetCount; i++)
         {
             var stationPos = planetPositions[i] + Random.onUnitSphere * 2;
-            ObjectManager.Instance.SpawnShip(ObjectType.FriendStation, Teams.Player, stationPos);
+            //ObjectManager.Instance.SpawnObject(ObjectType.FriendStation, Teams.Player, stationPos);
         }
         //pick a position for the bad guys
         var enemySpawnPos = Random.onUnitSphere * 50;
         //spawn enemy ships
         for (int i = 0; i < enemyShipCount; i++)
         {
-            ObjectManager.Instance.SpawnShip(ObjectType.Enemy1, Teams.Enemy, enemySpawnPos + Random.onUnitSphere * 1);
+            //ObjectManager.Instance.SpawnObject(ObjectType.Enemy1, Teams.Enemy, enemySpawnPos + Random.onUnitSphere * 1);
         }
     }
     public override float GetScore()

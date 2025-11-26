@@ -9,7 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36ee3c053e7a67a4698dfacc63d784b9, type: 3}
-  m_Name: PlayerData
-  m_EditorClassIdentifier: Assembly-CSharp::Spawning.SpawnableData
+  m_Script: {fileID: 11500000, guid: 0678c619ddc68914994e9b04667d49e9, type: 3}
+  m_Name: Player
+  m_EditorClassIdentifier: Assembly-CSharp::ObjectData
   Prefab: {fileID: 3018586782381239914, guid: 7758f3c2cdd275546a519cee0e8bb53a, type: 3}
+  ID: 1

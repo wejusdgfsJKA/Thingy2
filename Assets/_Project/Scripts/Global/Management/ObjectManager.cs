@@ -1,8 +1,7 @@
-using Player;
-using Spawning;
 using Spawning.Pooling;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 public enum Teams : byte
@@ -14,16 +13,14 @@ public class ObjectManager : MultiManager<ObjectType>
 {
     [Tooltip("Min. nr. of asteroids to be active at any given time.")][SerializeField] int asteroidIntendedCount = 2;
     public HashSet<Object> Objects { get; } = new();
-    Dictionary<ObjectType, string> addresses = new()
+    static Dictionary<ObjectType, ObjectData> assets = new();
+    static List<string> addresses = new()
     {
-        { ObjectType.Planet,"Planet"},
-        {ObjectType.Asteroid,"Asteroid" },
-        {ObjectType.Player,"Player"  }
+        "Asteroid",
+        "Player",
+        "FriendStation",
+        "Planet"
     };
-    [SerializeField] ObjectData asteroidData;
-    [SerializeField] ObjectData planetData;
-    [SerializeField] SpawnableData playerData;
-    [SerializeField] ObjectData friend1;
     public static ObjectManager Instance { get; protected set; }
     public readonly Team PlayerTeam = new(), EnemyTeam = new();
     #region Technical
@@ -33,7 +30,17 @@ public class ObjectManager : MultiManager<ObjectType>
     Coroutine coroutine;
     #endregion
     #region Setup
-    private void Awake()
+    public async static Task LoadAssets()
+    {
+        if (assets.Count > 0) return;
+        foreach (var address in addresses)
+        {
+            var data = await Addressables.LoadAssetAsync<ObjectData>(address).Task;
+            assets.Add(data.ID, data);
+        }
+        Debug.Log("assets loaded");
+    }
+    private async void Awake()
     {
         wait = new WaitForSeconds(checkInterval);
         Instance = this;
@@ -53,7 +60,7 @@ public class ObjectManager : MultiManager<ObjectType>
     }
     #endregion
     #region Object updates
-    Asteroid SpawnAsteroid()
+    async Task SpawnAsteroid()
     {
         //pick a position
         float dist = GameManager.Player.ScanRange + 1; //+ (GlobalSettings.UpdateRange + GlobalSettings.PlayerTrackingRange) / 2;
@@ -62,17 +69,15 @@ public class ObjectManager : MultiManager<ObjectType>
         float inertiaMagnitude = Random.Range(GlobalSettings.AsteroidInertia.Item1,
             GlobalSettings.AsteroidInertia.Item2);
         Vector3 inertia = Random.onUnitSphere * inertiaMagnitude;
-        var asteroid = Spawn(asteroidData, pos) as Asteroid;
+        var asteroid = Spawn(await GetObjectData(ObjectType.Asteroid), pos) as Asteroid;
         if (asteroid == null)
         {
             Debug.LogError($"Unable to convert Spawnable to InertTrackable when attempting to spawn asteroid at {System.DateTime.Now}.");
-            return null;
+            return;
         }
         asteroid.Inertia = inertia;
 
         ActiveEntityCounts[ObjectType.Asteroid]++;
-
-        return asteroid;
     }
     void DeactivateObject(Object obj)
     {
@@ -97,7 +102,7 @@ public class ObjectManager : MultiManager<ObjectType>
         }
         while (toRemove.Count > 0) DeactivateObject(toRemove.Pop());
     }
-    public void HandleSpawning()
+    public void HandleAsteroids()
     {
         ActiveEntityCounts.TryGetValue(ObjectType.Asteroid, out int count);
         count = asteroidIntendedCount - count;
@@ -112,16 +117,25 @@ public class ObjectManager : MultiManager<ObjectType>
         while (true)
         {
             yield return wait;
-            UpdateExisting();
-            HandleSpawning();
+            //UpdateExisting();
+            //HandleAsteroids();
             PlayerTeam.Update();
             EnemyTeam.Update();
         }
     }
     #endregion
-    public void SpawnShip(ObjectType type, Teams team, Vector3 position)
+    public async Task<ObjectData> GetObjectData(ObjectType type)
     {
-        Ship ship = Spawn(friend1, position) as Ship;
+        if (!assets.TryGetValue(type, out var data))
+        {
+            data = await Addressables.LoadAssetAsync<ObjectData>(type.ToString()).Task;
+            assets[type] = data;
+        }
+        return data;
+    }
+    public async Task SpawnObject(ObjectType type, Teams team, Vector3 position)
+    {
+        Ship ship = Spawn(await GetObjectData(type), position) as Ship;
         if (team == Teams.Player)
         {
             PlayerTeam.AddMember(ship);
@@ -131,17 +145,12 @@ public class ObjectManager : MultiManager<ObjectType>
             EnemyTeam.AddMember(ship);
         }
     }
-    public void SpawnPlayer()
+    public async void SpawnPlayer()
     {
-        //var s = Instantiate(playerData.Prefab, Vector3.zero, Quaternion.identity);
-        //s.Initialize(playerData);
-        PlayerTeam.AddMember(Spawn(playerData, Vector3.zero) as PlayerShip);
+        SpawnObject(ObjectType.Player, Teams.Player, Vector3.zero);
     }
-    public async void SpawnPlanet(Vector3 position)
+    public void SpawnPlanet(Vector3 position)
     {
-        //var s = Instantiate(planetData.Prefab, position, Quaternion.identity);
-        //s.Initialize(planetData);
-        var planetData = await Addressables.LoadAssetAsync<ObjectData>(addresses[ObjectType.Planet]).Task;
-        Spawn(planetData, position);
+
     }
 }
