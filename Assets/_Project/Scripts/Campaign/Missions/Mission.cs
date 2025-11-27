@@ -14,7 +14,7 @@ public class PlanetDefenseMission : Mission
         initialPlanetCount = planetCount;
         this.enemyShipCount = enemyShipCount;
     }
-    public override async void Initialize()
+    public override void Initialize()
     {
         ObjectManager.Instance.SpawnPlayer();
         List<Vector3> planetPositions = new();

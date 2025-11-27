@@ -17,7 +17,7 @@ namespace Timers
 
                 if (!InsertTimerManager<Update>(ref currentPlayerLoop, 0))
                 {
-                    Debug.LogWarning("Improved Timers not initialized, unable to register TimerManager into the Update loop.");
+                    Debug.LogWarning("Improved Timers not initialized, unable to register TimerManager into the Tick loop.");
                     return;
                 }
                 PlayerLoop.SetPlayerLoop(currentPlayerLoop);

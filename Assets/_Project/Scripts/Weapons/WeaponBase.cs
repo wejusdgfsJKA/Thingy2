@@ -6,24 +6,32 @@ namespace Weapons
     public abstract class WeaponBase : MonoBehaviour
     {
         [SerializeField] protected float shotCooldown;
-        protected IntervalTimer shotTimer;
+        protected CountdownTimer shotTimer;
+        protected bool firing;
         public bool Firing
         {
-            get => shotTimer.IsRunning;
+            get => firing;
             set
             {
+                if (firing == value) return;
                 if (value)
                 {
-                    if (!shotTimer.IsRunning) shotTimer.Start();
+                    Fire();
+                    shotTimer.OnTimerStop += Fire;
                 }
-                else shotTimer.Stop();
+                else shotTimer.OnTimerStop -= Fire;
             }
         }
         protected virtual void Awake()
         {
-            shotTimer = new(float.PositiveInfinity, shotCooldown);
-            shotTimer.OnInterval += Fire;
+            shotTimer = new(shotCooldown);
         }
-        protected abstract void Fire();
+        public void Fire()
+        {
+            if (shotTimer.IsRunning) return;
+            Shoot();
+            shotTimer.Start();
+        }
+        protected abstract void Shoot();
     }
 }

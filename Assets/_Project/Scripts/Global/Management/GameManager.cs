@@ -16,7 +16,6 @@ public static class GameManager
         }
     }
     public static Mission CurrentMission { get; set; }
-
     public static void EndMission()
     {
         if (CurrentMission == null) return;

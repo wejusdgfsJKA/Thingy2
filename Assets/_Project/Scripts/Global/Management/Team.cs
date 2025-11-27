@@ -1,28 +1,31 @@
 using System.Collections.Generic;
 using UnityEngine;
+public enum DetectionState
+{
+    Hidden,
+    Identified,
+    Tracked
+}
 public class Team
 {
-    public enum DetectionState
-    {
-        Hidden,
-        Identified,
-        Tracked
-    }
+
     HashSet<Ship> members { get; } = new();
     public int MemberCount => members.Count;
-    Dictionary<DetectionState, HashSet<Object>> Targets { get; } = new()
+    public Dictionary<DetectionState, HashSet<Object>> Targets { get; } = new()
     {
-        { DetectionState.Tracked, new HashSet<Object>() },
-        { DetectionState.Identified, new HashSet<Object>() }
+        { DetectionState.Tracked, new() },
+        { DetectionState.Identified, new() }
     };
     public event System.Action<Object> OnMemberAdded, OnMemberRemoved, OnTrackedTargetAdded,
         OnTrackedTargetRemoved, OnIdentifiedTargetAdded, OnIdentifiedTargetRemoved, OnTargetRemoved;
+    System.Action onTick;
     public void AddMember(Ship ship)
     {
         if (members.Add(ship))
         {
             OnMemberAdded?.Invoke(ship);
-            ship.OnDespawn += RemoveMember;
+            onTick += ship.Tick;
+            ship.Team = this;
         }
     }
     public void RemoveMember(Object @object)
@@ -31,14 +34,15 @@ public class Team
         if (members.Remove(ship))
         {
             OnMemberRemoved?.Invoke(ship);
-            ship.OnDespawn -= RemoveMember;
+            onTick -= ship.Tick;
         }
     }
-    public void Update()
+    public void Tick()
     {
-        Detect();
+        PerformDetection();
+        onTick?.Invoke();
     }
-    void Detect()
+    void PerformDetection()
     {
         foreach (var obj in ObjectManager.Instance.Objects)
         {
@@ -122,5 +126,6 @@ public class Team
         Targets.Clear();
         OnMemberAdded = OnMemberRemoved = OnTrackedTargetAdded = OnTrackedTargetRemoved =
             OnIdentifiedTargetAdded = OnIdentifiedTargetRemoved = OnTargetRemoved = null;
+        onTick = null;
     }
 }
