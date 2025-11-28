@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,7 +10,9 @@ public class GameInitializer : MonoBehaviour
         {
             GameManager.CurrentMission?.Initialize();
         };
-        await ObjectManager.LoadAssets();
+        var t1 = ObjectManager.LoadAssets();
+        var t2 = Weapons.RandomShitManager.LoadAssets();
+        await Task.WhenAll(t1, t2);
         SceneManager.LoadScene(1);
     }
 }

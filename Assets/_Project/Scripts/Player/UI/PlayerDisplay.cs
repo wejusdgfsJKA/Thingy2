@@ -160,7 +160,7 @@ namespace Player
 
                 a.Value.GameObject.SetActive(true);
 
-                // Map viewport (0..1) to canvas local position
+                // Map viewport (0..1) to mainMenuCanvas local position
                 RectTransform canvasRect = a.Value.RectTransform.parent as RectTransform;
                 Vector2 canvasPos = new Vector2(
                     (viewportPos.x - 0.5f) * canvasRect.sizeDelta.x,

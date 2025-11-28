@@ -27,15 +27,17 @@ public class Object : IDPoolable<ObjectType>
     protected virtual void Awake()
     {
         Transform = transform;
-        if (IdentifiedRenderer == null) IdentifiedRenderer = GetComponentInChildren<MeshRenderer>();
+        if (IdentifiedRenderer == null) IdentifiedRenderer = GetComponent<MeshRenderer>();
         hullComponent = GetComponent<HullComponent>();
         shieldComponent = GetComponent<ShieldComponent>();
     }
     protected virtual void OnEnable()
     {
-        if (ID == ObjectType.Player) return;
-        IdentifiedRenderer.enabled = false;
-        if (TrackedRenderer != null) TrackedRenderer.enabled = false;
+        if (ID != ObjectType.Player)
+        {
+            IdentifiedRenderer.enabled = false;
+            if (TrackedRenderer != null) TrackedRenderer.enabled = false;
+        }
         ObjectManager.Instance.Objects.Add(this);
     }
     protected override void OnDisable()

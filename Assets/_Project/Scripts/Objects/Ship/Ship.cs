@@ -1,6 +1,5 @@
 using HP;
 using UnityEngine;
-
 [RequireComponent(typeof(HullComponent))]
 public abstract class Ship : Object
 {

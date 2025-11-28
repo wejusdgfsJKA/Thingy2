@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0678c619ddc68914994e9b04667d49e9, type: 3}
-  m_Name: PlanetData
-  m_EditorClassIdentifier: Assembly-CSharp::TrackableData
-  Prefab: {fileID: 1389234978216439219, guid: de88057f39ca5e34785e1acd56240413, type: 3}
-  ID: 5
+  m_Script: {fileID: 11500000, guid: c700b6833fd364440afcc4f2d17db191, type: 3}
+  m_Name: Beam
+  m_EditorClassIdentifier: Assembly-CSharp::Weapons.RandomShitData
+  Prefab: {fileID: 6634943813334706988, guid: 04f38c56677b6974581ee00b480f463f, type: 3}
+  ID: 0

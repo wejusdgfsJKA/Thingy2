@@ -1,3 +1,4 @@
+using Player;
 using Spawning.Pooling;
 using System.Collections;
 using System.Collections.Generic;
@@ -20,7 +21,8 @@ public class ObjectManager : MultiManager<ObjectType>
         "Asteroid",
         "Player",
         "FriendStation",
-        "Planet"
+        "Planet",
+        "Enemy"
     };
     public static ObjectManager Instance { get; protected set; }
     public readonly Team PlayerTeam = new(), EnemyTeam = new();
@@ -30,6 +32,7 @@ public class ObjectManager : MultiManager<ObjectType>
     WaitForSeconds environmentWait, aiWait;
     readonly Stack<Object> toRemove = new();
     readonly List<Coroutine> coroutines = new();
+    int asteroidCount = 0;
     #endregion
     #endregion
     #region Setup
@@ -48,11 +51,6 @@ public class ObjectManager : MultiManager<ObjectType>
         aiWait = new WaitForSeconds(aiTickInterval);
         environmentWait = new WaitForSeconds(environmentCheckInterval);
         Instance = this;
-        var objectTypes = (ObjectType[])ObjectType.GetValues(typeof(ObjectType));
-        foreach (var objectType in objectTypes)
-        {
-            ActiveEntityCounts[objectType] = 0;
-        }
     }
     private void OnEnable()
     {
@@ -79,11 +77,10 @@ public class ObjectManager : MultiManager<ObjectType>
     }
     #endregion
     #region Object updates
-    void DeactivateObject(Object obj)
+    void DeactivateAsteroid(Object obj)
     {
         obj.gameObject.SetActive(false);
-        ActiveEntityCounts[obj.ID]--;
-        Objects.Remove(obj);
+        asteroidCount--;
     }
     public void UpdateExisting()
     {
@@ -100,12 +97,11 @@ public class ObjectManager : MultiManager<ObjectType>
                 toRemove.Push(obj);
             }
         }
-        while (toRemove.Count > 0) DeactivateObject(toRemove.Pop());
+        while (toRemove.Count > 0) DeactivateAsteroid(toRemove.Pop());
     }
     public void HandleAsteroids()
     {
-        ActiveEntityCounts.TryGetValue(ObjectType.Asteroid, out int count);
-        count = asteroidIntendedCount - count;
+        var count = asteroidIntendedCount - asteroidCount;
         if (count > 0)
         {
             for (int i = 0; i < count; i++) SpawnAsteroid();
@@ -139,12 +135,16 @@ public class ObjectManager : MultiManager<ObjectType>
             return;
         }
         asteroid.Inertia = inertia;
-
-        ActiveEntityCounts[ObjectType.Asteroid]++;
+        asteroidCount++;
     }
-    public void SpawnObject(ObjectType type, Teams team, Vector3 position)
+    public Object SpawnShip(ObjectType type, Teams team, Vector3 position)
     {
-        Ship ship = Spawn(assets[type], position) as Ship;
+        if (assets.TryGetValue(type, out var data) == false)
+        {
+            Debug.LogError($"No asset found for object type {type}.");
+            return null;
+        }
+        Ship ship = Spawn(data, position) as Ship;
         if (team == Teams.Player)
         {
             PlayerTeam.AddMember(ship);
@@ -153,14 +153,15 @@ public class ObjectManager : MultiManager<ObjectType>
         {
             EnemyTeam.AddMember(ship);
         }
+        return ship;
     }
-    public void SpawnPlayer()
+    public PlayerShip SpawnPlayer()
     {
-        SpawnObject(ObjectType.Player, Teams.Player, Vector3.zero);
+        return (PlayerShip)SpawnShip(ObjectType.Player, Teams.Player, Vector3.zero);
     }
-    public void SpawnPlanet(Vector3 position)
+    public Object SpawnPlanet(Vector3 position)
     {
-        Spawn(assets[ObjectType.Planet], position);
+        return (Object)Spawn(assets[ObjectType.Planet], position);
     }
     #endregion
 }

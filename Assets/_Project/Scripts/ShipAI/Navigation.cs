@@ -31,6 +31,7 @@ public class Navigation
     {
         Transform = tr;
         Rigidbody = tr.GetComponent<Rigidbody>();
+        Rigidbody.useGravity = false;
         Speed = speed;
     }
     public void Update()

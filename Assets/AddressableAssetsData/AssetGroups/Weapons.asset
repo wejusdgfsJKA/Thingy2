@@ -10,23 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Environment
+  m_Name: Weapons
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
-  m_GroupName: Environment
-  m_GUID: 662fe28b198b5204da662a95043e5df1
+  m_GroupName: Weapons
+  m_GUID: 76f765d8d787d6640965d27717963fe9
   m_SerializeEntries:
-  - m_GUID: 11c62317278c5b74ba0b24c04dd0fc7d
-    m_Address: Planet
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 85ada1f2a8a70434d9371f4607a2d46d
-    m_Address: Asteroid
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: dd23ee161cf39c74e835c0d700f22f61
-    m_Address: Enemy
+  - m_GUID: 1880d5764595cfe449577c91dcba8ad0
+    m_Address: Beam
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -34,5 +24,5 @@ MonoBehaviour:
   m_Settings: {fileID: 11400000, guid: ac0e09ab6d8f0f9448726279c34b302c, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 71f9a5dcbee69e44f9e435945ae2f924, type: 2}
-    - {fileID: 11400000, guid: 97de5eea04d2d1942b66be38755022a7, type: 2}
+    - {fileID: 11400000, guid: c0d6b8fab04a2ed4e8add7f83b1fd063, type: 2}
+    - {fileID: 11400000, guid: c09163e3c55993b46b6afa8f6766e9e8, type: 2}

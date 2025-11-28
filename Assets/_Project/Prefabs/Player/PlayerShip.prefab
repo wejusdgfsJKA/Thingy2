@@ -21,7 +21,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5265401070332729692
 Transform:
   m_ObjectHideFlags: 0
@@ -146,9 +146,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player.PlayerShip
   <ID>k__BackingField: 1
-  <Signature>k__BackingField: 0
-  <Persistent>k__BackingField: 0
-  <Selectable>k__BackingField: 1
+  <Signature>k__BackingField: 10
+  <Persistent>k__BackingField: 1
+  <Selectable>k__BackingField: 0
   <AlwaysVisible>k__BackingField: 0
   <Icon>k__BackingField: {fileID: 0}
   <Material>k__BackingField: {fileID: 0}

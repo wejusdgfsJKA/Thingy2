@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0678c619ddc68914994e9b04667d49e9, type: 3}
   m_Name: Friend1
   m_EditorClassIdentifier: Assembly-CSharp::ObjectData
-  Prefab: {fileID: 8470479368576577214, guid: 51394a8789a4f924aa5c2fe3b47eba8f, type: 3}
+  Prefab: {fileID: 1781749258003011623, guid: 51394a8789a4f924aa5c2fe3b47eba8f, type: 3}
   ID: 2

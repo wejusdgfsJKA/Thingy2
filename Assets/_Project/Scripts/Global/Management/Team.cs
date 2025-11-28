@@ -8,7 +8,6 @@ public enum DetectionState
 }
 public class Team
 {
-
     HashSet<Ship> members { get; } = new();
     public int MemberCount => members.Count;
     public Dictionary<DetectionState, HashSet<Object>> Targets { get; } = new()
@@ -28,9 +27,8 @@ public class Team
             ship.Team = this;
         }
     }
-    public void RemoveMember(Object @object)
+    public void RemoveMember(Ship ship)
     {
-        if (@object is not Ship ship) throw new System.ArgumentException("Object is not a Ship", nameof(@object));
         if (members.Remove(ship))
         {
             OnMemberRemoved?.Invoke(ship);

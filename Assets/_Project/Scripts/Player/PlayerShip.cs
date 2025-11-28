@@ -12,5 +12,6 @@ namespace Player
             base.OnDisable();
             GameManager.Player = null;
         }
+        public override void Tick() { }
     }
 }
