@@ -22,4 +22,5 @@ public static class GlobalSettings
     {
         return modifiers.GetValueOrDefault((damage, target), 1);
     }
+    public static readonly string MainSceneAddress = "MainScene", IntermediateSceneAddress = "Intermediate";
 }

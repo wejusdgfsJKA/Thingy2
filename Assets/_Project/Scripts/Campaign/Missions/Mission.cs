@@ -21,7 +21,7 @@ public class PlanetDefenseMission : Mission
             var pos = Random.onUnitSphere * 10;
             ObjectManager.Instance.SpawnPlanet(pos).OnDespawn += (p) => SubtractPlanet();
             pos += Random.onUnitSphere * 2;
-            ObjectManager.Instance.SpawnShip(ObjectType.FriendStation, Teams.Player, pos);
+            ObjectManager.Instance.SpawnShip(ObjectType.FriendStation, Teams.Player, pos, Random.rotation);
         }
 
         //pick a position for the bad guys

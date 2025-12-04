@@ -14,6 +14,10 @@ public class Navigation
                 Rigidbody.linearVelocity = destination != null ?
                     (destination.Value - Transform.position).normalized * Speed :
                     Vector3.zero;
+                if (destination != null)
+                {
+                    Transform.LookAt(destination.Value);
+                }
             }
         }
     }

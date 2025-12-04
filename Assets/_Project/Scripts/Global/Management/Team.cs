@@ -6,30 +6,28 @@ public enum DetectionState
     Identified,
     Tracked
 }
+
 public class Team
 {
-    HashSet<Ship> members { get; } = new();
-    public int MemberCount => members.Count;
-    public Dictionary<DetectionState, HashSet<Object>> Targets { get; } = new()
-    {
-        { DetectionState.Tracked, new() },
-        { DetectionState.Identified, new() }
-    };
+    public HashSet<Unit> Members { get; } = new();
+    public HashSet<Object> IdentifiedTargets { get; } = new();
+    public HashSet<Object> TrackedTargets { get; } = new();
+    public HashSet<Object> TrackedHostiles { get; } = new();
     public event System.Action<Object> OnMemberAdded, OnMemberRemoved, OnTrackedTargetAdded,
-        OnTrackedTargetRemoved, OnIdentifiedTargetAdded, OnIdentifiedTargetRemoved, OnTargetRemoved;
+        OnIdentifiedTargetAdded, OnTargetRemoved;
     System.Action onTick;
-    public void AddMember(Ship ship)
+    public void AddMember(Unit ship)
     {
-        if (members.Add(ship))
+        if (Members.Add(ship))
         {
             OnMemberAdded?.Invoke(ship);
             onTick += ship.Tick;
             ship.Team = this;
         }
     }
-    public void RemoveMember(Ship ship)
+    public void RemoveMember(Unit ship)
     {
-        if (members.Remove(ship))
+        if (Members.Remove(ship))
         {
             OnMemberRemoved?.Invoke(ship);
             onTick -= ship.Tick;
@@ -44,42 +42,38 @@ public class Team
     {
         foreach (var obj in ObjectManager.Instance.Objects)
         {
-            if (obj is Ship ship && members.Contains(ship)) continue;
+            if (obj is Unit ship && Members.Contains(ship)) continue;
             if (obj.AlwaysVisible)
             {
-                if (!Targets[DetectionState.Identified].Contains(obj))
+                if (!IdentifiedTargets.Contains(obj))
                 {
-                    Targets[DetectionState.Identified].Add(obj);
+                    IdentifiedTargets.Add(obj);
                     OnIdentifiedTargetAdded?.Invoke(obj);
                     obj.OnDespawn += RemoveTarget;
                 }
                 continue;
             }
             var newState = GetDetectionState(obj);
-            var oldState = Targets[DetectionState.Tracked].Contains(obj) ? DetectionState.Tracked :
-                           Targets[DetectionState.Identified].Contains(obj) ? DetectionState.Identified :
-                           DetectionState.Hidden;
+            var oldState = GetObjectDetectionState(obj);
             if (oldState == newState) continue;
             switch (newState)
             {
                 case DetectionState.Tracked:
                     if (oldState == DetectionState.Identified)
                     {
-                        Targets[DetectionState.Identified].Remove(obj);
-                        OnIdentifiedTargetRemoved?.Invoke(obj);
+                        IdentifiedTargets.Remove(obj);
                     }
                     else if (oldState == DetectionState.Hidden) obj.OnDespawn += RemoveTarget;
-                    Targets[DetectionState.Tracked].Add(obj);
+                    TrackedTargets.Add(obj);
                     OnTrackedTargetAdded?.Invoke(obj);
                     break;
                 case DetectionState.Identified:
                     if (oldState == DetectionState.Tracked)
                     {
-                        Targets[DetectionState.Tracked].Remove(obj);
-                        OnTrackedTargetRemoved?.Invoke(obj);
+                        var b = TrackedTargets.Remove(obj) || TrackedHostiles.Remove(obj);
                     }
                     else if (oldState == DetectionState.Hidden) obj.OnDespawn += RemoveTarget;
-                    Targets[DetectionState.Identified].Add(obj);
+                    IdentifiedTargets.Add(obj);
                     OnIdentifiedTargetAdded?.Invoke(obj);
                     break;
                 case DetectionState.Hidden:
@@ -88,23 +82,40 @@ public class Team
             }
         }
     }
+    public DetectionState GetObjectDetectionState(Object obj)
+    {
+        return TrackedTargets.Contains(obj) || TrackedHostiles.Contains(obj) ? DetectionState.Tracked :
+            IdentifiedTargets.Contains(obj) ? DetectionState.Identified :
+            DetectionState.Hidden;
+    }
+    public void AddUnidentifiedTarget(Object obj)
+    {
+        if (!TrackedHostiles.Contains(obj))
+        {
+            TrackedHostiles.Add(obj);
+            if (TrackedTargets.Contains(obj))
+            {
+                TrackedTargets.Remove(obj);
+            }
+            else
+            {
+                OnTrackedTargetAdded?.Invoke(obj);
+                IdentifiedTargets.Remove(obj);
+            }
+        }
+    }
     public void RemoveTarget(Object obj)
     {
-        if (Targets[DetectionState.Tracked].Remove(obj))
-        {
-            OnTrackedTargetRemoved?.Invoke(obj);
-        }
-        else if (Targets[DetectionState.Identified].Remove(obj))
-        {
-            OnIdentifiedTargetRemoved?.Invoke(obj);
-        }
+        IdentifiedTargets.Remove(obj);
+        TrackedTargets.Remove(obj);
+        TrackedHostiles.Remove(obj);
         obj.OnDespawn -= RemoveTarget;
         OnTargetRemoved?.Invoke(obj);
     }
     DetectionState GetDetectionState(Object obj)
     {
         DetectionState state = DetectionState.Hidden;
-        foreach (var member in members)
+        foreach (var member in Members)
         {
             float distance = Vector3.Distance(member.Transform.position, obj.Transform.position) - obj.Signature;
             if (distance <= member.ScanRange / 2)
@@ -120,10 +131,11 @@ public class Team
     }
     public void Clear()
     {
-        members.Clear();
-        Targets.Clear();
-        OnMemberAdded = OnMemberRemoved = OnTrackedTargetAdded = OnTrackedTargetRemoved =
-            OnIdentifiedTargetAdded = OnIdentifiedTargetRemoved = OnTargetRemoved = null;
+        Members.Clear();
+        IdentifiedTargets.Clear();
+        TrackedTargets.Clear();
+        TrackedHostiles.Clear();
+        OnMemberAdded = OnMemberRemoved = OnTrackedTargetAdded = OnIdentifiedTargetAdded = OnTargetRemoved = null;
         onTick = null;
     }
 }

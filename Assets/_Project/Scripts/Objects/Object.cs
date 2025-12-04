@@ -28,6 +28,10 @@ public class Object : IDPoolable<ObjectType>
     {
         Transform = transform;
         if (IdentifiedRenderer == null) IdentifiedRenderer = GetComponent<MeshRenderer>();
+        if (TrackedRenderer == null && Transform.childCount > 0)
+        {
+            TrackedRenderer = Transform.GetChild(0).GetComponent<MeshRenderer>();
+        }
         hullComponent = GetComponent<HullComponent>();
         shieldComponent = GetComponent<ShieldComponent>();
     }
@@ -43,8 +47,8 @@ public class Object : IDPoolable<ObjectType>
     protected override void OnDisable()
     {
         base.OnDisable();
-        OnDespawn?.Invoke(this);
         ObjectManager.Instance.Objects.Remove(this);
+        OnDespawn?.Invoke(this);
     }
     protected virtual void OnDestroy()
     {

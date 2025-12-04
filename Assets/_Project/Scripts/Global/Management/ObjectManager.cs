@@ -101,11 +101,7 @@ public class ObjectManager : MultiManager<ObjectType>
     }
     public void HandleAsteroids()
     {
-        var count = asteroidIntendedCount - asteroidCount;
-        if (count > 0)
-        {
-            for (int i = 0; i < count; i++) SpawnAsteroid();
-        }
+        for (int i = 0; i < asteroidIntendedCount - asteroidCount; i++) StartCoroutine(SpawnAsteroid());
     }
     IEnumerator EnvironmentCoroutine()
     {
@@ -119,7 +115,7 @@ public class ObjectManager : MultiManager<ObjectType>
     }
     #endregion
     #region Spawning
-    void SpawnAsteroid()
+    IEnumerator SpawnAsteroid()
     {
         //pick a position
         float dist = GameManager.Player.ScanRange + 1; //+ (GlobalSettings.UpdateRange + GlobalSettings.PlayerTrackingRange) / 2;
@@ -132,19 +128,19 @@ public class ObjectManager : MultiManager<ObjectType>
         if (asteroid == null)
         {
             Debug.LogError($"Unable to convert Spawnable to InertTrackable when attempting to spawn asteroid at {System.DateTime.Now}.");
-            return;
+            yield break;
         }
         asteroid.Inertia = inertia;
         asteroidCount++;
     }
-    public Object SpawnShip(ObjectType type, Teams team, Vector3 position)
+    public Object SpawnShip(ObjectType type, Teams team, Vector3 position, Quaternion rotation)
     {
         if (assets.TryGetValue(type, out var data) == false)
         {
             Debug.LogError($"No asset found for object type {type}.");
             return null;
         }
-        Ship ship = Spawn(data, position) as Ship;
+        Unit ship = Spawn(data, position, rotation) as Unit;
         if (team == Teams.Player)
         {
             PlayerTeam.AddMember(ship);
@@ -154,6 +150,10 @@ public class ObjectManager : MultiManager<ObjectType>
             EnemyTeam.AddMember(ship);
         }
         return ship;
+    }
+    public Object SpawnShip(ObjectType type, Teams team, Vector3 position)
+    {
+        return SpawnShip(type, team, position, Quaternion.identity);
     }
     public PlayerShip SpawnPlayer()
     {

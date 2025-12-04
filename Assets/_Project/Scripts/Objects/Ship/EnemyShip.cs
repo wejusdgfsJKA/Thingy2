@@ -1,61 +1,87 @@
 using HP;
 using System.Collections.Generic;
 using UnityEngine;
-using Weapons;
-public class EnemyShip : Ship
+public class EnemyShip : Unit
 {
     [SerializeField] float assaultRange = 2f;
     TakeDamage assault;
-    [SerializeField] List<ObjectType> ignore = new() { ObjectType.Asteroid };
-    WeaponBase weapon;
     Navigation navigation;
+    Queue<Object> planets = new();
+    [SerializeField] List<ObjectType> ignore = new();
+    bool assaulting;
+    Object closestTarget;
+    float closestTargetDist;
     protected override void Awake()
     {
         base.Awake();
-        weapon = GetComponent<WeaponBase>();
         assault = new TakeDamage { Damage = 1f, DamageType = DamageType.Kinetic, Source = transform };
         navigation = new(transform, 5);
     }
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        navigation.Destination = null;
+    }
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        planets.Clear();
+    }
     public override void Tick()
     {
-        bool assaulting = false;
-        Object closestTarget = null;
-        float bestDist = float.PositiveInfinity;
-        Queue<Object> planets = new();
-        //commence assault on a planet if in range
-        foreach (var target in Team.Targets[DetectionState.Identified])
-        {
-            if (ignore.Contains(target.ID)) continue;
-            if (target.ID == ObjectType.Planet)
-            {
-                if (!assaulting)
-                {
-                    assaulting = true;
-                    float distance = Vector3.Distance(Transform.position, target.Transform.position);
-                    if (distance <= assaultRange)
-                    {
-                        planets.Enqueue(target);
-                    }
-                    else navigation.Destination = target.Transform.position + (assaultRange / 2) * Random.onUnitSphere;
-                }
-                continue;
-            }
-            float dist = Vector3.Distance(Transform.position, target.Transform.position);
-            if (dist < bestDist)
-            {
-                bestDist = dist;
-                closestTarget = target;
-            }
-        }
-        if (closestTarget != null)
-        {
-            if (!assaulting) navigation.Destination = closestTarget.Transform.position;
-            weapon.Fire(closestTarget);
-        }
+        closestTarget = null;
+        closestTargetDist = float.PositiveInfinity;
+        assaulting = false;
+        base.Tick();
         while (planets.Count > 0)
         {
             planets.Dequeue().TakeDamage(assault);
         }
         navigation.Update();
+        if (closestTarget == null)
+        {
+            foreach (var @object in Team.TrackedHostiles)
+            {
+                float dist = Vector3.Distance(Transform.position, @object.Transform.position);
+                if (dist < closestTargetDist)
+                {
+                    closestTarget = @object;
+                    closestTargetDist = dist;
+                }
+            }
+            if (closestTarget != null)
+            {
+                navigation.Destination = closestTarget.Transform.position;
+            }
+            else navigation.Destination = Vector3.zero;
+        }
+    }
+    protected override void ConsiderTarget(Object @object)
+    {
+        base.ConsiderTarget(@object);
+        if (@object.ID == ObjectType.Planet)
+        {
+            if (!assaulting)
+            {
+                assaulting = true;
+                if (Vector3.Distance(transform.position, @object.transform.position) <= assaultRange)
+                {
+                    planets.Enqueue(@object);
+                }
+                else navigation.Destination = @object.Transform.position;
+            }
+        }
+        else
+        {
+            if (!assaulting)
+            {
+                float dist = Vector3.Distance(Transform.position, @object.Transform.position);
+                if (dist < closestTargetDist)
+                {
+                    closestTargetDist = dist;
+                    closestTarget = @object;
+                }
+            }
+        }
     }
 }

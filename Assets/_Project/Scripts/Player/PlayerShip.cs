@@ -1,6 +1,6 @@
 namespace Player
 {
-    public class PlayerShip : Ship
+    public class PlayerShip : Unit
     {
         protected override void OnEnable()
         {

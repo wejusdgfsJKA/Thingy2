@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.SceneManagement;
 namespace Player.UI
 {
@@ -10,7 +11,7 @@ namespace Player.UI
         {
             SceneManager.sceneLoaded += (s1, s2) =>
             {
-                GameManager.CurrentMission?.Initialize();
+                GameManager.StartMission();
             };
             var t1 = ObjectManager.LoadAssets();
             var t2 = Weapons.RandomShitManager.LoadAssets();
@@ -20,8 +21,7 @@ namespace Player.UI
         }
         public void OnStart()
         {
-            GameManager.CurrentMission = new PlanetDefenseMission(2, 5);
-            if (GameManager.CurrentMission != null) SceneManager.LoadScene(1);
+            Addressables.LoadSceneAsync(GlobalSettings.IntermediateSceneAddress);
         }
         public void OnExit()
         {
