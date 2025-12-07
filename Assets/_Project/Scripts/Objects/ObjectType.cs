@@ -1,6 +1,5 @@
 public enum ObjectType : byte
 {
-    Asteroid,
     Player,
     FriendStation,
     Friend1,

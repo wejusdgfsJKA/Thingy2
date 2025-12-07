@@ -7,6 +7,7 @@ namespace Weapons
     {
         TakeDamage takeDamage;
         [SerializeField] Material material;
+        [SerializeField] float lineThickness = .1f;
         protected override void Awake()
         {
             base.Awake();
@@ -16,6 +17,7 @@ namespace Weapons
         {
             var beam = RandomShitManager.Instance.SpawnObject(RandomShit.Beam, transform.position) as Beam;
             beam.LineRenderer.material = material;
+            beam.LineRenderer.startWidth = beam.LineRenderer.endWidth = lineThickness;
             beam.LineRenderer.SetPosition(0, transform.position);
             beam.LineRenderer.SetPosition(1, target.Transform.position);
             target.TakeDamage(takeDamage);

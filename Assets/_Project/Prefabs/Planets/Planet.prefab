@@ -100,8 +100,8 @@ GameObject:
   - component: {fileID: 5459109952282142041}
   - component: {fileID: 7182413594234247016}
   - component: {fileID: 8963309553407482164}
-  - component: {fileID: 1389234978216439219}
   - component: {fileID: 6118048313467859962}
+  - component: {fileID: 984035225522976058}
   m_Layer: 6
   m_Name: Planet
   m_TagString: Untagged
@@ -181,28 +181,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &1389234978216439219
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7935156352786863229}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8bb6226ac8c0614b9374690d5007d36, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Object
-  <ID>k__BackingField: 5
-  <Signature>k__BackingField: 0
-  <Persistent>k__BackingField: 1
-  <Selectable>k__BackingField: 0
-  <AlwaysVisible>k__BackingField: 1
-  <Icon>k__BackingField: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  <Material>k__BackingField: {fileID: 2100000, guid: 7ba00c2bb1c8ee348b9f7033073383f6, type: 2}
-  <IconSizeCoefficient>k__BackingField: 300
-  <IdentifiedRenderer>k__BackingField: {fileID: 8963309553407482164}
-  <TrackedRenderer>k__BackingField: {fileID: 5874580164140230902}
 --- !u!114 &6118048313467859962
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -219,3 +197,24 @@ MonoBehaviour:
   OnHullChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &984035225522976058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7935156352786863229}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e82e64b7e817724090c6116a07509a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Planet
+  <ID>k__BackingField: 4
+  <Signature>k__BackingField: 0
+  <Selectable>k__BackingField: 0
+  <AlwaysVisible>k__BackingField: 0
+  <Icon>k__BackingField: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  <Material>k__BackingField: {fileID: 2100000, guid: 7ba00c2bb1c8ee348b9f7033073383f6, type: 2}
+  <IconSizeCoefficient>k__BackingField: 300
+  <IdentifiedRenderer>k__BackingField: {fileID: 8963309553407482164}
+  <TrackedRenderer>k__BackingField: {fileID: 5874580164140230902}

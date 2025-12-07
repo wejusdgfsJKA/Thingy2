@@ -20,11 +20,18 @@ namespace Weapons
         public async static Task LoadAssets()
         {
             if (assets.Count > 0) return;
-            foreach (var address in addresses)
+            Task<RandomShitData>[] tasks = new Task<RandomShitData>[addresses.Count];
+            for (int i = 0; i < addresses.Count; i++)
             {
-                var data = await Addressables.LoadAssetAsync<RandomShitData>(address).Task;
-                assets.Add(data.ID, data);
+                tasks[i] = Addressables.LoadAssetAsync<RandomShitData>(addresses[i]).Task;
             }
+            await Task.WhenAll(tasks);
+            for (int i = 0; i < tasks.Length; i++)
+            {
+                var result = tasks[i].Result;
+                assets.Add(result.ID, result);
+            }
+            Debug.Log("Assets loaded successfully.");
         }
         public IDPoolable<RandomShit> SpawnObject(RandomShit id, Vector3 spawnPoint)
         {

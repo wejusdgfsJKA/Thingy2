@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Player
   m_EditorClassIdentifier: Assembly-CSharp::ObjectData
   Prefab: {fileID: 3018586782381239914, guid: 7758f3c2cdd275546a519cee0e8bb53a, type: 3}
-  ID: 1
+  ID: 0

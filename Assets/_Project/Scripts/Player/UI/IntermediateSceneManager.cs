@@ -13,7 +13,7 @@ namespace Player.UI
         }
         public void OnBeginMission()
         {
-            GameManager.CurrentMission = new PlanetDefenseMission(2, 5);
+            GameManager.CurrentMission = new FleetBattleMission();
             Addressables.LoadSceneAsync(GlobalSettings.MainSceneAddress);
         }
         public void OnExit()

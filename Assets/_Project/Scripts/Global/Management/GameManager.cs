@@ -13,15 +13,23 @@ public static class GameManager
             if (player != value)
             {
                 player = value;
-                if (player == null && CurrentMission != null) AutoResolve();
+                if (player == null && CurrentMission != null)
+                {
+                    AutoResolve();
+                }
             }
         }
     }
     public static Mission CurrentMission { get; set; }
+    /// <summary>
+    /// Teams[0] is the player's team, Teams[1] is the enemy team.
+    /// </summary>
+    public static Team[] Teams { get; private set; } = new Team[2];
     public static void StartMission()
     {
         if (CurrentMission != null)
         {
+            Teams[0] = new(0); Teams[1] = new(1);
             CurrentMission.Initialize();
             Score = null;
         }
@@ -32,6 +40,7 @@ public static class GameManager
         Score = CurrentMission.GetScore();
         Debug.Log(Score);
         CurrentMission = null;
+        Teams[0] = Teams[1] = null;
         Addressables.LoadSceneAsync(GlobalSettings.IntermediateSceneAddress);
     }
     static void AutoResolve() => EndMission();

@@ -8,7 +8,7 @@ public class GameInitializer : MonoBehaviour
     {
         SceneManager.sceneLoaded += (s1, s2) =>
         {
-            GameManager.CurrentMission?.Initialize();
+            GameManager.StartMission();
         };
         var t1 = ObjectManager.LoadAssets();
         var t2 = Weapons.RandomShitManager.LoadAssets();

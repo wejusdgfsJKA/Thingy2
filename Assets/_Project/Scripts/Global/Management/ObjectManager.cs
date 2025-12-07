@@ -13,129 +13,69 @@ public enum Teams : byte
 public class ObjectManager : MultiManager<ObjectType>
 {
     #region Fields
-    [Tooltip("Min. nr. of asteroids to be active at any given time.")][SerializeField] int asteroidIntendedCount = 2;
-    public HashSet<Object> Objects { get; } = new();
     static readonly Dictionary<ObjectType, ObjectData> assets = new();
     static readonly List<string> addresses = new()
     {
-        "Asteroid",
         "Player",
         "FriendStation",
-        "Planet",
         "Enemy"
     };
     public static ObjectManager Instance { get; protected set; }
-    public readonly Team PlayerTeam = new(), EnemyTeam = new();
     #region Technical
-    readonly float aiTickInterval = .05f;
-    readonly float environmentCheckInterval = .2f;
-    WaitForSeconds environmentWait, aiWait;
-    readonly Stack<Object> toRemove = new();
+    WaitForSeconds aiWait;
     readonly List<Coroutine> coroutines = new();
-    int asteroidCount = 0;
     #endregion
     #endregion
     #region Setup
     public async static Task LoadAssets()
     {
         if (assets.Count > 0) return;
-        foreach (var address in addresses)
+        Task<ObjectData>[] tasks = new Task<ObjectData>[addresses.Count];
+        for (int i = 0; i < addresses.Count; i++)
         {
-            var data = await Addressables.LoadAssetAsync<ObjectData>(address).Task;
-            assets.Add(data.ID, data);
+            tasks[i] = Addressables.LoadAssetAsync<ObjectData>(addresses[i]).Task;
+        }
+        await Task.WhenAll(tasks);
+        for (int i = 0; i < tasks.Length; i++)
+        {
+            var result = tasks[i].Result;
+            assets.Add(result.ID, result);
         }
         Debug.Log("Assets loaded successfully.");
     }
     private void Awake()
     {
-        aiWait = new WaitForSeconds(aiTickInterval);
-        environmentWait = new WaitForSeconds(environmentCheckInterval);
+        aiWait = new WaitForSeconds(GlobalSettings.AITickCooldown);
         Instance = this;
     }
     private void OnEnable()
     {
-        coroutines.Add(StartCoroutine(EnvironmentCoroutine()));
         coroutines.Add(StartCoroutine(AICoroutine()));
     }
     private void OnDisable()
     {
         for (int i = 0; i < coroutines.Count; i++) if (coroutines[i] != null) StopCoroutine(coroutines[i]);
-        PlayerTeam.Clear();
-        EnemyTeam.Clear();
     }
     #endregion
     #region AI
     IEnumerator AICoroutine()
     {
-        yield return new WaitUntil(() => PlayerTeam != null && EnemyTeam != null);
+        yield return new WaitUntil(() => GameManager.Teams[0] != null && GameManager.Teams[1] != null);
         while (true)
         {
             yield return aiWait;
-            PlayerTeam.Tick();
-            EnemyTeam.Tick();
+            GameManager.Teams[0]?.Tick(GlobalSettings.AITickCooldown);
+            GameManager.Teams[1]?.Tick(GlobalSettings.AITickCooldown);
         }
     }
     #endregion
     #region Object updates
-    void DeactivateAsteroid(Object obj)
-    {
-        obj.gameObject.SetActive(false);
-        asteroidCount--;
-    }
-    public void UpdateExisting()
-    {
-        foreach (var obj in Objects)
-        {
-            if (obj.Persistent) continue;
 
-            var dist = Mathf.Max(Vector3.Distance(GameManager.Player.Transform.position,
-                obj.Transform.position) - obj.Signature, 0.1f);
-
-            if (dist > GlobalSettings.UpdateRange)
-            {
-                //remove this object
-                toRemove.Push(obj);
-            }
-        }
-        while (toRemove.Count > 0) DeactivateAsteroid(toRemove.Pop());
-    }
-    public void HandleAsteroids()
-    {
-        for (int i = 0; i < asteroidIntendedCount - asteroidCount; i++) StartCoroutine(SpawnAsteroid());
-    }
-    IEnumerator EnvironmentCoroutine()
-    {
-        yield return new WaitUntil(() => GameManager.Player != null);
-        while (true)
-        {
-            yield return environmentWait;
-            UpdateExisting();
-            HandleAsteroids();
-        }
-    }
     #endregion
     #region Spawning
-    IEnumerator SpawnAsteroid()
-    {
-        //pick a position
-        float dist = GameManager.Player.ScanRange + 1; //+ (GlobalSettings.UpdateRange + GlobalSettings.PlayerTrackingRange) / 2;
-        Vector3 pos = GameManager.Player.Transform.position + Random.onUnitSphere * dist;
-        //pick an inertia
-        float inertiaMagnitude = Random.Range(GlobalSettings.AsteroidInertia.Item1,
-            GlobalSettings.AsteroidInertia.Item2);
-        Vector3 inertia = Random.onUnitSphere * inertiaMagnitude;
-        var asteroid = Spawn(assets[ObjectType.Asteroid], pos) as Asteroid;
-        if (asteroid == null)
-        {
-            Debug.LogError($"Unable to convert Spawnable to InertTrackable when attempting to spawn asteroid at {System.DateTime.Now}.");
-            yield break;
-        }
-        asteroid.Inertia = inertia;
-        asteroidCount++;
-    }
     public Object SpawnShip(ObjectType type, Teams team, Vector3 position, Quaternion rotation)
     {
-        if (assets.TryGetValue(type, out var data) == false)
+        if (!assets.TryGetValue(type, out var data))
         {
             Debug.LogError($"No asset found for object type {type}.");
             return null;
@@ -143,11 +83,11 @@ public class ObjectManager : MultiManager<ObjectType>
         Unit ship = Spawn(data, position, rotation) as Unit;
         if (team == Teams.Player)
         {
-            PlayerTeam.AddMember(ship);
+            GameManager.Teams[0].AddMember(ship);
         }
         else if (team == Teams.Enemy)
         {
-            EnemyTeam.AddMember(ship);
+            GameManager.Teams[1].AddMember(ship);
         }
         return ship;
     }

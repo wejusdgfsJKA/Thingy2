@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0678c619ddc68914994e9b04667d49e9, type: 3}
   m_Name: PlanetData
   m_EditorClassIdentifier: Assembly-CSharp::TrackableData
-  Prefab: {fileID: 1389234978216439219, guid: de88057f39ca5e34785e1acd56240413, type: 3}
-  ID: 5
+  Prefab: {fileID: 984035225522976058, guid: de88057f39ca5e34785e1acd56240413, type: 3}
+  ID: 4
