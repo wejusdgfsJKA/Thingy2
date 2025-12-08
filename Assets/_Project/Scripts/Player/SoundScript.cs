@@ -6,13 +6,8 @@ namespace Player
     {
         [SerializeField] AudioClip bigGun, heavyDamage;
         [SerializeField] AudioClip[] smallDamageSounds;
-        AudioSource audioSource;
+        [SerializeField] AudioSource audioSource;
         bool playedHeavyDamageSound = false;
-        private void Awake()
-        {
-            audioSource = GetComponent<AudioSource>();
-            audioSource.playOnAwake = false;
-        }
         public void PlayBigGunSound()
         {
             audioSource.PlayOneShot(bigGun);

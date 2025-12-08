@@ -23,8 +23,7 @@ public class Team
     public HashSet<Object> TrackedTargets { get; } = new();
     public event System.Action<Object> OnMemberAdded, OnMemberRemoved, OnTrackedTargetAdded,
         OnIdentifiedTargetAdded, OnTargetRemoved;
-    System.Action<float> onTick;
-    int index;
+    readonly int index;
     public Team(int index)
     {
         this.index = index;
@@ -34,22 +33,23 @@ public class Team
         if (Members.Add(ship))
         {
             OnMemberAdded?.Invoke(ship);
-            onTick += ship.Tick;
+            ship.OnDespawn += RemoveMember;
             ship.Team = this;
         }
     }
-    public void RemoveMember(Unit ship)
+    public void RemoveMember(Object @object)
     {
+        if (@object is not Unit ship) return;
         if (Members.Remove(ship))
         {
+            ship.OnDespawn -= RemoveMember;
             OnMemberRemoved?.Invoke(ship);
-            onTick -= ship.Tick;
+            ship.Team = null;
         }
     }
     public void Tick(float deltaTime)
     {
         PerformDetection();
-        onTick?.Invoke(deltaTime);
     }
     void PerformDetection()
     {
@@ -117,6 +117,5 @@ public class Team
         IdentifiedTargets.Clear();
         TrackedTargets.Clear();
         OnMemberAdded = OnMemberRemoved = OnTrackedTargetAdded = OnIdentifiedTargetAdded = OnTargetRemoved = null;
-        onTick = null;
     }
 }

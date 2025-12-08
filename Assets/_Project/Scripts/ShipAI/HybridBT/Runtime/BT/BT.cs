@@ -26,7 +26,7 @@ namespace HybridBT
         }
         public void Tick()
         {
-            Root.Evaluate(blackboard);
+            Root?.Evaluate(blackboard);
         }
         public void SetValue(T key, object value) => blackboard.SetData(key, value);
     }

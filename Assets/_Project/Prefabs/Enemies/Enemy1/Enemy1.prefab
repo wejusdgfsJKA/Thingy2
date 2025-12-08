@@ -60,7 +60,7 @@ MonoBehaviour:
   <IdentifiedRenderer>k__BackingField: {fileID: 3035678715630224028}
   <TrackedRenderer>k__BackingField: {fileID: 4915477264058440870}
   <ScanRange>k__BackingField: 30
-  <turrets>k__BackingField:
+  <Turrets>k__BackingField:
   - {fileID: 6073887827518722397}
   TurretsHaveTarget: 0
   speed: 1
@@ -81,6 +81,9 @@ MonoBehaviour:
   OnHullChanged:
     m_PersistentCalls:
       m_Calls: []
+  OnDamageTaken:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &2579727659987166391
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -93,8 +96,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7713538afd10e9041afaa03325d26a7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Weapons.BeamWeapon
-  shotCooldown: 3
-  <Damage>k__BackingField: 1
+  shotCooldown: 1
+  <Damage>k__BackingField: 2
+  damageType: 1
+  onFire:
+    m_PersistentCalls:
+      m_Calls: []
   material: {fileID: 2100000, guid: f712bd3b78c94b3428969e55491442f4, type: 2}
   lineThickness: 0.1
 --- !u!54 &1093903392853879601

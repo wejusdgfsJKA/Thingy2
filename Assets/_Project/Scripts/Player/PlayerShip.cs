@@ -12,7 +12,6 @@ namespace Player
             base.OnDisable();
             GameManager.Player = null;
         }
-        public override void Tick(float deltaTime) { base.Tick(deltaTime); }
         public void Exit()
         {
             GameManager.EndMission();

@@ -18,7 +18,7 @@ public class Ship : Unit
         base.OnEnable();
         Navigation.Destination = null;
     }
-    public override void Tick(float deltaTime)
+    protected override void Tick(float deltaTime)
     {
         base.Tick(deltaTime);
         behaviourTree.Tick();
