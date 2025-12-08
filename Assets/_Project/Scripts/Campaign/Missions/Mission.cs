@@ -1,8 +1,13 @@
 using UnityEngine;
 public abstract class Mission
 {
+    public float EnemiesDestroyedScore { get; protected set; }
     public abstract void Initialize();
     public abstract float GetScore();
+    protected void EnemyDestroyed(Object @object)
+    {
+        EnemiesDestroyedScore += GlobalSettings.GetWeight(@object.ID);
+    }
 }
 public class FleetBattleMission : Mission
 {
@@ -23,6 +28,7 @@ public class FleetBattleMission : Mission
             var enemy = ObjectManager.Instance.SpawnShip(ObjectType.Enemy1, Teams.Enemy, enemySpawnPos + Random.onUnitSphere * 1);
             enemy.OnDespawn += (o) =>
             {
+                EnemyDestroyed(o);
                 SubtractEnemy();
             };
         }
@@ -37,7 +43,7 @@ public class FleetBattleMission : Mission
     }
     public override float GetScore()
     {
-        float score = 0;
+        float score = EnemiesDestroyedScore;
         if (GameManager.Player == null) score -= 0.5f;
         return score;
     }
@@ -70,6 +76,7 @@ public class PlanetDefenseMission : Mission
             var enemy = ObjectManager.Instance.SpawnShip(ObjectType.Enemy1, Teams.Enemy, enemySpawnPos + Random.onUnitSphere * 1);
             enemy.OnDespawn += (o) =>
             {
+                EnemyDestroyed(o);
                 SubtractEnemy();
             };
         }
@@ -92,7 +99,7 @@ public class PlanetDefenseMission : Mission
     }
     public override float GetScore()
     {
-        var score = (float)initialPlanetCount;
+        var score = initialPlanetCount + EnemiesDestroyedScore;
         if (GameManager.Player == null) score -= 0.5f;
         return score;
     }

@@ -1,5 +1,7 @@
+using HP;
 using Timers;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Weapons
 {
@@ -7,18 +9,33 @@ namespace Weapons
     {
         [SerializeField] protected float shotCooldown = 1;
         protected CountdownTimer shotTimer;
+        protected TakeDamage takeDamage;
         [field: SerializeField] public float Damage { get; protected set; } = 1;
         public bool CanFire => !shotTimer.IsRunning;
+        [SerializeField] protected DamageType damageType = DamageType.Energy;
+        [SerializeField] protected UnityEvent onFire;
         protected virtual void Awake()
         {
             shotTimer = new(shotCooldown);
         }
+        protected virtual void OnEnable()
+        {
+            shotTimer.Reset();
+        }
         public void Fire(Object @object)
         {
             ActuallyShoot(@object);
+            onFire?.Invoke();
             shotTimer.Start();
         }
         protected abstract void ActuallyShoot(Object target);
-        protected virtual void OnDestroy() => shotTimer.Dispose();
+        protected virtual void OnDisable()
+        {
+            onFire.RemoveAllListeners();
+        }
+        protected virtual void OnDestroy()
+        {
+            shotTimer.Dispose();
+        }
     }
 }

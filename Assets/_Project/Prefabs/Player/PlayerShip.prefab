@@ -45,10 +45,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7713538afd10e9041afaa03325d26a7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Weapons.BeamWeapon
-  shotCooldown: 1
+  shotCooldown: 2
   <Damage>k__BackingField: 1
-  material: {fileID: 2100000, guid: 7ba00c2bb1c8ee348b9f7033073383f6, type: 2}
-  lineThickness: 0.2
+  damageType: 0
+  onFire:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6407932047146319691}
+        m_TargetAssemblyTypeName: Player.SoundScript, Assembly-CSharp
+        m_MethodName: PlayBigGunSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  material: {fileID: 2100000, guid: f6bbdd24e5487ce4b94a4bb04179a30e, type: 2}
+  lineThickness: 0.3
 --- !u!114 &1622287998275316103
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62,8 +78,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Weapons.Turret
   targetStrategyType: 0
-  <Angle>k__BackingField: 80
-  <Range>k__BackingField: 30
+  <Angle>k__BackingField: 45
+  <Range>k__BackingField: 40
   <TargetPriorities>k__BackingField: []
   <RequiresLock>k__BackingField: 1
 --- !u!1 &558959981058532373
@@ -82,6 +98,8 @@ GameObject:
   - component: {fileID: 6915140122644198231}
   - component: {fileID: 3018586782381239914}
   - component: {fileID: 5334374161027430584}
+  - component: {fileID: 3388846384189019393}
+  - component: {fileID: 6407932047146319691}
   m_Layer: 8
   m_Name: PlayerShip
   m_TagString: Untagged
@@ -105,11 +123,8 @@ Transform:
   - {fileID: 6728637190885341191}
   - {fileID: 7417290802641076621}
   - {fileID: 4703159787847218536}
-  - {fileID: 5565856074679829978}
-  - {fileID: 4782143201021551993}
-  - {fileID: 8229488058154703528}
-  - {fileID: 9204490860706885121}
   - {fileID: 5535541556051148416}
+  - {fileID: 3560443133365011524}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4932984410122319928
@@ -203,10 +218,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af69b7e86ab945b4fa6c0bc813871986, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HP.HullComponent
-  <MaxHullPoints>k__BackingField: 1000
+  <MaxHullPoints>k__BackingField: 10
   OnHullChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6407932047146319691}
+        m_TargetAssemblyTypeName: Player.SoundScript, Assembly-CSharp
+        m_MethodName: DamageTaken
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &3018586782381239914
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -345,6 +372,121 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!82 &3388846384189019393
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 558959981058532373}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &6407932047146319691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 558959981058532373}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a77fad720f6e5d41a21a603fe6dcdab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Player.SoundScript
+  bigGun: {fileID: 8300000, guid: 2bd97bfde5e7ea044be32e1e1766a32e, type: 3}
+  heavyDamage: {fileID: 8300000, guid: d75f22ad3b736aa45acee5411178f1f9, type: 3}
+  smallDamageSounds:
+  - {fileID: 8300000, guid: 7808373844c94b14ab55fe4df1efc128, type: 3}
+  - {fileID: 8300000, guid: ee59397f0dbf0e445ac0679483f70560, type: 3}
+  - {fileID: 8300000, guid: 2bd97bfde5e7ea044be32e1e1766a32e, type: 3}
 --- !u!1 &1052377603752670234
 GameObject:
   m_ObjectHideFlags: 0
@@ -535,12 +677,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3377687533652277675}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 5265401070332729692}
+  m_Father: {fileID: 3560443133365011524}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!114 &6402333104087057432
 MonoBehaviour:
@@ -556,6 +698,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Weapons.BeamWeapon
   shotCooldown: 1
   <Damage>k__BackingField: 1
+  damageType: 1
+  onFire:
+    m_PersistentCalls:
+      m_Calls: []
   material: {fileID: 2100000, guid: 7ba00c2bb1c8ee348b9f7033073383f6, type: 2}
   lineThickness: 0.2
 --- !u!114 &3209108339109165133
@@ -601,12 +747,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3734615965750096521}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 5265401070332729692}
+  m_Father: {fileID: 3560443133365011524}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!114 &698057166352964045
 MonoBehaviour:
@@ -622,6 +768,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Weapons.BeamWeapon
   shotCooldown: 1
   <Damage>k__BackingField: 1
+  damageType: 1
+  onFire:
+    m_PersistentCalls:
+      m_Calls: []
   material: {fileID: 2100000, guid: 7ba00c2bb1c8ee348b9f7033073383f6, type: 2}
   lineThickness: 0.2
 --- !u!114 &4691344507359841725
@@ -769,12 +919,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4556212917106733802}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 5265401070332729692}
+  m_Father: {fileID: 3560443133365011524}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!114 &3653355962057867642
 MonoBehaviour:
@@ -790,6 +940,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Weapons.BeamWeapon
   shotCooldown: 1
   <Damage>k__BackingField: 1
+  damageType: 1
+  onFire:
+    m_PersistentCalls:
+      m_Calls: []
   material: {fileID: 2100000, guid: 7ba00c2bb1c8ee348b9f7033073383f6, type: 2}
   lineThickness: 0.2
 --- !u!114 &448346147910569594
@@ -902,6 +1056,41 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5309504132273285419}
   m_Enabled: 1
+--- !u!1 &7737024835471682230
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3560443133365011524}
+  m_Layer: 8
+  m_Name: BeamArray
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3560443133365011524
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7737024835471682230}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 5565856074679829978}
+  - {fileID: 4782143201021551993}
+  - {fileID: 8229488058154703528}
+  - {fileID: 9204490860706885121}
+  m_Father: {fileID: 5265401070332729692}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8044711423998848383
 GameObject:
   m_ObjectHideFlags: 0
@@ -928,12 +1117,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8044711423998848383}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 5265401070332729692}
+  m_Father: {fileID: 3560443133365011524}
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!114 &5637736700703956613
 MonoBehaviour:
@@ -949,6 +1138,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Weapons.BeamWeapon
   shotCooldown: 1
   <Damage>k__BackingField: 1
+  damageType: 1
+  onFire:
+    m_PersistentCalls:
+      m_Calls: []
   material: {fileID: 2100000, guid: 7ba00c2bb1c8ee348b9f7033073383f6, type: 2}
   lineThickness: 0.2
 --- !u!114 &2077609491103112187

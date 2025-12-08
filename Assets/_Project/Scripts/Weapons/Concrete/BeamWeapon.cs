@@ -5,13 +5,12 @@ namespace Weapons
 {
     public class BeamWeapon : WeaponBase
     {
-        TakeDamage takeDamage;
         [SerializeField] Material material;
         [SerializeField] float lineThickness = .1f;
         protected override void Awake()
         {
             base.Awake();
-            takeDamage = new TakeDamage(Damage, transform, DamageType.Energy);
+            takeDamage = new TakeDamage(Damage, transform, damageType);
         }
         protected override void ActuallyShoot(Object target)
         {

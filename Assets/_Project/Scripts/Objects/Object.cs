@@ -56,7 +56,7 @@ public class Object : IDPoolable<ObjectType>
     {
         if (shieldComponent != null)
         {
-            takeDamage.Damage -= ShieldPoints / GlobalSettings.GetModifier(takeDamage.DamageType, TargetType.Shield);
+            takeDamage.Damage -= ShieldPoints / GlobalSettings.GetDamageModifier(takeDamage.DamageType, TargetType.Shield);
             shieldComponent.TakeDamage(takeDamage);
         }
         if (takeDamage.Damage > 0)

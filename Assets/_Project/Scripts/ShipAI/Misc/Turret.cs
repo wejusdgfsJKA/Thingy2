@@ -14,6 +14,7 @@ namespace Weapons
         [field: SerializeField] public float Range { get; protected set; }
         [field: SerializeField] public List<TargetPriority> TargetPriorities { get; protected set; } = new();
         [field: SerializeField] public bool RequiresLock { get; protected set; } = true;
+        public bool HasTarget => targetStrategy.CurrentTarget != null;
         private void Awake()
         {
             weapon = GetComponent<WeaponBase>();

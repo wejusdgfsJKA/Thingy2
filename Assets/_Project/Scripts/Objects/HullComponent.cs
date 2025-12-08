@@ -19,14 +19,11 @@ namespace HP
                 if (value != currentHullPoints)
                 {
                     currentHullPoints = value;
-                    OnHullChanged?.Invoke(currentHullPoints);
+                    OnHullChanged?.Invoke(currentHullPoints / MaxHullPoints);
                 }
             }
         }
-        /// <summary>
-        /// Fires when this entity's health value changes. Has as parameter the 
-        /// entity's current health.
-        /// </summary>
+        [Tooltip("Fires when this entity's health value changes. Has as parameter the entity's current health percentage.")]
         public UnityEvent<float> OnHullChanged;
         protected virtual void OnEnable()
         {
@@ -35,7 +32,7 @@ namespace HP
 
         public void TakeDamage(TakeDamage dmg)
         {
-            CurrentHullPoints -= dmg.Damage * GlobalSettings.GetModifier(dmg.DamageType, TargetType.Hull);
+            CurrentHullPoints -= dmg.Damage * GlobalSettings.GetDamageModifier(dmg.DamageType, TargetType.Hull);
             if (CurrentHullPoints <= 0) gameObject.SetActive(false);
         }
     }

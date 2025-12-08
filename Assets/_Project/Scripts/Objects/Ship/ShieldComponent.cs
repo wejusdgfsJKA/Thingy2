@@ -37,7 +37,7 @@ public class ShieldComponent : MonoBehaviour
     }
     public void TakeDamage(TakeDamage takeDamage)
     {
-        ShieldPoints -= takeDamage.Damage * GlobalSettings.GetModifier(takeDamage.DamageType, TargetType.Shield);
+        ShieldPoints -= takeDamage.Damage * GlobalSettings.GetDamageModifier(takeDamage.DamageType, TargetType.Shield);
         shieldCDTimer.Start();
     }
     private void OnDestroy()
