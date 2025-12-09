@@ -1,4 +1,3 @@
-using HP;
 using Timers;
 using UnityEngine;
 using UnityEngine.Events;
@@ -11,7 +10,7 @@ namespace Weapons
         protected CountdownTimer shotTimer;
         protected TakeDamage takeDamage;
         [field: SerializeField] public float Damage { get; protected set; } = 1;
-        public bool CanFire => !shotTimer.IsRunning;
+        public float Charge => 1 - shotTimer.Progress;
         [SerializeField] protected DamageType damageType = DamageType.Energy;
         [SerializeField] protected UnityEvent onFire;
         protected virtual void Awake()
@@ -22,13 +21,13 @@ namespace Weapons
         {
             shotTimer.Reset();
         }
-        public void Fire(Object @object)
+        public void Fire(Unit @object)
         {
             ActuallyShoot(@object);
             onFire?.Invoke();
             shotTimer.Start();
         }
-        protected abstract void ActuallyShoot(Object target);
+        protected abstract void ActuallyShoot(Unit target);
         protected virtual void OnDisable()
         {
             onFire.RemoveAllListeners();

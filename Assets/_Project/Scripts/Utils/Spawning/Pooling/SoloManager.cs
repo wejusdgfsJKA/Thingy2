@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Spawning.Pooling
 {
     /// <summary>
-    /// A manager which can only handle one type of object.
+    /// A manager which can only handle one type of SpecialObject.
     /// </summary>
     public class SoloManager : Manager
     {

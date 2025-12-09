@@ -25,7 +25,7 @@ public static class GlobalSettings
     /// <summary>
     /// Get the weight for the given ObjectType in mission score.
     /// </summary>
-    /// <param name="type">The type of object to determine the weight for.</param>
+    /// <param name="type">The type of SpecialObject to determine the weight for.</param>
     /// <returns>Weight for the given ObjectType. Default 1.</returns>
     public static float GetWeight(ObjectType type)
     {

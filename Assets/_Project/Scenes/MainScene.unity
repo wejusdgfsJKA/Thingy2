@@ -228,7 +228,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c252c669bcfd604cb52be57a0b852c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectManager
-  asteroidIntendedCount: 5
 --- !u!4 &1290597802
 Transform:
   m_ObjectHideFlags: 0

@@ -7,7 +7,7 @@ namespace HybridBT.Template
     {
         public override Action<Context<ShipAIKeys>> Action => (ctx) =>
             {
-                Object target = null;
+                Unit target = null;
                 float closestTargetDist = float.PositiveInfinity;
                 foreach (var unit in ctx.Ship.Team.IdentifiedTargets)
                 {
@@ -30,7 +30,7 @@ namespace HybridBT.Template
                         }
                     }
                 }
-                ctx.SetData<Object>(ShipAIKeys.Target, target);
+                ctx.SetData(ShipAIKeys.Target, target);
             };
     }
 }

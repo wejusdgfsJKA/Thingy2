@@ -1,4 +1,3 @@
-using HP;
 using Timers;
 using UnityEngine;
 using UnityEngine.Events;
@@ -51,9 +50,12 @@ public class ShieldComponent : MonoBehaviour
     }
     public void TakeDamage(TakeDamage takeDamage)
     {
-        ShieldPoints -= takeDamage.Damage * GlobalSettings.GetDamageModifier(takeDamage.DamageType, TargetType.Shield);
-        regenTimer.Stop();
-        shieldCDTimer.Start();
+        if (takeDamage.Damage > 0)
+        {
+            ShieldPoints -= takeDamage.Damage * GlobalSettings.GetDamageModifier(takeDamage.DamageType, TargetType.Shield);
+            regenTimer.Stop();
+            shieldCDTimer.Start();
+        }
     }
     private void OnDestroy()
     {

@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 1093903392853879601}
   - component: {fileID: 6073887827518722397}
   - component: {fileID: 8473904179032565797}
+  - component: {fileID: 2133459164554359415}
   m_Layer: 0
   m_Name: Enemy1
   m_TagString: Untagged
@@ -35,8 +36,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7549545964382806079}
   - {fileID: 4209679733363145203}
+  - {fileID: 7549545964382806079}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2524300982238176342
@@ -52,7 +53,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyShip
   <ID>k__BackingField: 4
-  <Signature>k__BackingField: 50
   <Selectable>k__BackingField: 1
   <Icon>k__BackingField: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
   <Material>k__BackingField: {fileID: 2100000, guid: f712bd3b78c94b3428969e55491442f4, type: 2}
@@ -62,7 +62,6 @@ MonoBehaviour:
   <ScanRange>k__BackingField: 30
   <Turrets>k__BackingField:
   - {fileID: 6073887827518722397}
-  TurretsHaveTarget: 0
   speed: 1
   rotationSpeed: 1
 --- !u!114 &7199803315287620194
@@ -84,6 +83,7 @@ MonoBehaviour:
   OnDamageTaken:
     m_PersistentCalls:
       m_Calls: []
+  <ArmorModifiers>k__BackingField: []
 --- !u!114 &2579727659987166391
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -161,6 +161,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HybridBT.Template.ShipBT
   rootData: {fileID: 11400000, guid: b867e5ee327d10c4aaaa919a62ff16b6, type: 2}
+--- !u!114 &2133459164554359415
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3991626477142195072}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4c59abc458732644bd2950ca24b82e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SignatureComponent
+  defaultSignature: 10
 --- !u!1 &7844034349886602526
 GameObject:
   m_ObjectHideFlags: 0

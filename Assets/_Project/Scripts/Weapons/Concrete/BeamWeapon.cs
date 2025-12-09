@@ -12,7 +12,7 @@ namespace Weapons
             base.Awake();
             takeDamage = new TakeDamage(Damage, transform, damageType);
         }
-        protected override void ActuallyShoot(Object target)
+        protected override void ActuallyShoot(Unit target)
         {
             var beam = RandomShitManager.Instance.SpawnObject(RandomShit.Beam, transform.position) as Beam;
             beam.LineRenderer.material = material;

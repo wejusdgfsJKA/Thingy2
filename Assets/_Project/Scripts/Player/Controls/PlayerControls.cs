@@ -34,14 +34,14 @@ using UnityEngine.InputSystem.Utilities;
 ///
 ///     void Awake()
 ///     {
-///         m_Actions = new MyActions_Actions();              // Create asset object.
-///         m_Player = m_Actions.PlayerShip;                      // Extract action map object.
+///         m_Actions = new MyActions_Actions();              // Create asset SpecialObject.
+///         m_Player = m_Actions.PlayerShip;                      // Extract action map SpecialObject.
 ///         m_Player.AddCallbacks(this);                      // Register callback interface IPlayerActions.
 ///     }
 ///
 ///     void OnDestroy()
 ///     {
-///         m_Actions.Dispose();                              // Destroy asset object.
+///         m_Actions.Dispose();                              // Destroy asset SpecialObject.
 ///     }
 ///
 ///     void OnEnable()

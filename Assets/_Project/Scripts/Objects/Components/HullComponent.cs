@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using Utilities;
 
 namespace HP
 {
@@ -26,6 +28,7 @@ namespace HP
         [Tooltip("Fires when this entity's health value changes. Has as parameter the entity's current health percentage.")]
         public UnityEvent<float> OnHullChanged;
         public UnityEvent<float> OnDamageTaken;
+        [field: SerializeField] public List<ArmorModifier> ArmorModifiers { get; private set; } = new();
         protected virtual void OnEnable()
         {
             CurrentHullPoints = MaxHullPoints;
@@ -33,10 +36,25 @@ namespace HP
 
         public void TakeDamage(TakeDamage dmg)
         {
-            float finalDmg = dmg.Damage * GlobalSettings.GetDamageModifier(dmg.DamageType, TargetType.Hull);
+            float finalDmg = CalculateDamage(dmg);
+            if (finalDmg <= 0) return;
             CurrentHullPoints -= finalDmg;
             OnDamageTaken.Invoke(finalDmg);
             if (CurrentHullPoints <= 0) gameObject.SetActive(false);
+        }
+        public float CalculateDamage(TakeDamage dmg)
+        {
+            float armorModifier = 1;
+            var direction = gameObject.GetDirection(dmg.Source.position);
+            foreach (var armor in ArmorModifiers)
+            {
+                if (armor.Direction == direction)
+                {
+                    armorModifier = armor.Modifier;
+                    break;
+                }
+            }
+            return armorModifier * dmg.Damage * GlobalSettings.GetDamageModifier(dmg.DamageType, TargetType.Hull);
         }
     }
 }

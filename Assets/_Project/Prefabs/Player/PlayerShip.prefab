@@ -25,16 +25,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 243015571709696056}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3881448478832984459}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 300, y: 160}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 249.99997, y: 110}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4321564657988924343
@@ -99,8 +99,8 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
-  m_VerticalAlignment: 512
+  m_HorizontalAlignment: 4
+  m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -214,6 +214,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Weapons.Turret
   targetStrategyType: 0
+  <TypeOfAngle>k__BackingField: 0
   <Angle>k__BackingField: 45
   <Range>k__BackingField: 40
   <TargetPriorities>k__BackingField: []
@@ -237,6 +238,7 @@ GameObject:
   - component: {fileID: 5334374161027430584}
   - component: {fileID: 3388846384189019393}
   - component: {fileID: 6407932047146319691}
+  - component: {fileID: 7616987475534224153}
   m_Layer: 8
   m_Name: PlayerShip
   m_TagString: Untagged
@@ -259,9 +261,9 @@ Transform:
   m_Children:
   - {fileID: 6728637190885341191}
   - {fileID: 7417290802641076621}
-  - {fileID: 3560443133365011524}
   - {fileID: 4703159787847218536}
   - {fileID: 5535541556051148416}
+  - {fileID: 1234230883927013991}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4932984410122319928
@@ -386,6 +388,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  <ArmorModifiers>k__BackingField: []
 --- !u!114 &7825883424872649121
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -431,7 +434,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player.PlayerShip
   <ID>k__BackingField: 0
-  <Signature>k__BackingField: 10
   <Selectable>k__BackingField: 0
   <Icon>k__BackingField: {fileID: 0}
   <Material>k__BackingField: {fileID: 0}
@@ -441,11 +443,10 @@ MonoBehaviour:
   <ScanRange>k__BackingField: 30
   <Turrets>k__BackingField:
   - {fileID: 1622287998275316103}
-  - {fileID: 448346147910569594}
-  - {fileID: 3209108339109165133}
-  - {fileID: 2077609491103112187}
-  - {fileID: 4691344507359841725}
-  TurretsHaveTarget: 0
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!120 &5334374161027430584
 LineRenderer:
   serializedVersion: 2
@@ -672,6 +673,19 @@ MonoBehaviour:
   - {fileID: 8300000, guid: ee59397f0dbf0e445ac0679483f70560, type: 3}
   - {fileID: 8300000, guid: 2bd97bfde5e7ea044be32e1e1766a32e, type: 3}
   audioSource: {fileID: 3388846384189019393}
+--- !u!114 &7616987475534224153
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 558959981058532373}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4c59abc458732644bd2950ca24b82e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SignatureComponent
+  defaultSignature: 10
 --- !u!1 &1052377603752670234
 GameObject:
   m_ObjectHideFlags: 0
@@ -836,146 +850,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!1 &3377687533652277675
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4782143201021551993}
-  - component: {fileID: 6402333104087057432}
-  - component: {fileID: 3209108339109165133}
-  m_Layer: 8
-  m_Name: DorsalTurret
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4782143201021551993
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3377687533652277675}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3560443133365011524}
-  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
---- !u!114 &6402333104087057432
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3377687533652277675}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7713538afd10e9041afaa03325d26a7e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Weapons.BeamWeapon
-  shotCooldown: 1
-  <Damage>k__BackingField: 1
-  damageType: 1
-  onFire:
-    m_PersistentCalls:
-      m_Calls: []
-  material: {fileID: 2100000, guid: 7ba00c2bb1c8ee348b9f7033073383f6, type: 2}
-  lineThickness: 0.2
---- !u!114 &3209108339109165133
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3377687533652277675}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa63681f9d36e0e44818dc0c2bef4133, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Weapons.Turret
-  targetStrategyType: 0
-  <Angle>k__BackingField: 80
-  <Range>k__BackingField: 30
-  <TargetPriorities>k__BackingField: []
-  <RequiresLock>k__BackingField: 1
---- !u!1 &3734615965750096521
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 9204490860706885121}
-  - component: {fileID: 698057166352964045}
-  - component: {fileID: 4691344507359841725}
-  m_Layer: 8
-  m_Name: StarboardTurret
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &9204490860706885121
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3734615965750096521}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3560443133365011524}
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
---- !u!114 &698057166352964045
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3734615965750096521}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7713538afd10e9041afaa03325d26a7e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Weapons.BeamWeapon
-  shotCooldown: 1
-  <Damage>k__BackingField: 1
-  damageType: 1
-  onFire:
-    m_PersistentCalls:
-      m_Calls: []
-  material: {fileID: 2100000, guid: 7ba00c2bb1c8ee348b9f7033073383f6, type: 2}
-  lineThickness: 0.2
---- !u!114 &4691344507359841725
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3734615965750096521}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa63681f9d36e0e44818dc0c2bef4133, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Weapons.Turret
-  targetStrategyType: 0
-  <Angle>k__BackingField: 80
-  <Range>k__BackingField: 30
-  <TargetPriorities>k__BackingField: []
-  <RequiresLock>k__BackingField: 1
 --- !u!1 &4357487717180483712
 GameObject:
   m_ObjectHideFlags: 0
@@ -1079,7 +953,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!1 &4556212917106733802
+--- !u!1 &5110591801384098641
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1087,38 +961,38 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5565856074679829978}
-  - component: {fileID: 3653355962057867642}
-  - component: {fileID: 448346147910569594}
+  - component: {fileID: 1234230883927013991}
+  - component: {fileID: 8076299474897670835}
+  - component: {fileID: 4775689130079195335}
   m_Layer: 8
-  m_Name: VentralTurret
+  m_Name: BroadsideBeams
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5565856074679829978
+--- !u!4 &1234230883927013991
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4556212917106733802}
+  m_GameObject: {fileID: 5110591801384098641}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3560443133365011524}
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
---- !u!114 &3653355962057867642
+  m_Father: {fileID: 5265401070332729692}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8076299474897670835
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4556212917106733802}
+  m_GameObject: {fileID: 5110591801384098641}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7713538afd10e9041afaa03325d26a7e, type: 3}
@@ -1131,21 +1005,22 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   material: {fileID: 2100000, guid: 7ba00c2bb1c8ee348b9f7033073383f6, type: 2}
-  lineThickness: 0.2
---- !u!114 &448346147910569594
+  lineThickness: 0.1
+--- !u!114 &4775689130079195335
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4556212917106733802}
+  m_GameObject: {fileID: 5110591801384098641}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fa63681f9d36e0e44818dc0c2bef4133, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Weapons.Turret
   targetStrategyType: 0
-  <Angle>k__BackingField: 80
+  <TypeOfAngle>k__BackingField: 1
+  <Angle>k__BackingField: 85
   <Range>k__BackingField: 30
   <TargetPriorities>k__BackingField: []
   <RequiresLock>k__BackingField: 1
@@ -1274,9 +1149,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 3881448478832984459}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 300, y: 110}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 250, y: 60}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6064885569108843112
@@ -1341,8 +1216,8 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
-  m_VerticalAlignment: 512
+  m_HorizontalAlignment: 4
+  m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -1407,8 +1282,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 6773058874513903764}
   - {fileID: 378577999834105310}
+  - {fileID: 6773058874513903764}
   m_Father: {fileID: 2284127706595016713}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -1430,111 +1305,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Player.HUD
   hullText: {fileID: 4751311087329690904}
   shieldText: {fileID: 4338965909457331692}
---- !u!1 &7737024835471682230
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3560443133365011524}
-  m_Layer: 8
-  m_Name: BeamArray
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3560443133365011524
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7737024835471682230}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 5565856074679829978}
-  - {fileID: 4782143201021551993}
-  - {fileID: 8229488058154703528}
-  - {fileID: 9204490860706885121}
-  m_Father: {fileID: 5265401070332729692}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &8044711423998848383
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8229488058154703528}
-  - component: {fileID: 5637736700703956613}
-  - component: {fileID: 2077609491103112187}
-  m_Layer: 8
-  m_Name: PortTurret
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8229488058154703528
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8044711423998848383}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3560443133365011524}
-  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
---- !u!114 &5637736700703956613
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8044711423998848383}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7713538afd10e9041afaa03325d26a7e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Weapons.BeamWeapon
-  shotCooldown: 1
-  <Damage>k__BackingField: 1
-  damageType: 1
-  onFire:
-    m_PersistentCalls:
-      m_Calls: []
-  material: {fileID: 2100000, guid: 7ba00c2bb1c8ee348b9f7033073383f6, type: 2}
-  lineThickness: 0.2
---- !u!114 &2077609491103112187
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8044711423998848383}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa63681f9d36e0e44818dc0c2bef4133, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Weapons.Turret
-  targetStrategyType: 0
-  <Angle>k__BackingField: 80
-  <Range>k__BackingField: 30
-  <TargetPriorities>k__BackingField: []
-  <RequiresLock>k__BackingField: 1
 --- !u!1 &8980521270692792982
 GameObject:
   m_ObjectHideFlags: 0

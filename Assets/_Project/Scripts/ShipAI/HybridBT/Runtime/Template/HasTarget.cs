@@ -7,7 +7,7 @@ namespace HybridBT.Template
     {
         public override Func<Context<ShipAIKeys>, bool> Function => (ctx) =>
         {
-            return ctx.GetData<Object>(ShipAIKeys.Target);
+            return ctx.GetData<Unit>(ShipAIKeys.Target);
         };
     }
 }

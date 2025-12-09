@@ -20,10 +20,10 @@ namespace Spawning
             return s;
         }
         /// <summary>
-        /// Get a spawnable object. In this version we just instantiate it.
+        /// Get a spawnable SpecialObject. In this version we just instantiate it.
         /// </summary>
         /// <param name="objectData">The data containing the prefab and used for initialization.</param>
-        /// <returns>The spawned object.</returns>
+        /// <returns>The spawned SpecialObject.</returns>
         protected virtual Spawnable Obtain(SpawnableData objectData)
         {
             var s = Instantiate(objectData.Prefab);

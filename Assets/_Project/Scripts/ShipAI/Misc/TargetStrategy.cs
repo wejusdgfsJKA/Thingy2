@@ -9,12 +9,13 @@ namespace Weapons
     }
     public abstract class TargetStrategy
     {
-        public Object CurrentTarget { get; protected set; } = null;
+        public Unit CurrentTarget { get; protected set; } = null;
         protected float currentTargetScore = 0;
         protected Transform self;
         protected float maxRange, angle;
         protected Dictionary<ObjectType, float> targetPriorities = new();
         protected bool requiresLock = true;
+        protected System.Func<Unit, bool> angleCheck;
         public TargetStrategy(Turret turret)
         {
             self = turret.transform;
@@ -26,13 +27,14 @@ namespace Weapons
                 var p = turret.TargetPriorities[i];
                 targetPriorities.Add(p.Type, p.Weight);
             }
+            angleCheck = turret.IsInAngle;
         }
         public void Reset()
         {
             CurrentTarget = null;
             currentTargetScore = 0;
         }
-        public bool ConsiderTarget(Object @object, DetectionState detectionState = DetectionState.Identified)
+        public bool ConsiderTarget(Unit @object, DetectionState detectionState = DetectionState.Identified)
         {
             if (ValidTarget(@object, detectionState))
             {
@@ -51,27 +53,22 @@ namespace Weapons
             }
             return false;
         }
-        public abstract float ScoreTarget(Object @object);
-        public virtual bool ValidTarget(Object @object, DetectionState detectionState)
+        public abstract float ScoreTarget(Unit @object);
+        public virtual bool ValidTarget(Unit @object, DetectionState detectionState)
         {
             if (requiresLock && detectionState != DetectionState.Identified) return false;
+
             //check range
             if (Vector3.Distance(self.position, @object.Transform.position) > maxRange) return false;
 
             //check angle
-            if (angle < 360)
-            {
-                Vector3 directionToTarget = (@object.Transform.position - self.position).normalized;
-                float angleToTarget = Vector3.Angle(self.forward, directionToTarget);
-                if (angleToTarget > angle / 2) return false;
-            }
-            return true;
+            return angleCheck(@object);
         }
     }
     public class ClosestTargetStrategy : TargetStrategy
     {
         public ClosestTargetStrategy(Turret turret) : base(turret) { }
-        public override float ScoreTarget(Object @object)
+        public override float ScoreTarget(Unit @object)
         {
             float distance = Vector3.Distance(@object.Transform.position, self.position);
             return distance <= maxRange ? maxRange / (distance + Mathf.Epsilon) : 0;

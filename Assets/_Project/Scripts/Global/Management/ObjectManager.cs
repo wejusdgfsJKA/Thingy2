@@ -13,7 +13,7 @@ public enum Teams : byte
 public class ObjectManager : MultiManager<ObjectType>
 {
     #region Fields
-    static readonly Dictionary<ObjectType, ObjectData> assets = new();
+    static readonly Dictionary<ObjectType, UnitData> assets = new();
     static readonly List<string> addresses = new()
     {
         "Player",
@@ -30,10 +30,10 @@ public class ObjectManager : MultiManager<ObjectType>
     public async static Task LoadAssets()
     {
         if (assets.Count > 0) return;
-        Task<ObjectData>[] tasks = new Task<ObjectData>[addresses.Count];
+        Task<UnitData>[] tasks = new Task<UnitData>[addresses.Count];
         for (int i = 0; i < addresses.Count; i++)
         {
-            tasks[i] = Addressables.LoadAssetAsync<ObjectData>(addresses[i]).Task;
+            tasks[i] = Addressables.LoadAssetAsync<UnitData>(addresses[i]).Task;
         }
         await Task.WhenAll(tasks);
         for (int i = 0; i < tasks.Length; i++)
@@ -73,11 +73,11 @@ public class ObjectManager : MultiManager<ObjectType>
 
     #endregion
     #region Spawning
-    public Object SpawnShip(ObjectType type, Teams team, Vector3 position, Quaternion rotation)
+    public Unit SpawnShip(ObjectType type, Teams team, Vector3 position, Quaternion rotation)
     {
         if (!assets.TryGetValue(type, out var data))
         {
-            Debug.LogError($"No asset found for object type {type}.");
+            Debug.LogError($"No asset found for SpecialObject type {type}.");
             return null;
         }
         Unit ship = Spawn(data, position, rotation) as Unit;
@@ -91,7 +91,7 @@ public class ObjectManager : MultiManager<ObjectType>
         }
         return ship;
     }
-    public Object SpawnShip(ObjectType type, Teams team, Vector3 position)
+    public Unit SpawnShip(ObjectType type, Teams team, Vector3 position)
     {
         return SpawnShip(type, team, position, Quaternion.identity);
     }

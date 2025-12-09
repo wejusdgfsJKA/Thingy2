@@ -11,7 +11,7 @@ public enum DetectionState
     /// </summary>
     Tracked,
     /// <summary>
-    /// This is the first time we are seeing this object.
+    /// This is the first time we are seeing this SpecialObject.
     /// </summary>
     Hidden
 }
@@ -19,9 +19,9 @@ public enum DetectionState
 public class Team
 {
     public HashSet<Unit> Members { get; } = new();
-    public HashSet<Object> IdentifiedTargets { get; } = new();
-    public HashSet<Object> TrackedTargets { get; } = new();
-    public event System.Action<Object> OnMemberAdded, OnMemberRemoved, OnTrackedTargetAdded,
+    public HashSet<Unit> IdentifiedTargets { get; } = new();
+    public HashSet<Unit> TrackedTargets { get; } = new();
+    public event System.Action<Unit> OnMemberAdded, OnMemberRemoved, OnTrackedTargetAdded,
         OnIdentifiedTargetAdded, OnTargetRemoved;
     readonly int index;
     public Team(int index)
@@ -37,9 +37,8 @@ public class Team
             ship.Team = this;
         }
     }
-    public void RemoveMember(Object @object)
+    public void RemoveMember(Unit ship)
     {
-        if (@object is not Unit ship) return;
         if (Members.Remove(ship))
         {
             ship.OnDespawn -= RemoveMember;
@@ -85,20 +84,20 @@ public class Team
             }
         }
     }
-    public DetectionState GetObjectDetectionState(Object obj)
+    public DetectionState GetObjectDetectionState(Unit obj)
     {
         return TrackedTargets.Contains(obj) ? DetectionState.Tracked :
             IdentifiedTargets.Contains(obj) ? DetectionState.Identified :
             DetectionState.Hidden;
     }
-    public void RemoveTarget(Object obj)
+    public void RemoveTarget(Unit obj)
     {
         IdentifiedTargets.Remove(obj);
         TrackedTargets.Remove(obj);
         obj.OnDespawn -= RemoveTarget;
         OnTargetRemoved?.Invoke(obj);
     }
-    DetectionState GetDetectionState(Object obj)
+    DetectionState GetDetectionState(Unit obj)
     {
         DetectionState state = DetectionState.Tracked;
         foreach (var member in Members)

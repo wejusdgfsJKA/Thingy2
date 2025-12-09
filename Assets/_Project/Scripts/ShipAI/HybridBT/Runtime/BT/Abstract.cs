@@ -18,10 +18,10 @@ namespace HybridBT
             Name = name;
         }
         /// <summary>
-        /// Get the name of this object, indented a certain nr of times.
+        /// Get the name of this SpecialObject, indented a certain nr of times.
         /// </summary>
         /// <param name="indentation">How many times we should apply an indent.</param>
-        /// <returns>The name of the object.</returns>
+        /// <returns>The name of the SpecialObject.</returns>
         public virtual string GetInfo(int indentation)
         {
             return new string('\t', indentation) + Name;

@@ -10,7 +10,7 @@ namespace HybridBT.Template
         protected override Func<Context<ShipAIKeys>, NodeState> onEvaluate => (ctx) =>
         {
             var prevPos = ctx.GetData<Vector3>(ShipAIKeys.PrevTargetPos);
-            var currentPos = ctx.GetData<Object>(ShipAIKeys.Target).Position;
+            var currentPos = ctx.GetData<Unit>(ShipAIKeys.Target).Position;
             if (Vector3.Magnitude(prevPos - currentPos) >= chaseErrorThreshold)
             {
                 ctx.Navigation.Destination = currentPos + stopDistance * UnityEngine.Random.onUnitSphere; ;
@@ -21,7 +21,7 @@ namespace HybridBT.Template
         };
         protected override Action<Context<ShipAIKeys>> onEnter => (ctx) =>
         {
-            var obj = ctx.GetData<Object>(ShipAIKeys.Target);
+            var obj = ctx.GetData<Unit>(ShipAIKeys.Target);
             if (obj != null)
             {
                 ctx.Navigation.UpdateRotation = false;

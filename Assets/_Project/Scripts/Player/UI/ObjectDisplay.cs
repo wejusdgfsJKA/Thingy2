@@ -19,10 +19,10 @@ namespace Player
             public readonly RectTransform RectTransform;
             public readonly Image Image;
             public readonly Button Button;
-            public readonly Object Object;
+            public readonly Unit Object;
             public readonly TextMeshProUGUI Text;
             public readonly GameObject GameObject { get => RectTransform.gameObject; }
-            public ObjectUIData(Image image, Object @object, Button button, TextMeshProUGUI text)
+            public ObjectUIData(Image image, Unit @object, Button button, TextMeshProUGUI text)
             {
                 RectTransform = image.rectTransform;
                 Image = image;
@@ -31,10 +31,10 @@ namespace Player
                 Text = text;
             }
         }
-        [field: SerializeField] public Object CurrentTarget { get; protected set; }
+        [field: SerializeField] public Unit CurrentTarget { get; protected set; }
         protected Camera cam;
         protected Canvas canvas;
-        protected readonly Dictionary<Object, ObjectUIData> toTrack = new();
+        protected readonly Dictionary<Unit, ObjectUIData> toTrack = new();
         protected readonly Stack<(Image, Button, TextMeshProUGUI)> iconPool = new();
         #endregion
         #endregion
@@ -64,7 +64,7 @@ namespace Player
         /// Disables button and raycast target.
         /// </summary>
         /// <param name="obj">The object to keep track of.</param>
-        public void AddTracked(Object obj)
+        public void AddTracked(Unit obj)
         {
             if (obj == GameManager.Player) return;
             obj.IdentifiedRenderer.enabled = false;
@@ -85,7 +85,7 @@ namespace Player
         }
         public void AddIdentified(SpecialObjectAdded objectAdded)
         {
-            AddIdentified(objectAdded.@object);
+            AddIdentified(objectAdded.SpecialObject);
         }
         /// <summary>
         /// Does nothing for the player object.
@@ -93,7 +93,7 @@ namespace Player
         /// Disables button and raycast target if the object is not selectable.
         /// </summary>
         /// <param name="obj"></param>
-        public void AddIdentified(Object obj)
+        public void AddIdentified(Unit obj)
         {
             if (obj.ID == ObjectType.Player) return;
             obj.IdentifiedRenderer.enabled = true;
@@ -118,7 +118,7 @@ namespace Player
         /// image and button to the pool.
         /// </summary>
         /// <param name="obj"></param>
-        public void RemoveObject(Object obj)
+        public void RemoveObject(Unit obj)
         {
             if (obj.ID == ObjectType.Player) return;
             obj.OnDespawn -= RemoveObject;
@@ -199,7 +199,7 @@ namespace Player
             }
         }
         #endregion
-        void TargetSelected(Object obj)
+        void TargetSelected(Unit obj)
         {
             CurrentTarget = obj;
         }
