@@ -36,6 +36,7 @@ namespace Weapons
         }
         public bool ConsiderTarget(Unit @object)
         {
+            if (@object == null) throw new System.ArgumentNullException($"{this} received null target for evaluation.");
             return targetStrategy.ConsiderTarget(@object);
         }
         public void Fire()
@@ -46,7 +47,6 @@ namespace Weapons
 
             //check cooldown
             if (weapon.Charge < 1) return;
-
             //check range
             if (Vector3.Distance(transform.position, @object.Transform.position) > Range) return;
 

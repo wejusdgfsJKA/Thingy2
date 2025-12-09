@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 72199614292037894}
   - component: {fileID: 4961490904052932586}
   - component: {fileID: 8484232309202354424}
+  - component: {fileID: 112537818960169776}
   m_Layer: 0
   m_Name: FriendStation
   m_TagString: Untagged
@@ -56,6 +57,7 @@ MonoBehaviour:
   OnDamageTaken:
     m_PersistentCalls:
       m_Calls: []
+  <ArmorModifiers>k__BackingField: []
 --- !u!114 &72199614292037894
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -69,17 +71,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Unit
   <ID>k__BackingField: 2
-  <Signature>k__BackingField: 30
   <Selectable>k__BackingField: 0
   <Icon>k__BackingField: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
   <Material>k__BackingField: {fileID: 2100000, guid: 7ba00c2bb1c8ee348b9f7033073383f6, type: 2}
-  <IconSizeCoefficient>k__BackingField: 300
+  <IconSizeCoefficient>k__BackingField: 5
   <IdentifiedRenderer>k__BackingField: {fileID: 5563910399959560779}
   <TrackedRenderer>k__BackingField: {fileID: 161886762737019715}
   <ScanRange>k__BackingField: 40
   <Turrets>k__BackingField:
   - {fileID: 4961490904052932586}
-  TurretsHaveTarget: 0
 --- !u!114 &4961490904052932586
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -93,6 +93,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Weapons.Turret
   targetStrategyType: 0
+  <TypeOfAngle>k__BackingField: 0
   <Angle>k__BackingField: 360
   <Range>k__BackingField: 30
   <TargetPriorities>k__BackingField:
@@ -121,6 +122,19 @@ MonoBehaviour:
       m_Calls: []
   material: {fileID: 2100000, guid: 7ba00c2bb1c8ee348b9f7033073383f6, type: 2}
   lineThickness: 0.1
+--- !u!114 &112537818960169776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1610702160051717356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4c59abc458732644bd2950ca24b82e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SignatureComponent
+  defaultSignature: 10
 --- !u!1 &6282651783333426131
 GameObject:
   m_ObjectHideFlags: 0

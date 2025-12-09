@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using static Weapons.Turret;
 
 namespace Weapons
 {
@@ -16,10 +17,12 @@ namespace Weapons
         protected Dictionary<ObjectType, float> targetPriorities = new();
         protected bool requiresLock = true;
         protected System.Func<Unit, bool> angleCheck;
+        protected AngleType typeOfAngle;
         public TargetStrategy(Turret turret)
         {
             self = turret.transform;
             maxRange = turret.Range;
+            typeOfAngle = turret.TypeOfAngle;
             angle = turret.Angle;
             requiresLock = turret.RequiresLock;
             for (int i = 0; i < turret.TargetPriorities.Count; i++)
@@ -62,7 +65,28 @@ namespace Weapons
             if (Vector3.Distance(self.position, @object.Transform.position) > maxRange) return false;
 
             //check angle
-            return angleCheck(@object);
+            return IsInAngle(@object);
+        }
+        protected bool IsInAngle(Unit target)
+        {
+            switch (typeOfAngle)
+            {
+                case AngleType.ForwardArc:
+                    {
+                        if (angle >= 360) return true;
+                        Vector3 directionToTarget = (target.Transform.position - self.position).normalized;
+                        float angleToTarget = Vector3.Angle(self.forward, directionToTarget);
+                        return angleToTarget <= angle / 2;
+                    }
+                case AngleType.Side:
+                    {
+                        if (angle >= 180) return true;
+                        Vector3 directionToTarget = (target.Transform.position - self.position).normalized;
+                        float angleToTarget = Vector3.Angle(self.forward, directionToTarget);
+                        return 180 - angleToTarget <= angle;
+                    }
+            }
+            return false;
         }
     }
     public class ClosestTargetStrategy : TargetStrategy

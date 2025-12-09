@@ -36,8 +36,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4209679733363145203}
   - {fileID: 7549545964382806079}
+  - {fileID: 4209679733363145203}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2524300982238176342
@@ -56,7 +56,7 @@ MonoBehaviour:
   <Selectable>k__BackingField: 1
   <Icon>k__BackingField: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
   <Material>k__BackingField: {fileID: 2100000, guid: f712bd3b78c94b3428969e55491442f4, type: 2}
-  <IconSizeCoefficient>k__BackingField: 300
+  <IconSizeCoefficient>k__BackingField: 5
   <IdentifiedRenderer>k__BackingField: {fileID: 3035678715630224028}
   <TrackedRenderer>k__BackingField: {fileID: 4915477264058440870}
   <ScanRange>k__BackingField: 30
@@ -144,6 +144,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Weapons.Turret
   targetStrategyType: 0
+  <TypeOfAngle>k__BackingField: 0
   <Angle>k__BackingField: 180
   <Range>k__BackingField: 20
   <TargetPriorities>k__BackingField: []

@@ -1,5 +1,7 @@
 using EventBus;
 using System.Collections.Generic;
+using System.Linq;
+using Timers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,25 +19,24 @@ namespace Player
         protected readonly struct ObjectUIData
         {
             public readonly RectTransform RectTransform;
-            public readonly Image Image;
-            public readonly Button Button;
+            public readonly Image BoundingBox;
             public readonly Unit Object;
-            public readonly TextMeshProUGUI Text;
+            public readonly TextMeshProUGUI DistanceText;
             public readonly GameObject GameObject { get => RectTransform.gameObject; }
-            public ObjectUIData(Image image, Unit @object, Button button, TextMeshProUGUI text)
+            public ObjectUIData(Image image, Unit @object, TextMeshProUGUI text)
             {
                 RectTransform = image.rectTransform;
-                Image = image;
+                BoundingBox = image;
                 Object = @object;
-                Button = button;
-                Text = text;
+                DistanceText = text;
             }
         }
         [field: SerializeField] public Unit CurrentTarget { get; protected set; }
         protected Camera cam;
-        protected Canvas canvas;
+        [SerializeField] protected RectTransform reticleParent;
         protected readonly Dictionary<Unit, ObjectUIData> toTrack = new();
-        protected readonly Stack<(Image, Button, TextMeshProUGUI)> iconPool = new();
+        protected readonly Stack<(Image, TextMeshProUGUI)> iconPool = new();
+        protected readonly CountdownTimer reorderTimer = new(GlobalSettings.UIUpdateCooldown);
         #endregion
         #endregion
         #region Setup
@@ -43,7 +44,6 @@ namespace Player
         {
             Instance = this;
             cam = GetComponentInChildren<Camera>();
-            canvas = cam.transform.GetComponentInChildren<Canvas>();
             EventBus<SpecialObjectAdded>.AddActions(AddIdentified);
             GameManager.Teams[0].OnMemberAdded += AddIdentified;
             GameManager.Teams[0].OnMemberRemoved += RemoveObject;
@@ -51,9 +51,24 @@ namespace Player
             GameManager.Teams[0].OnTrackedTargetAdded += AddTracked;
             GameManager.Teams[0].OnTargetRemoved += RemoveObject;
         }
+        private void OnEnable()
+        {
+            reorderTimer.OnTimerStop += () =>
+            {
+                ReorderBoundingBoxes();
+                reorderTimer.Start();
+            };
+            reorderTimer.Start();
+        }
         private void OnDisable()
         {
             EventBus<SpecialObjectAdded>.RemoveActions(AddIdentified);
+            reorderTimer.OnTimerStop = null;
+            reorderTimer.Stop();
+        }
+        private void OnDestroy()
+        {
+            reorderTimer.Dispose();
         }
         #endregion
         #region Object management
@@ -73,15 +88,14 @@ namespace Player
             if (!toTrack.TryGetValue(obj, out var data))
             {
                 obj.OnDespawn += RemoveObject;
-                Image img; Button btn; TextMeshProUGUI txt;
-                (img, btn, txt) = GetIcon(obj.Icon);
-                if (obj.Selectable) btn.onClick.AddListener(() => TargetSelected(obj));
+                Image img; TextMeshProUGUI txt;
+                (img, txt) = GetIcon(obj.Icon);
                 img.rectTransform.anchoredPosition = cam.ScreenToWorldPoint(obj.Transform.position);
-                data = new(img, obj, btn, txt);
+                img.raycastTarget = false;
+                data = new(img, obj, txt);
                 toTrack.Add(obj, data);
             }
-            data.Image.material = obj.TrackedRenderer.material;
-            data.Button.enabled = data.Image.raycastTarget = false;
+            data.BoundingBox.material = obj.TrackedRenderer.material;
         }
         public void AddIdentified(SpecialObjectAdded objectAdded)
         {
@@ -101,16 +115,15 @@ namespace Player
             if (obj.Icon == null) return;
             if (!toTrack.TryGetValue(obj, out var data))
             {
-                Image img; Button btn; TextMeshProUGUI txt;
-                (img, btn, txt) = GetIcon(obj.Icon);
+                Image img; TextMeshProUGUI txt;
+                (img, txt) = GetIcon(obj.Icon);
                 obj.OnDespawn += RemoveObject;
-                if (obj.Selectable) btn.onClick.AddListener(() => TargetSelected(obj));
+                img.raycastTarget = obj.Selectable;
                 img.rectTransform.anchoredPosition = cam.ScreenToWorldPoint(obj.Transform.position);
-                data = new(img, obj, btn, txt);
+                data = new(img, obj, txt);
                 toTrack.Add(obj, data);
             }
-            data.Image.material = obj.Material;
-            data.Button.enabled = data.Image.raycastTarget = obj.Selectable;
+            data.BoundingBox.material = obj.Material;
         }
         /// <summary>
         /// Does nothing for the player object.
@@ -126,33 +139,30 @@ namespace Player
             if (CurrentTarget == obj) ClearTarget();
             if (toTrack.TryGetValue(obj, out var data))
             {
-                data.Button.onClick.RemoveAllListeners();
-                iconPool.Push((data.Image, data.Button, data.Text));
+                iconPool.Push((data.BoundingBox, data.DistanceText));
                 data.RectTransform.gameObject.SetActive(false);
                 toTrack.Remove(obj);
             }
         }
-        protected (Image, Button, TextMeshProUGUI) GetIcon(Sprite sprite)
+        protected (Image, TextMeshProUGUI) GetIcon(Sprite sprite)
         {
             Image icon;
-            Button btn;
             TextMeshProUGUI txt;
             if (iconPool.Count == 0)
             {
-                icon = Instantiate(iconPrefab, canvas.transform);
-                btn = icon.GetComponent<Button>();
+                icon = Instantiate(iconPrefab, reticleParent.transform);
                 txt = icon.GetComponentInChildren<TextMeshProUGUI>();
                 icon.sprite = sprite;
                 icon.fillCenter = false;
             }
             else
             {
-                (icon, btn, txt) = iconPool.Pop();
+                (icon, txt) = iconPool.Pop();
                 icon.sprite = sprite;
                 icon.gameObject.SetActive(true);
             }
             txt.text = "";
-            return (icon, btn, txt);
+            return (icon, txt);
         }
         #endregion
         #region UI
@@ -166,28 +176,19 @@ namespace Player
             {
                 if (a.Key == null) continue;
 
-                Vector3 worldPos = a.Key.Transform.position;
+                Vector3 worldPos = a.Value.Object.Transform.position;
+                Vector3 screenPos = cam.WorldToScreenPoint(worldPos);
 
-                // Convert world position to viewport coordinates (0..1)
                 Vector3 viewportPos = cam.WorldToViewportPoint(worldPos);
-
-                // If behind the camera, hide the icon
                 if (viewportPos.z <= 0)
                 {
                     a.Value.GameObject.SetActive(false);
                     continue;
                 }
-
                 a.Value.GameObject.SetActive(true);
 
-                // Map viewport (0..1) to mainMenuCanvas local position
-                RectTransform canvasRect = a.Value.RectTransform.parent as RectTransform;
-                Vector2 canvasPos = new Vector2(
-                    (viewportPos.x - 0.5f) * canvasRect.sizeDelta.x,
-                    (viewportPos.y - 0.5f) * canvasRect.sizeDelta.y
-                );
-
-                a.Value.RectTransform.anchoredPosition = canvasPos;
+                RectTransformUtility.ScreenPointToLocalPointInRectangle(reticleParent, screenPos, null, out var localPos);
+                a.Value.RectTransform.localPosition = localPos;
 
                 //scale based on distance
                 float dist = Vector3.Distance(cam.transform.position, worldPos);
@@ -195,7 +196,21 @@ namespace Player
                     minTextScale, maxTextScale);
                 a.Value.RectTransform.sizeDelta = new Vector2(20, 20) * size;
                 dist = Vector3.Distance(cam.transform.root.position, worldPos);
-                a.Value.Text.text = dist.ToString("0.0");
+                a.Value.DistanceText.text = dist.ToString("0.0");
+            }
+        }
+        void ReorderBoundingBoxes()
+        {
+            var list = toTrack.Values.ToList();
+            list.Sort((a, b) =>
+            {
+                float distA = Vector3.Distance(Camera.main.transform.position, a.Object.transform.position);
+                float distB = Vector3.Distance(Camera.main.transform.position, b.Object.transform.position);
+                return distB.CompareTo(distA);
+            });
+            for (int i = 0; i < list.Count; i++)
+            {
+                list[i].RectTransform.SetSiblingIndex(i);
             }
         }
         #endregion

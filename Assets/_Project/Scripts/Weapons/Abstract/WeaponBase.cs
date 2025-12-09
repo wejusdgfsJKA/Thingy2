@@ -10,7 +10,7 @@ namespace Weapons
         protected CountdownTimer shotTimer;
         protected TakeDamage takeDamage;
         [field: SerializeField] public float Damage { get; protected set; } = 1;
-        public float Charge => 1 - shotTimer.Progress;
+        public float Charge => shotTimer.IsRunning ? shotTimer.Progress : 1;
         [SerializeField] protected DamageType damageType = DamageType.Energy;
         [SerializeField] protected UnityEvent onFire;
         protected virtual void Awake()

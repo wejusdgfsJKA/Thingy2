@@ -32,5 +32,6 @@ public static class GlobalSettings
         return weights.GetValueOrDefault(type, 1);
     }
     public static readonly string MainSceneAddress = "MainScene", IntermediateSceneAddress = "Intermediate";
-    public static float AITickCooldown = 0.05f;
+    public static readonly float AITickCooldown = 0.05f;
+    public static readonly float UIUpdateCooldown = 1f;
 }

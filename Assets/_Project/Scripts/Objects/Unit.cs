@@ -13,7 +13,7 @@ public class Unit : IDPoolable<ObjectType>
     [field: SerializeField] public bool Selectable { get; set; } = true;
     [field: SerializeField] public Sprite Icon { get; protected set; }
     [field: SerializeField] public Material Material { get; protected set; }
-    [field: SerializeField] public float IconSizeCoefficient { get; protected set; } = 300;
+    [field: SerializeField] public float IconSizeCoefficient { get; protected set; } = 5;
     [field: SerializeField] public MeshRenderer IdentifiedRenderer { get; protected set; }
     [field: SerializeField] public MeshRenderer TrackedRenderer { get; protected set; }
     #endregion
@@ -95,6 +95,7 @@ public class Unit : IDPoolable<ObjectType>
     }
     protected virtual void Tick(float deltaTime)
     {
+        if (Team == null) return;
         TurretsHaveTarget = false;
         foreach (var target in Team.IdentifiedTargets)
         {
