@@ -23,16 +23,27 @@ public class Unit : IDPoolable<ObjectType>
     [field: SerializeField] public List<Turret> Turrets { get; protected set; } = new();
     #endregion
     public event System.Action<Unit> OnDespawn;
+    /// <summary>
+    /// Unit transform.
+    /// </summary>
     public Transform Transform { get; protected set; }
+    /// <summary>
+    /// Transform.position.
+    /// </summary>
     public Vector3 Position => Transform.position;
     protected HullComponent hullComponent;
     protected SignatureComponent signatureComponent;
     protected ShieldComponent shieldComponent;
     public float HullPoints => hullComponent.CurrentHullPoints;
     public float ShieldPoints => shieldComponent.ShieldPoints;
-    public Team Team { get; set; }
+    public int Team { get; set; }
     public bool TurretsHaveTarget { get; protected set; }
     protected CountdownTimer tickTimer;
+    public readonly Dictionary<DetectionState, HashSet<Unit>> Targets = new() {
+        {DetectionState.Identified, new HashSet<Unit>() },
+        {DetectionState.Tracked, new HashSet<Unit>() }
+    };
+    public event System.Action<Unit> OnIdentifiedTargetAdded, OnTrackedTargetAdded, OnTargetRemoved;
     #endregion
     #region Setup
     protected virtual void Awake()
@@ -61,6 +72,8 @@ public class Unit : IDPoolable<ObjectType>
     }
     protected virtual void OnEnable()
     {
+        Targets[DetectionState.Identified].Clear();
+        Targets[DetectionState.Tracked].Clear();
         if (ID != ObjectType.Player)
         {
             IdentifiedRenderer.enabled = false;
@@ -76,6 +89,7 @@ public class Unit : IDPoolable<ObjectType>
     }
     protected virtual void OnDestroy()
     {
+        Targets.Clear();
         OnDespawn = null;
         tickTimer.Dispose();
     }
@@ -95,19 +109,51 @@ public class Unit : IDPoolable<ObjectType>
     }
     protected virtual void Tick(float deltaTime)
     {
-        if (Team == null) return;
+        PerformDetection();
         TurretsHaveTarget = false;
-        foreach (var target in Team.IdentifiedTargets)
+        foreach (var target in Targets[DetectionState.Identified])
         {
             ConsiderTarget(target);
         }
-        foreach (var target in Team.TrackedTargets)
+        foreach (var target in Targets[DetectionState.Tracked])
         {
             ConsiderTarget(target);
         }
         for (int i = 0; i < Turrets.Count; i++)
         {
             Turrets[i].Fire();
+        }
+    }
+    protected virtual void PerformDetection()
+    {
+        var enemyTeam = Team == 0 ? GameManager.Teams[1] : GameManager.Teams[0];
+        foreach (var obj in enemyTeam.Members)
+        {
+            if (!Targets[DetectionState.Identified].Contains(obj) && !Targets[DetectionState.Tracked].Contains(obj))
+            {
+                obj.OnDespawn += RemoveTarget;
+            }
+            float dist = Vector3.Distance(obj.Position, Position) - obj.Signature;
+            if (dist <= ScanRange)
+            {
+                Targets[DetectionState.Tracked].Remove(obj);
+                Targets[DetectionState.Identified].Add(obj);
+                OnIdentifiedTargetAdded?.Invoke(obj);
+            }
+            else
+            {
+                Targets[DetectionState.Identified].Remove(obj);
+                Targets[DetectionState.Tracked].Add(obj);
+                OnTrackedTargetAdded?.Invoke(obj);
+            }
+        }
+    }
+    protected void RemoveTarget(Unit unit)
+    {
+        unit.OnDespawn -= RemoveTarget;
+        if (Targets[DetectionState.Identified].Remove(unit) || Targets[DetectionState.Tracked].Remove(unit))
+        {
+            OnTargetRemoved?.Invoke(unit);
         }
     }
     protected virtual void ConsiderTarget(Unit @object)

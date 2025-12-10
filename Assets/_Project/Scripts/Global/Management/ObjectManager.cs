@@ -1,6 +1,5 @@
 using Player;
 using Spawning.Pooling;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -21,10 +20,6 @@ public class ObjectManager : MultiManager<ObjectType>
         "Enemy"
     };
     public static ObjectManager Instance { get; protected set; }
-    #region Technical
-    WaitForSeconds aiWait;
-    readonly List<Coroutine> coroutines = new();
-    #endregion
     #endregion
     #region Setup
     public async static Task LoadAssets()
@@ -45,28 +40,7 @@ public class ObjectManager : MultiManager<ObjectType>
     }
     private void Awake()
     {
-        aiWait = new WaitForSeconds(GlobalSettings.AITickCooldown);
         Instance = this;
-    }
-    private void OnEnable()
-    {
-        coroutines.Add(StartCoroutine(AICoroutine()));
-    }
-    private void OnDisable()
-    {
-        for (int i = 0; i < coroutines.Count; i++) if (coroutines[i] != null) StopCoroutine(coroutines[i]);
-    }
-    #endregion
-    #region AI
-    IEnumerator AICoroutine()
-    {
-        yield return new WaitUntil(() => GameManager.Teams[0] != null && GameManager.Teams[1] != null);
-        while (true)
-        {
-            yield return aiWait;
-            GameManager.Teams[0]?.Tick(GlobalSettings.AITickCooldown);
-            GameManager.Teams[1]?.Tick(GlobalSettings.AITickCooldown);
-        }
     }
     #endregion
     #region Object updates

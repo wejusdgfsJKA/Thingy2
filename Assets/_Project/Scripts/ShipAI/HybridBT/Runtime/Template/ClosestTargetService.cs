@@ -9,7 +9,7 @@ namespace HybridBT.Template
             {
                 Unit target = null;
                 float closestTargetDist = float.PositiveInfinity;
-                foreach (var unit in ctx.Ship.Team.IdentifiedTargets)
+                foreach (var unit in ctx.Ship.Targets[DetectionState.Identified])
                 {
                     float dist = Vector3.Distance(unit.Transform.position, ctx.Ship.transform.position);
                     if (dist < closestTargetDist)
@@ -20,7 +20,7 @@ namespace HybridBT.Template
                 }
                 if (target == null)
                 {
-                    foreach (var unit in ctx.Ship.Team.TrackedTargets)
+                    foreach (var unit in ctx.Ship.Targets[DetectionState.Tracked])
                     {
                         float dist = Vector3.Distance(unit.Transform.position, ctx.Ship.transform.position);
                         if (dist < closestTargetDist)

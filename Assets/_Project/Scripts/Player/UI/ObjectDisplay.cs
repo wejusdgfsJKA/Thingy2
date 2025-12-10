@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 namespace Player
 {
+    [RequireComponent(typeof(PlayerShip))]
     public class ObjectDisplay : MonoBehaviour
     {
         #region Fields
@@ -15,7 +16,6 @@ namespace Player
         [SerializeField] float minTextScale, maxTextScale;
         #endregion
         #region Implementation
-        public static ObjectDisplay Instance { get; private set; }
         protected readonly struct ObjectUIData
         {
             public readonly RectTransform RectTransform;
@@ -37,19 +37,20 @@ namespace Player
         protected readonly Dictionary<Unit, ObjectUIData> toTrack = new();
         protected readonly Stack<(Image, TextMeshProUGUI)> iconPool = new();
         protected readonly CountdownTimer reorderTimer = new(GlobalSettings.UIUpdateCooldown);
+        protected PlayerShip playerShip;
         #endregion
         #endregion
         #region Setup
         protected void Awake()
         {
-            Instance = this;
+            playerShip = GetComponent<PlayerShip>();
             cam = GetComponentInChildren<Camera>();
             EventBus<SpecialObjectAdded>.AddActions(AddIdentified);
             GameManager.Teams[0].OnMemberAdded += AddIdentified;
             GameManager.Teams[0].OnMemberRemoved += RemoveObject;
-            GameManager.Teams[0].OnIdentifiedTargetAdded += AddIdentified;
-            GameManager.Teams[0].OnTrackedTargetAdded += AddTracked;
-            GameManager.Teams[0].OnTargetRemoved += RemoveObject;
+            playerShip.OnIdentifiedTargetAdded += AddIdentified;
+            playerShip.OnTrackedTargetAdded += AddTracked;
+            playerShip.OnTargetRemoved += RemoveObject;
         }
         private void OnEnable()
         {
