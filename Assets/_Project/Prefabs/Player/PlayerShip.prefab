@@ -236,6 +236,7 @@ MonoBehaviour:
         m_CallState: 2
   material: {fileID: 2100000, guid: f6bbdd24e5487ce4b94a4bb04179a30e, type: 2}
   lineThickness: 0.3
+  arc: 0
 --- !u!114 &1622287998275316103
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -297,8 +298,8 @@ Transform:
   - {fileID: 6728637190885341191}
   - {fileID: 7417290802641076621}
   - {fileID: 4703159787847218536}
-  - {fileID: 5535541556051148416}
   - {fileID: 1234230883927013991}
+  - {fileID: 5535541556051148416}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4932984410122319928
@@ -907,6 +908,7 @@ MonoBehaviour:
       m_Calls: []
   material: {fileID: 2100000, guid: 7ba00c2bb1c8ee348b9f7033073383f6, type: 2}
   lineThickness: 0.1
+  arc: 1
 --- !u!114 &4775689130079195335
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,4 +1,3 @@
-using HP;
 using UnityEngine;
 
 namespace Weapons
@@ -7,6 +6,7 @@ namespace Weapons
     {
         [SerializeField] Material material;
         [SerializeField] float lineThickness = .1f;
+        [SerializeField] bool arc = true;
         protected override void Awake()
         {
             base.Awake();
@@ -18,7 +18,19 @@ namespace Weapons
             beam.LineRenderer.material = material;
             beam.LineRenderer.startWidth = beam.LineRenderer.endWidth = lineThickness;
             beam.LineRenderer.SetPosition(0, transform.position);
-            beam.LineRenderer.SetPosition(1, target.Transform.position);
+            if (arc)
+            {
+                beam.LineRenderer.positionCount = 3;
+                var normal = target.Position - transform.position;
+                var midPoint = transform.position + normal / 4;
+                beam.LineRenderer.SetPosition(1, midPoint + Random.onUnitSphere);
+                beam.LineRenderer.SetPosition(2, target.Transform.position);
+            }
+            else
+            {
+                beam.LineRenderer.positionCount = 2;
+                beam.LineRenderer.SetPosition(1, target.Transform.position);
+            }
             target.TakeDamage(takeDamage);
         }
     }
