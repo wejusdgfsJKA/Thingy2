@@ -5,7 +5,6 @@ using Timers;
 using UnityEngine;
 using Weapons;
 [RequireComponent(typeof(HullComponent))]
-[RequireComponent(typeof(SignatureComponent))]
 public class Unit : IDPoolable<ObjectType>
 {
     #region Fields
@@ -18,11 +17,12 @@ public class Unit : IDPoolable<ObjectType>
     [field: SerializeField] public MeshRenderer TrackedRenderer { get; protected set; }
     #endregion
     #region Parameters
-    public float Signature => signatureComponent.Signature;
+    [SerializeField] protected float defaultSignature = 10;
     [field: SerializeField] public float ScanRange { get; protected set; }
     [field: SerializeField] public List<Turret> Turrets { get; protected set; } = new();
     #endregion
-    public event System.Action<Unit> OnDespawn;
+
+    #region Helpers
     /// <summary>
     /// Unit transform.
     /// </summary>
@@ -31,11 +31,12 @@ public class Unit : IDPoolable<ObjectType>
     /// Transform.position.
     /// </summary>
     public Vector3 Position => Transform.position;
-    protected HullComponent hullComponent;
-    protected SignatureComponent signatureComponent;
-    protected ShieldComponent shieldComponent;
     public float HullPoints => hullComponent.CurrentHullPoints;
     public float ShieldPoints => shieldComponent.ShieldPoints;
+    public float Signature { get; protected set; }
+    #endregion   
+    protected HullComponent hullComponent;
+    protected ShieldComponent shieldComponent;
     public int Team { get; set; }
     public bool TurretsHaveTarget { get; protected set; }
     protected CountdownTimer tickTimer;
@@ -43,6 +44,11 @@ public class Unit : IDPoolable<ObjectType>
         {DetectionState.Identified, new HashSet<Unit>() },
         {DetectionState.Tracked, new HashSet<Unit>() }
     };
+    public Unit Target { get; protected set; }
+    /// <summary>
+    /// Fires when the unit is deactivated. Including when destroyed.
+    /// </summary>
+    public event System.Action<Unit> OnDespawn;
     public event System.Action<Unit> OnIdentifiedTargetAdded, OnTrackedTargetAdded, OnTargetRemoved;
     #endregion
     #region Setup
@@ -51,7 +57,6 @@ public class Unit : IDPoolable<ObjectType>
         Transform = transform;
         hullComponent = GetComponent<HullComponent>();
         shieldComponent = GetComponent<ShieldComponent>();
-        signatureComponent = GetComponent<SignatureComponent>();
 
         #region UI stuff
         if (IdentifiedRenderer == null) IdentifiedRenderer = GetComponent<MeshRenderer>();
@@ -72,6 +77,7 @@ public class Unit : IDPoolable<ObjectType>
     }
     protected virtual void OnEnable()
     {
+        Signature = defaultSignature;
         Targets[DetectionState.Identified].Clear();
         Targets[DetectionState.Tracked].Clear();
         if (ID != ObjectType.Player)
@@ -121,7 +127,20 @@ public class Unit : IDPoolable<ObjectType>
         }
         for (int i = 0; i < Turrets.Count; i++)
         {
-            Turrets[i].Fire();
+            Turrets[i].Tick();
+        }
+        RecalculateSignature();
+    }
+    protected void RecalculateSignature()
+    {
+        Signature = 0;
+        for (int i = 0; i < Turrets.Count; i++)
+        {
+            var turret = Turrets[i];
+            if (turret != null)
+            {
+                Signature += turret.Signature;
+            }
         }
     }
     protected virtual void PerformDetection()

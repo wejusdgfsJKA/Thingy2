@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 72199614292037894}
   - component: {fileID: 4961490904052932586}
   - component: {fileID: 8484232309202354424}
-  - component: {fileID: 112537818960169776}
   m_Layer: 0
   m_Name: FriendStation
   m_TagString: Untagged
@@ -77,6 +76,7 @@ MonoBehaviour:
   <IconSizeCoefficient>k__BackingField: 5
   <IdentifiedRenderer>k__BackingField: {fileID: 5563910399959560779}
   <TrackedRenderer>k__BackingField: {fileID: 161886762737019715}
+  defaultSignature: 10
   <ScanRange>k__BackingField: 40
   <Turrets>k__BackingField:
   - {fileID: 4961490904052932586}
@@ -120,21 +120,11 @@ MonoBehaviour:
   onFire:
     m_PersistentCalls:
       m_Calls: []
+  <SignatureOnFire>k__BackingField: 1
+  <SignatureDecrease>k__BackingField: 0.5
   material: {fileID: 2100000, guid: 7ba00c2bb1c8ee348b9f7033073383f6, type: 2}
   lineThickness: 0.1
---- !u!114 &112537818960169776
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1610702160051717356}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4c59abc458732644bd2950ca24b82e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SignatureComponent
-  defaultSignature: 10
+  arc: 1
 --- !u!1 &6282651783333426131
 GameObject:
   m_ObjectHideFlags: 0

@@ -13,6 +13,8 @@ namespace Weapons
         public float Charge => shotTimer.IsRunning ? shotTimer.Progress : 1;
         [SerializeField] protected DamageType damageType = DamageType.Energy;
         [SerializeField] protected UnityEvent onFire;
+        [field: SerializeField] public float SignatureOnFire { get; protected set; } = 1;
+        [field: SerializeField] public float SignatureDecrease { get; protected set; } = .5f;
         protected virtual void Awake()
         {
             shotTimer = new(shotCooldown);

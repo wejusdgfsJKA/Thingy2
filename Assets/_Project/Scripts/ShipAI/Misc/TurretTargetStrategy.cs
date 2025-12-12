@@ -8,7 +8,7 @@ namespace Weapons
     {
         ClosestTarget
     }
-    public abstract class TargetStrategy
+    public abstract class TurretTargetStrategy
     {
         public Unit CurrentTarget { get; protected set; } = null;
         protected float currentTargetScore = 0;
@@ -18,7 +18,7 @@ namespace Weapons
         protected bool requiresLock = true;
         protected System.Func<Unit, bool> angleCheck;
         protected AngleType typeOfAngle;
-        public TargetStrategy(Turret turret)
+        public TurretTargetStrategy(Turret turret)
         {
             self = turret.transform;
             maxRange = turret.Range;
@@ -89,7 +89,7 @@ namespace Weapons
             return false;
         }
     }
-    public class ClosestTargetStrategy : TargetStrategy
+    public class ClosestTargetStrategy : TurretTargetStrategy
     {
         public ClosestTargetStrategy(Turret turret) : base(turret) { }
         public override float ScoreTarget(Unit @object)

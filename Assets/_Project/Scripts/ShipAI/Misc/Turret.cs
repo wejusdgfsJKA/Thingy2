@@ -10,7 +10,7 @@ namespace Weapons
             ForwardArc,
             Side
         }
-        TargetStrategy targetStrategy;
+        TurretTargetStrategy targetStrategy;
         WeaponBase weapon;
         [Tooltip("What targeting strategy should this turret employ. Defaults to closest target.")]
         [SerializeField] TargetStrategyType targetStrategyType;
@@ -20,6 +20,7 @@ namespace Weapons
         [field: SerializeField] public List<TargetPriority> TargetPriorities { get; protected set; } = new();
         [field: SerializeField] public bool RequiresLock { get; protected set; } = true;
         public bool HasTarget => targetStrategy.CurrentTarget != null;
+        public float Signature { get; protected set; }
         private void Awake()
         {
             weapon = GetComponent<WeaponBase>();
@@ -32,6 +33,7 @@ namespace Weapons
         }
         private void OnEnable()
         {
+            Signature = 0;
             targetStrategy?.Reset();
         }
         public bool ConsiderTarget(Unit @object)
@@ -39,21 +41,35 @@ namespace Weapons
             if (@object == null) throw new System.ArgumentNullException($"{this} received null target for evaluation.");
             return targetStrategy.ConsiderTarget(@object);
         }
-        public void Fire()
+        public bool Tick()
         {
-            if (targetStrategy.CurrentTarget == null) return;
-            var @object = targetStrategy.CurrentTarget;
+            var @object = CanFire();
+            if (!@object)
+            {
+                Signature = Mathf.Max(0, Signature - weapon.SignatureDecrease * GlobalSettings.AITickCooldown);
+            }
+            else
+            {
+                weapon.Fire(@object);
+                Signature += weapon.SignatureOnFire;
+            }
             targetStrategy.Reset();
-
-            //check cooldown
-            if (weapon.Charge < 1) return;
-            //check range
-            if (Vector3.Distance(transform.position, @object.Transform.position) > Range) return;
-
-            //check angle
-            if (!IsInAngle(@object)) return;
-
-            weapon.Fire(@object);
+            return @object != null;
+        }
+        public Unit CanFire()
+        {
+            if (targetStrategy.CurrentTarget != null)
+            {
+                Unit target = targetStrategy.CurrentTarget;
+                //check cooldown
+                if (weapon.Charge < 1) return null;
+                //check range
+                if (Vector3.Distance(transform.position, target.Transform.position) > Range) return null;
+                //check angle
+                if (!IsInAngle(target)) return null;
+                return target;
+            }
+            return null;
         }
         public bool IsInAngle(Unit target)
         {

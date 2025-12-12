@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: 1093903392853879601}
   - component: {fileID: 6073887827518722397}
   - component: {fileID: 8473904179032565797}
-  - component: {fileID: 2133459164554359415}
   m_Layer: 0
   m_Name: Enemy1
   m_TagString: Untagged
@@ -59,6 +58,7 @@ MonoBehaviour:
   <IconSizeCoefficient>k__BackingField: 5
   <IdentifiedRenderer>k__BackingField: {fileID: 3035678715630224028}
   <TrackedRenderer>k__BackingField: {fileID: 4915477264058440870}
+  defaultSignature: 10
   <ScanRange>k__BackingField: 30
   <Turrets>k__BackingField:
   - {fileID: 6073887827518722397}
@@ -102,8 +102,11 @@ MonoBehaviour:
   onFire:
     m_PersistentCalls:
       m_Calls: []
+  <SignatureOnFire>k__BackingField: 1
+  <SignatureDecrease>k__BackingField: 0.5
   material: {fileID: 2100000, guid: f712bd3b78c94b3428969e55491442f4, type: 2}
   lineThickness: 0.1
+  arc: 1
 --- !u!54 &1093903392853879601
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -162,19 +165,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HybridBT.Template.ShipBT
   rootData: {fileID: 11400000, guid: b867e5ee327d10c4aaaa919a62ff16b6, type: 2}
---- !u!114 &2133459164554359415
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3991626477142195072}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4c59abc458732644bd2950ca24b82e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SignatureComponent
-  defaultSignature: 10
 --- !u!1 &7844034349886602526
 GameObject:
   m_ObjectHideFlags: 0
