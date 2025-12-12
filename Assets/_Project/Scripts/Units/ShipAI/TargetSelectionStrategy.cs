@@ -9,7 +9,6 @@ public abstract class TargetSelectionStrategy
     public Unit CurrentTarget { get; protected set; } = null;
     protected float currentTargetScore = 0;
     protected Transform self;
-    protected float maxRange;
     public TargetSelectionStrategy(Ship ship)
     {
         self = ship.Transform;
@@ -41,12 +40,13 @@ public abstract class TargetSelectionStrategy
 }
 public class NearestTargetSelectionStrategy : TargetSelectionStrategy
 {
+    readonly float maxDistance;
     public NearestTargetSelectionStrategy(Ship ship) : base(ship)
     {
-        maxRange = ship.ScanRange;
+        maxDistance = GlobalSettings.MaxTargetDistance;
     }
     public override float ScoreTarget(Unit potentialTarget, DetectionState detectionState = DetectionState.Identified)
     {
-        return -Vector3.Distance(self.position, potentialTarget.Transform.position);
+        return maxDistance - Vector3.Distance(self.position, potentialTarget.Transform.position);
     }
 }

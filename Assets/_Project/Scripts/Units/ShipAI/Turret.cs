@@ -18,18 +18,16 @@ namespace Weapons
         [field: SerializeField] public float Angle { get; protected set; } = 360;
         [field: SerializeField] public float Range { get; protected set; }
         [field: SerializeField] public List<TargetPriority> TargetPriorities { get; protected set; } = new();
+        [Tooltip("If true, this turret will only fire at identified targets.")]
         [field: SerializeField] public bool RequiresLock { get; protected set; } = true;
+        [Tooltip("Modifier applied to the target that is also the target of the ship itself.")]
+        [field: SerializeField] public float CurrentTargetModifier { get; protected set; } = 2f;
         public bool HasTarget => targetStrategy.CurrentTarget != null;
         public float Signature { get; protected set; }
         private void Awake()
         {
             weapon = GetComponent<WeaponBase>();
-            switch (targetStrategyType)
-            {
-                default:
-                    targetStrategy = new ClosestTargetStrategy(this);
-                    break;
-            }
+            targetStrategy = TurretTargetStrategy.Create(targetStrategyType, this);
         }
         private void OnEnable()
         {

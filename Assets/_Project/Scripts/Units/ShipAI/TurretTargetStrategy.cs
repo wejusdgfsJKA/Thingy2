@@ -17,8 +17,21 @@ namespace Weapons
         protected Dictionary<ObjectType, float> targetPriorities = new();
         protected bool requiresLock = true;
         protected AngleType typeOfAngle;
+        protected Ship ship;
+        protected float currentTargetModifier;
+        public static TurretTargetStrategy Create(TargetStrategyType type, Turret turret)
+        {
+            switch (type)
+            {
+                case TargetStrategyType.ClosestTarget:
+                    return new ClosestTargetStrategy(turret);
+                default:
+                    return new ClosestTargetStrategy(turret);
+            }
+        }
         public TurretTargetStrategy(Turret turret)
         {
+            ship = turret.GetComponentInParent<Ship>();
             self = turret.transform;
             maxRange = turret.Range;
             typeOfAngle = turret.TypeOfAngle;
@@ -29,6 +42,7 @@ namespace Weapons
                 var p = turret.TargetPriorities[i];
                 targetPriorities.Add(p.Type, p.Weight);
             }
+            currentTargetModifier = turret.CurrentTargetModifier;
         }
         public void Clear()
         {
@@ -44,7 +58,10 @@ namespace Weapons
                     weight = 1;
                 }
                 float score = ScoreTarget(@object) * weight;
-
+                if (ship != null && ship.CurrentTarget == @object)
+                {
+                    score *= currentTargetModifier;
+                }
                 if (score > currentTargetScore)
                 {
                     currentTargetScore = score;

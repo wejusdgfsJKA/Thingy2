@@ -37,20 +37,15 @@ namespace Player
         protected readonly Dictionary<Unit, ObjectUIData> toTrack = new();
         protected readonly Stack<(Image, TextMeshProUGUI)> iconPool = new();
         protected readonly CountdownTimer reorderTimer = new(GlobalSettings.UIUpdateCooldown);
-        protected PlayerShip playerShip;
         #endregion
         #endregion
         #region Setup
         protected void Awake()
         {
-            playerShip = GetComponent<PlayerShip>();
             cam = GetComponentInChildren<Camera>();
             EventBus<SpecialObjectAdded>.AddActions(AddIdentified);
             GameManager.Teams[0].OnMemberAdded += AddIdentified;
             GameManager.Teams[0].OnMemberRemoved += RemoveObject;
-            playerShip.OnIdentifiedTargetAdded += AddIdentified;
-            playerShip.OnTrackedTargetAdded += AddTracked;
-            playerShip.OnTargetRemoved += RemoveObject;
         }
         private void OnEnable()
         {

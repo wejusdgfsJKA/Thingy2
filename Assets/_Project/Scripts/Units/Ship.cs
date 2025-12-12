@@ -5,6 +5,8 @@ public class Ship : Unit
 {
     [SerializeField] protected float speed, rotationSpeed;
     [SerializeField] protected TargetSelectionStrategy.Type targetSelectionType = TargetSelectionStrategy.Type.Nearest;
+    [field: SerializeField] public float MaxTargetDistance { get; protected set; } = GlobalSettings.MaxTargetDistance;
+    public Unit CurrentTarget => targetSelectionStrategy.CurrentTarget;
     public Navigation Navigation { get; protected set; }
     protected ShipBT behaviourTree;
     protected TargetSelectionStrategy targetSelectionStrategy;
@@ -28,9 +30,9 @@ public class Ship : Unit
         behaviourTree.Tick();
         Navigation?.Update(deltaTime);
     }
-    protected override void ConsiderTarget(Unit @object, DetectionState detectionState = DetectionState.Identified)
+    protected override void OnTarget(Unit target, DetectionState detectionState = DetectionState.Identified)
     {
-        base.ConsiderTarget(@object, detectionState);
-        targetSelectionStrategy?.ConsiderTarget(@object, detectionState);
+        Debug.Log(targetSelectionStrategy.ConsiderTarget(target, detectionState));
+
     }
 }

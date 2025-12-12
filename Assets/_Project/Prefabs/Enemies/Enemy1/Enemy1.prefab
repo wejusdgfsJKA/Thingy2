@@ -65,6 +65,7 @@ MonoBehaviour:
   speed: 1
   rotationSpeed: 1
   targetSelectionType: 0
+  <MaxTargetDistance>k__BackingField: 1000
 --- !u!114 &7199803315287620194
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -101,7 +102,7 @@ MonoBehaviour:
   rateOfFireRampUp: 0.1
   rateOfFireRampDown: 0.2
   minShotCooldown: 0.1
-  <Damage>k__BackingField: 2
+  <Damage>k__BackingField: 0
   <SignatureOnFire>k__BackingField: 1
   <SignatureDecrease>k__BackingField: 0.5
   damageType: 1
@@ -156,6 +157,7 @@ MonoBehaviour:
   <Range>k__BackingField: 20
   <TargetPriorities>k__BackingField: []
   <RequiresLock>k__BackingField: 1
+  <CurrentTargetModifier>k__BackingField: 2
 --- !u!114 &8473904179032565797
 MonoBehaviour:
   m_ObjectHideFlags: 0

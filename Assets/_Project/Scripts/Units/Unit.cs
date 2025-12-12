@@ -37,19 +37,23 @@ public class Unit : IDPoolable<ObjectType>
     #endregion   
     protected HullComponent hullComponent;
     protected ShieldComponent shieldComponent;
+    /// <summary>
+    /// Index of this ship's team in GameManager.Teams.
+    /// </summary>
     public int Team { get; set; }
+    /// <summary>
+    /// True if any turret has a target this tick.
+    /// </summary>
     public bool TurretsHaveTarget { get; protected set; }
     protected CountdownTimer tickTimer;
     public readonly Dictionary<DetectionState, HashSet<Unit>> Targets = new() {
         {DetectionState.Identified, new HashSet<Unit>() },
         {DetectionState.Tracked, new HashSet<Unit>() }
     };
-    public Unit Target { get; protected set; }
     /// <summary>
     /// Fires when the unit is deactivated. Including when destroyed.
     /// </summary>
     public event System.Action<Unit> OnDespawn;
-    public event System.Action<Unit> OnIdentifiedTargetAdded, OnTrackedTargetAdded, OnTargetRemoved;
     #endregion
     #region Setup
     protected virtual void Awake()
@@ -119,6 +123,15 @@ public class Unit : IDPoolable<ObjectType>
         TurretsHaveTarget = false;
         IterateOverTargets();
 
+        foreach (var target in Targets[DetectionState.Identified])
+        {
+            ConsiderTargetForTurrets(target);
+        }
+        foreach (var target in Targets[DetectionState.Tracked])
+        {
+            ConsiderTargetForTurrets(target, DetectionState.Tracked);
+        }
+
         for (int i = 0; i < Turrets.Count; i++)
         {
             Turrets[i].Tick();
@@ -151,15 +164,13 @@ public class Unit : IDPoolable<ObjectType>
             {
                 Targets[DetectionState.Tracked].Remove(obj);
                 Targets[DetectionState.Identified].Add(obj);
-                OnIdentifiedTargetAdded?.Invoke(obj);
-                ConsiderTarget(obj);
+                OnTarget(obj);
             }
             else
             {
                 Targets[DetectionState.Identified].Remove(obj);
                 Targets[DetectionState.Tracked].Add(obj);
-                OnTrackedTargetAdded?.Invoke(obj);
-                ConsiderTarget(obj, DetectionState.Tracked);
+                OnTarget(obj, DetectionState.Tracked);
             }
         }
     }
@@ -168,10 +179,14 @@ public class Unit : IDPoolable<ObjectType>
         unit.OnDespawn -= RemoveTarget;
         if (Targets[DetectionState.Identified].Remove(unit) || Targets[DetectionState.Tracked].Remove(unit))
         {
-            OnTargetRemoved?.Invoke(unit);
+
         }
     }
-    protected virtual void ConsiderTarget(Unit @object, DetectionState detectionState = DetectionState.Identified)
+    protected virtual void OnTarget(Unit target, DetectionState detectionState = DetectionState.Identified)
+    {
+
+    }
+    protected virtual void ConsiderTargetForTurrets(Unit @object, DetectionState detectionState = DetectionState.Identified)
     {
         for (int i = 0; i < Turrets.Count; i++)
         {
