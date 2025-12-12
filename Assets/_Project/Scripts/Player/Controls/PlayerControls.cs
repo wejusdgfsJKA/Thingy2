@@ -111,7 +111,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Reset"",
+                    ""name"": ""Clear"",
                     ""type"": ""Button"",
                     ""id"": ""584ae8b4-a494-4a9e-9f28-c95fbb65c0e4"",
                     ""expectedControlType"": """",
@@ -181,7 +181,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Reset"",
+                    ""action"": ""Clear"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -385,7 +385,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Camera = asset.FindActionMap("Camera", throwIfNotFound: true);
         m_Camera_Look = m_Camera.FindAction("Look", throwIfNotFound: true);
         m_Camera_Zoom = m_Camera.FindAction("Zoom", throwIfNotFound: true);
-        m_Camera_Reset = m_Camera.FindAction("Reset", throwIfNotFound: true);
+        m_Camera_Reset = m_Camera.FindAction("Clear", throwIfNotFound: true);
         m_Camera_EnableCursor = m_Camera.FindAction("EnableCursor", throwIfNotFound: true);
         // Movement
         m_Movement = asset.FindActionMap("Movement", throwIfNotFound: true);
@@ -496,7 +496,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Zoom => m_Wrapper.m_Camera_Zoom;
         /// <summary>
-        /// Provides access to the underlying input action "Camera/Reset".
+        /// Provides access to the underlying input action "Camera/Clear".
         /// </summary>
         public InputAction @Reset => m_Wrapper.m_Camera_Reset;
         /// <summary>
@@ -726,7 +726,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnZoom(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Reset" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Clear" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />

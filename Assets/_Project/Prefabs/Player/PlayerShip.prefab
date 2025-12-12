@@ -217,7 +217,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Weapons.BeamWeapon
   shotCooldown: 2
+  rateOfFireRampUp: 0
+  rateOfFireRampDown: 0
+  minShotCooldown: 2
   <Damage>k__BackingField: 1
+  <SignatureOnFire>k__BackingField: 1
+  <SignatureDecrease>k__BackingField: 0.5
   damageType: 0
   onFire:
     m_PersistentCalls:
@@ -234,8 +239,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  <SignatureOnFire>k__BackingField: 1
-  <SignatureDecrease>k__BackingField: 0.5
   material: {fileID: 2100000, guid: f6bbdd24e5487ce4b94a4bb04179a30e, type: 2}
   lineThickness: 0.3
   arc: 0
@@ -297,8 +300,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6728637190885341191}
-  - {fileID: 4703159787847218536}
   - {fileID: 1234230883927013991}
+  - {fileID: 4703159787847218536}
   - {fileID: 5535541556051148416}
   - {fileID: 1981921317669082871}
   m_Father: {fileID: 0}
@@ -439,7 +442,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba654d87b78e5a44aac5feb81276829e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShieldComponent
-  <MaxShieldPoints>k__BackingField: 10
+  <MaxShieldPoints>k__BackingField: 100
   shieldPoints: 0
   shieldValueChanged:
     m_PersistentCalls:
@@ -890,13 +893,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Weapons.BeamWeapon
   shotCooldown: 0.5
+  rateOfFireRampUp: 0.1
+  rateOfFireRampDown: 0.2
+  minShotCooldown: 0.1
   <Damage>k__BackingField: 1
+  <SignatureOnFire>k__BackingField: 1
+  <SignatureDecrease>k__BackingField: 0.5
   damageType: 1
   onFire:
     m_PersistentCalls:
       m_Calls: []
-  <SignatureOnFire>k__BackingField: 1
-  <SignatureDecrease>k__BackingField: 0.5
   material: {fileID: 2100000, guid: 7ba00c2bb1c8ee348b9f7033073383f6, type: 2}
   lineThickness: 0.1
   arc: 1

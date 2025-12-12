@@ -16,7 +16,6 @@ namespace Weapons
         protected float maxRange, angle;
         protected Dictionary<ObjectType, float> targetPriorities = new();
         protected bool requiresLock = true;
-        protected System.Func<Unit, bool> angleCheck;
         protected AngleType typeOfAngle;
         public TurretTargetStrategy(Turret turret)
         {
@@ -30,9 +29,8 @@ namespace Weapons
                 var p = turret.TargetPriorities[i];
                 targetPriorities.Add(p.Type, p.Weight);
             }
-            angleCheck = turret.IsInAngle;
         }
-        public void Reset()
+        public void Clear()
         {
             CurrentTarget = null;
             currentTargetScore = 0;

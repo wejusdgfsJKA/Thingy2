@@ -100,6 +100,7 @@ public class Unit : IDPoolable<ObjectType>
         tickTimer.Dispose();
     }
     #endregion
+    #region Functionality
     public void TakeDamage(TakeDamage takeDamage)
     {
         if (shieldComponent != null)
@@ -115,16 +116,9 @@ public class Unit : IDPoolable<ObjectType>
     }
     protected virtual void Tick(float deltaTime)
     {
-        PerformDetection();
         TurretsHaveTarget = false;
-        foreach (var target in Targets[DetectionState.Identified])
-        {
-            ConsiderTarget(target);
-        }
-        foreach (var target in Targets[DetectionState.Tracked])
-        {
-            ConsiderTarget(target);
-        }
+        IterateOverTargets();
+
         for (int i = 0; i < Turrets.Count; i++)
         {
             Turrets[i].Tick();
@@ -143,7 +137,7 @@ public class Unit : IDPoolable<ObjectType>
             }
         }
     }
-    protected virtual void PerformDetection()
+    protected virtual void IterateOverTargets()
     {
         var enemyTeam = Team == 0 ? GameManager.Teams[1] : GameManager.Teams[0];
         foreach (var obj in enemyTeam.Members)
@@ -158,12 +152,14 @@ public class Unit : IDPoolable<ObjectType>
                 Targets[DetectionState.Tracked].Remove(obj);
                 Targets[DetectionState.Identified].Add(obj);
                 OnIdentifiedTargetAdded?.Invoke(obj);
+                ConsiderTarget(obj);
             }
             else
             {
                 Targets[DetectionState.Identified].Remove(obj);
                 Targets[DetectionState.Tracked].Add(obj);
                 OnTrackedTargetAdded?.Invoke(obj);
+                ConsiderTarget(obj, DetectionState.Tracked);
             }
         }
     }
@@ -175,11 +171,12 @@ public class Unit : IDPoolable<ObjectType>
             OnTargetRemoved?.Invoke(unit);
         }
     }
-    protected virtual void ConsiderTarget(Unit @object)
+    protected virtual void ConsiderTarget(Unit @object, DetectionState detectionState = DetectionState.Identified)
     {
         for (int i = 0; i < Turrets.Count; i++)
         {
-            if (Turrets[i].ConsiderTarget(@object)) TurretsHaveTarget = true;
+            if (Turrets[i].ConsiderTarget(@object, detectionState)) TurretsHaveTarget = true;
         }
     }
+    #endregion
 }

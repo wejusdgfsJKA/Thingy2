@@ -14,8 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HybridBT.Template.SelectorData
   myName: Root
   Conditions: []
-  Services:
-  - {fileID: 11400000, guid: 0f0bc3c1af504a349a4dfde955c481a7, type: 2}
+  Services: []
   Children:
   - {fileID: 11400000, guid: ed829bf9476bcb54985d47ee71a252ea, type: 2}
   - {fileID: 11400000, guid: c7ff63712b8ee674e83c0cea5bf46cd0, type: 2}

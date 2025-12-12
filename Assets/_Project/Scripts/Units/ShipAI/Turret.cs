@@ -34,12 +34,12 @@ namespace Weapons
         private void OnEnable()
         {
             Signature = 0;
-            targetStrategy?.Reset();
+            targetStrategy?.Clear();
         }
-        public bool ConsiderTarget(Unit @object)
+        public bool ConsiderTarget(Unit @object, DetectionState detectionState = DetectionState.Identified)
         {
             if (@object == null) throw new System.ArgumentNullException($"{this} received null target for evaluation.");
-            return targetStrategy.ConsiderTarget(@object);
+            return targetStrategy.ConsiderTarget(@object, detectionState);
         }
         public bool Tick()
         {
@@ -47,13 +47,14 @@ namespace Weapons
             if (!@object)
             {
                 Signature = Mathf.Max(0, Signature - weapon.SignatureDecrease * GlobalSettings.AITickCooldown);
+                if (weapon.CanFire) weapon.DecreaseRateOfFire();
             }
             else
             {
                 weapon.Fire(@object);
                 Signature = weapon.SignatureOnFire;
             }
-            targetStrategy.Reset();
+            targetStrategy.Clear();
             return @object != null;
         }
         public Unit CanFire()
@@ -62,7 +63,7 @@ namespace Weapons
             {
                 Unit target = targetStrategy.CurrentTarget;
                 //check cooldown
-                if (weapon.Charge < 1) return null;
+                if (!weapon.CanFire) return null;
                 //check range
                 if (Vector3.Distance(transform.position, target.Transform.position) > Range) return null;
                 //check angle

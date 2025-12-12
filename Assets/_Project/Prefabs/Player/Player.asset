@@ -9,7 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c3e1a6da4ecb914f826ae27aa6c1550, type: 3}
-  m_Name: Closest Target Service
-  m_EditorClassIdentifier: Assembly-CSharp::HybridBT.Template.ClosestTargetService
-  myName: 
+  m_Script: {fileID: 11500000, guid: e5b6f4ba77ed5a7429b88c2e18bac375, type: 3}
+  m_Name: Player
+  m_EditorClassIdentifier: Assembly-CSharp::UnitData
+  Prefab: {fileID: 3018586782381239914, guid: 7758f3c2cdd275546a519cee0e8bb53a, type: 3}
+  ID: 0

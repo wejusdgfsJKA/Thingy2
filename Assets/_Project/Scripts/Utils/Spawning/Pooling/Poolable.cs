@@ -3,7 +3,7 @@ namespace Spawning.Pooling
 {
     public class Poolable : Spawnable
     {
-        [Header("On Reset")]//these exist bc unity has a bug with protected serialized fields
+        [Header("On Clear")]//these exist bc unity has a bug with protected serialized fields
         public Manager Manager { get; set; }
         public virtual void ResetObject()
         {
