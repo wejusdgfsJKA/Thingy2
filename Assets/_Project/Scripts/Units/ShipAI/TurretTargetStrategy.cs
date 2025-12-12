@@ -98,7 +98,7 @@ namespace Weapons
                         if (angle >= 180) return true;
                         Vector3 directionToTarget = (target.Transform.position - self.position).normalized;
                         float angleToTarget = Vector3.Angle(self.forward, directionToTarget);
-                        return 180 - angleToTarget <= angle;
+                        return 180 - angleToTarget * 2 <= angle;
                     }
             }
             return false;
