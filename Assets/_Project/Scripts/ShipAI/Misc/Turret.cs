@@ -51,7 +51,7 @@ namespace Weapons
             else
             {
                 weapon.Fire(@object);
-                Signature += weapon.SignatureOnFire;
+                Signature = weapon.SignatureOnFire;
             }
             targetStrategy.Reset();
             return @object != null;

@@ -133,7 +133,7 @@ public class Unit : IDPoolable<ObjectType>
     }
     protected void RecalculateSignature()
     {
-        Signature = 0;
+        Signature = defaultSignature;
         for (int i = 0; i < Turrets.Count; i++)
         {
             var turret = Turrets[i];
