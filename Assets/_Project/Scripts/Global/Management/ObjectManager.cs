@@ -16,8 +16,7 @@ public class ObjectManager : MultiManager<ObjectType>
     static readonly List<string> addresses = new()
     {
         "Player",
-        //"FriendStation",
-        "Enemy"
+        "Enemy1"
     };
     public static ObjectManager Instance { get; protected set; }
     #endregion

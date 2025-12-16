@@ -15,6 +15,7 @@ namespace Player
         #region Parameters
         [SerializeField] Image iconPrefab;
         [SerializeField] float minTextScale, maxTextScale;
+        [Tooltip("Material to use for the selected target.")]
         [SerializeField] Material selectedMaterial;
         #endregion
         #region Implementation
@@ -34,10 +35,20 @@ namespace Player
             }
         }
         protected Camera cam;
-        [SerializeField] protected RectTransform reticleParent;
+        [Tooltip("The object that will be the parent of all bounding boxes.")]
+        [SerializeField] protected RectTransform boundingBoxParent;
+        /// <summary>
+        /// All objects being tracked and their corresponding UI data.
+        /// </summary>
         protected Dictionary<Unit, ObjectUIData> toTrack { get; } = new();
+        /// <summary>
+        /// The counterpart dictionary to quickly find UI data based on the image GameObject.
+        /// </summary>
         protected Dictionary<GameObject, ObjectUIData> images { get; } = new();
         protected readonly Stack<(Image, TextMeshProUGUI)> iconPool = new();
+        /// <summary>
+        /// This timer determines how often the bounding boxes are reordered.
+        /// </summary>
         protected readonly CountdownTimer reorderTimer = new(GlobalSettings.UIUpdateCooldown);
         protected GraphicRaycaster raycaster;
         protected EventSystem eventSystem;
@@ -79,7 +90,7 @@ namespace Player
         /// Does nothing for the player object.
         /// Add an object to be tracked and displayed on the UI. Disables identified renderer and 
         /// enables tracked renderer.
-        /// Disables button and raycast target.
+        /// Disables raycast target.
         /// </summary>
         /// <param name="obj">The object to keep track of.</param>
         public void AddTracked(Unit obj)
@@ -94,22 +105,19 @@ namespace Player
                 Image img; TextMeshProUGUI txt;
                 (img, txt) = GetIcon(obj.Icon);
                 img.rectTransform.anchoredPosition = cam.ScreenToWorldPoint(obj.Transform.position);
-                img.raycastTarget = false;
                 data = new(img, obj, txt);
                 toTrack.Add(obj, data);
                 images.Add(img.gameObject, data);
             }
+            data.BoundingBox.raycastTarget = false;
             if (CurrentTarget == obj) ClearTarget();
             data.BoundingBox.material = obj.TrackedRenderer.material;
         }
-        public void AddIdentified(SpecialObjectAdded objectAdded)
-        {
-            AddIdentified(objectAdded.SpecialObject);
-        }
+        public void AddIdentified(SpecialObjectAdded objectAdded) => AddIdentified(objectAdded.SpecialObject);
         /// <summary>
         /// Does nothing for the player object.
         /// Add an object to be tracked and displayed on the UI. Enables identified renderer and disables tracked renderer.
-        /// Disables button and raycast target if the object is not selectable.
+        /// Disables raycast target if the object is not selectable.
         /// </summary>
         /// <param name="obj"></param>
         public void AddIdentified(Unit obj)
@@ -123,12 +131,13 @@ namespace Player
                 Image img; TextMeshProUGUI txt;
                 (img, txt) = GetIcon(obj.Icon);
                 obj.OnDespawn += RemoveObject;
-                img.raycastTarget = obj.Selectable;
+
                 img.rectTransform.anchoredPosition = cam.ScreenToWorldPoint(obj.Transform.position);
                 data = new(img, obj, txt);
                 toTrack.Add(obj, data);
                 images.Add(img.gameObject, data);
             }
+            data.BoundingBox.raycastTarget = obj.Selectable;
             if (obj != CurrentTarget) data.BoundingBox.material = obj.Material;
         }
         /// <summary>
@@ -151,13 +160,18 @@ namespace Player
                 images.Remove(data.BoundingBox.gameObject);
             }
         }
+        /// <summary>
+        /// Get an icon prefab from the pool and set the sprite.
+        /// </summary>
+        /// <param name="sprite">What sprite should the new icon have.</param>
+        /// <returns>An instance of the icon prefab with empty text and corresponding sprite.</returns>
         protected (Image, TextMeshProUGUI) GetIcon(Sprite sprite)
         {
             Image icon;
             TextMeshProUGUI txt;
             if (iconPool.Count == 0)
             {
-                icon = Instantiate(iconPrefab, reticleParent.transform);
+                icon = Instantiate(iconPrefab, boundingBoxParent.transform);
                 txt = icon.GetComponentInChildren<TextMeshProUGUI>();
                 icon.sprite = sprite;
                 //icon.fillCenter = false;
@@ -177,6 +191,9 @@ namespace Player
         {
             HandleDisplay();
         }
+        /// <summary>
+        /// Repositions and rescales all tracked object icons based on their world position.
+        /// </summary>
         void HandleDisplay()
         {
             foreach (var a in toTrack)
@@ -194,7 +211,7 @@ namespace Player
                 }
                 a.Value.GameObject.SetActive(true);
 
-                RectTransformUtility.ScreenPointToLocalPointInRectangle(reticleParent, screenPos, null, out var localPos);
+                RectTransformUtility.ScreenPointToLocalPointInRectangle(boundingBoxParent, screenPos, null, out var localPos);
                 a.Value.RectTransform.localPosition = localPos;
 
                 //scale based on distance
@@ -206,6 +223,9 @@ namespace Player
                 a.Value.DistanceText.text = dist.ToString("0.0");
             }
         }
+        /// <summary>
+        /// Reorders all tracked objects in the UI hierarchy based on their distance to the camera.
+        /// </summary>
         void ReorderBoundingBoxes()
         {
             var list = toTrack.Values.ToList();
@@ -221,6 +241,10 @@ namespace Player
             }
         }
         #endregion
+        /// <summary>
+        /// Cast a ray to find an image in front of the crosshair. If found, select the corresponding object 
+        /// as the current target.
+        /// </summary>
         public void SelectTarget()
         {
             var pointerEventData = new PointerEventData(eventSystem);
@@ -241,11 +265,22 @@ namespace Player
                 }
             }
         }
+        /// <summary>
+        /// Sets the current target and changes its bounding box material. Resets the material of the previous target.
+        /// </summary>
+        /// <param name="data">The data of the target object.</param>
         void TargetSelected(ObjectUIData data)
         {
+            if (CurrentTarget != null && toTrack.TryGetValue(CurrentTarget, out var previousData))
+            {
+                if (previousData.Object.IdentifiedRenderer.enabled) previousData.BoundingBox.material = previousData.Object.Material;
+            }
             CurrentTarget = data.Object;
             data.BoundingBox.material = selectedMaterial;
         }
+        /// <summary>
+        /// Clears current target and resets its bounding box material.
+        /// </summary>
         public void ClearTarget()
         {
             if (CurrentTarget == null) return;
