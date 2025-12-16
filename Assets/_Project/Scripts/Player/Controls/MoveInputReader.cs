@@ -6,7 +6,9 @@ namespace Player
     [CreateAssetMenu(fileName = "MoveInputReader", menuName = "ScriptableObjects/PlayerShip/MoveInputReader")]
     public class MoveInputReader : InputReader, IMovementActions
     {
-        public event System.Action<Vector3> Strafe, Rotate;
+        public event System.Action<Vector2> Strafe;
+        public event System.Action<Vector3> Rotate;
+        public event System.Action<float> Thrust;
         public override void EnablePlayerActions()
         {
             base.EnablePlayerActions();
@@ -15,6 +17,9 @@ namespace Player
         public override void DisablePlayerActions()
         {
             base.DisablePlayerActions();
+            Strafe = null;
+            Rotate = null;
+            Thrust = null;
             inputActions?.Movement.SetCallbacks(null);
         }
         public void OnRotate(InputAction.CallbackContext context)
@@ -24,7 +29,12 @@ namespace Player
 
         public void OnStrafe(InputAction.CallbackContext context)
         {
-            Strafe?.Invoke(context.ReadValue<Vector3>());
+            Strafe?.Invoke(context.ReadValue<Vector2>());
+        }
+
+        public void OnThrust(InputAction.CallbackContext context)
+        {
+            Thrust?.Invoke(context.ReadValue<float>());
         }
     }
 }

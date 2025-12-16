@@ -1,6 +1,7 @@
 using UnityEngine;
 namespace Player
 {
+    [RequireComponent(typeof(ObjectDisplay))]
     public class CameraController : MonoBehaviour
     {
         #region Fields
@@ -14,12 +15,14 @@ namespace Player
         [Range(1f, 50f)] public float cameraSmoothingFactor = 25f;
         [SerializeField] Transform camPivot, cam;
         [SerializeField] CameraInputReader cameraInputReader;
+        protected ObjectDisplay objectDisplay;
         #endregion
 
         void Awake()
         {
             currentXAngle = transform.localRotation.eulerAngles.x;
             currentYAngle = transform.localRotation.eulerAngles.y;
+            objectDisplay = GetComponent<ObjectDisplay>();
         }
         private void OnEnable()
         {
@@ -27,9 +30,8 @@ namespace Player
             cameraInputReader.EnablePlayerActions();
             cameraInputReader.Zoom += OnZoom;
             cameraInputReader.Reset += OnReset;
+            cameraInputReader.OnTargetSelect += objectDisplay.SelectTarget;
             OnReset();
-            cameraInputReader.OnCursorDisabled += DisableCursor;
-            cameraInputReader.OnCursorEnabled += EnableCursor;
         }
         private void OnDisable()
         {

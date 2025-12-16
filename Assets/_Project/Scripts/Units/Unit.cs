@@ -5,7 +5,7 @@ using Timers;
 using UnityEngine;
 using Weapons;
 [RequireComponent(typeof(HullComponent))]
-public class Unit : IDPoolable<ObjectType>
+public abstract class Unit : IDPoolable<ObjectType>
 {
     #region Fields
     #region UI stuff
@@ -54,6 +54,7 @@ public class Unit : IDPoolable<ObjectType>
     /// Fires when the unit is deactivated. Including when destroyed.
     /// </summary>
     public event System.Action<Unit> OnDespawn;
+    public abstract Unit CurrentTarget { get; }
     #endregion
     #region Setup
     protected virtual void Awake()

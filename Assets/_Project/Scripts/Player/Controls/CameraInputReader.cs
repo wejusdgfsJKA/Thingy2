@@ -11,6 +11,7 @@ namespace Player
         public event UnityAction<float> Zoom;
         public event UnityAction Reset;
         public Vector2 LookDirection => inputActions.Camera.Look.ReadValue<Vector2>();
+        public event UnityAction OnTargetSelect;
         public event UnityAction OnCursorEnabled;
         public event UnityAction OnCursorDisabled;
         public override void EnablePlayerActions()
@@ -24,7 +25,7 @@ namespace Player
         {
             inputActions.Camera.EnableCursor.performed -= EnableCursor;
             inputActions.Camera.EnableCursor.canceled -= DisableCursor;
-            OnCursorEnabled = OnCursorDisabled = Reset = null;
+            OnCursorEnabled = OnCursorDisabled = Reset = OnTargetSelect = null;
             Zoom = null;
             Move = null;
             inputActions?.Camera.SetCallbacks(null);
@@ -48,6 +49,11 @@ namespace Player
         public void OnEnableCursor(InputAction.CallbackContext context)
         {
 
+        }
+
+        public void OnSelectTarget(InputAction.CallbackContext context)
+        {
+            OnTargetSelect?.Invoke();
         }
     }
 }

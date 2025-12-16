@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Orange
+  m_Name: OrangeOnTop
   m_Shader: {fileID: 4800000, guid: 34057585f7dd9944da1b10abe7c2f310, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0

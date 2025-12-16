@@ -17,7 +17,7 @@ namespace Weapons
         protected Dictionary<ObjectType, float> targetPriorities = new();
         protected bool requiresLock = true;
         protected AngleType typeOfAngle;
-        protected Ship ship;
+        protected Unit ship;
         protected float currentTargetModifier;
         public static TurretTargetStrategy Create(TargetStrategyType type, Turret turret)
         {
@@ -31,7 +31,7 @@ namespace Weapons
         }
         public TurretTargetStrategy(Turret turret)
         {
-            ship = turret.GetComponentInParent<Ship>();
+            ship = turret.GetComponentInParent<Unit>();
             self = turret.transform;
             maxRange = turret.Range;
             typeOfAngle = turret.TypeOfAngle;

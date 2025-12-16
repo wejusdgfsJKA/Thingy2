@@ -4,6 +4,7 @@ using System.Linq;
 using Timers;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 namespace Player
 {
@@ -14,12 +15,13 @@ namespace Player
         #region Parameters
         [SerializeField] Image iconPrefab;
         [SerializeField] float minTextScale, maxTextScale;
+        [SerializeField] Material selectedMaterial;
         #endregion
         #region Implementation
         protected readonly struct ObjectUIData
         {
             public readonly RectTransform RectTransform;
-            public readonly Image BoundingBox;
+            public Image BoundingBox { get; }
             public readonly Unit Object;
             public readonly TextMeshProUGUI DistanceText;
             public readonly GameObject GameObject { get => RectTransform.gameObject; }
@@ -31,12 +33,15 @@ namespace Player
                 DistanceText = text;
             }
         }
-        [field: SerializeField] public Unit CurrentTarget { get; protected set; }
         protected Camera cam;
         [SerializeField] protected RectTransform reticleParent;
-        protected readonly Dictionary<Unit, ObjectUIData> toTrack = new();
+        protected Dictionary<Unit, ObjectUIData> toTrack { get; } = new();
+        protected Dictionary<GameObject, ObjectUIData> images { get; } = new();
         protected readonly Stack<(Image, TextMeshProUGUI)> iconPool = new();
         protected readonly CountdownTimer reorderTimer = new(GlobalSettings.UIUpdateCooldown);
+        protected GraphicRaycaster raycaster;
+        protected EventSystem eventSystem;
+        public Unit CurrentTarget { get; protected set; }
         #endregion
         #endregion
         #region Setup
@@ -46,9 +51,11 @@ namespace Player
             EventBus<SpecialObjectAdded>.AddActions(AddIdentified);
             GameManager.Teams[0].OnMemberAdded += AddIdentified;
             GameManager.Teams[0].OnMemberRemoved += RemoveObject;
+            raycaster = GetComponentInChildren<GraphicRaycaster>();
         }
         private void OnEnable()
         {
+            eventSystem ??= EventSystem.current;
             reorderTimer.OnTimerStop += () =>
             {
                 ReorderBoundingBoxes();
@@ -90,7 +97,9 @@ namespace Player
                 img.raycastTarget = false;
                 data = new(img, obj, txt);
                 toTrack.Add(obj, data);
+                images.Add(img.gameObject, data);
             }
+            if (CurrentTarget == obj) ClearTarget();
             data.BoundingBox.material = obj.TrackedRenderer.material;
         }
         public void AddIdentified(SpecialObjectAdded objectAdded)
@@ -118,8 +127,9 @@ namespace Player
                 img.rectTransform.anchoredPosition = cam.ScreenToWorldPoint(obj.Transform.position);
                 data = new(img, obj, txt);
                 toTrack.Add(obj, data);
+                images.Add(img.gameObject, data);
             }
-            data.BoundingBox.material = obj.Material;
+            if (obj != CurrentTarget) data.BoundingBox.material = obj.Material;
         }
         /// <summary>
         /// Does nothing for the player object.
@@ -138,6 +148,7 @@ namespace Player
                 iconPool.Push((data.BoundingBox, data.DistanceText));
                 data.RectTransform.gameObject.SetActive(false);
                 toTrack.Remove(obj);
+                images.Remove(data.BoundingBox.gameObject);
             }
         }
         protected (Image, TextMeshProUGUI) GetIcon(Sprite sprite)
@@ -149,7 +160,7 @@ namespace Player
                 icon = Instantiate(iconPrefab, reticleParent.transform);
                 txt = icon.GetComponentInChildren<TextMeshProUGUI>();
                 icon.sprite = sprite;
-                icon.fillCenter = false;
+                //icon.fillCenter = false;
             }
             else
             {
@@ -210,12 +221,38 @@ namespace Player
             }
         }
         #endregion
-        void TargetSelected(Unit obj)
+        public void SelectTarget()
         {
-            CurrentTarget = obj;
+            var pointerEventData = new PointerEventData(eventSystem);
+            pointerEventData.position = new Vector2(Screen.width / 2, Screen.height / 2);
+            List<RaycastResult> results = new List<RaycastResult>();
+            raycaster.Raycast(pointerEventData, results);
+            if (results.Count == 0)
+            {
+                ClearTarget();
+                return;
+            }
+            foreach (RaycastResult result in results)
+            {
+                if (images.TryGetValue(result.gameObject, out var data))
+                {
+                    TargetSelected(data);
+                    break;
+                }
+            }
+        }
+        void TargetSelected(ObjectUIData data)
+        {
+            CurrentTarget = data.Object;
+            data.BoundingBox.material = selectedMaterial;
         }
         public void ClearTarget()
         {
+            if (CurrentTarget == null) return;
+            if (toTrack.TryGetValue(CurrentTarget, out var data))
+            {
+                if (data.Object.IdentifiedRenderer.enabled) data.BoundingBox.material = data.Object.Material;
+            }
             CurrentTarget = null;
         }
     }

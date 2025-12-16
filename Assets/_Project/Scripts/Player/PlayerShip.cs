@@ -4,6 +4,7 @@ namespace Player
     public class PlayerShip : Unit
     {
         protected ObjectDisplay display;
+        public override Unit CurrentTarget => display.CurrentTarget;
         protected override void Awake()
         {
             base.Awake();

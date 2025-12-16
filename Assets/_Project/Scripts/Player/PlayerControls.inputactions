@@ -41,6 +41,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "SelectTarget",
+                    "type": "Button",
+                    "id": "7b4398d5-b0db-4c18-bb58-4bccf90298a0",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -109,6 +118,17 @@
                     "action": "EnableCursor",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6295b4e3-9114-49ff-af90-ab216d2d4254",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SelectTarget",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -129,7 +149,16 @@
                     "name": "Strafe",
                     "type": "Value",
                     "id": "ba2908e7-c72c-47f1-93ec-fa70c4a4f7a1",
-                    "expectedControlType": "Vector3",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Thrust",
+                    "type": "Value",
+                    "id": "d1fbb7dd-61f0-4ab4-a8f5-c18cad2b1e81",
+                    "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -214,9 +243,9 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "3D Vector",
-                    "id": "1491caca-5e05-41bc-bdc5-7ee2341b7edf",
-                    "path": "3DVector",
+                    "name": "2D Vector",
+                    "id": "3deca0d1-90da-4a7c-911f-79c4edc86026",
+                    "path": "2DVector",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -226,8 +255,8 @@
                 },
                 {
                     "name": "up",
-                    "id": "282062b9-c585-4ccb-a261-4124101ab951",
-                    "path": "<Keyboard>/space",
+                    "id": "9bb03319-cc9f-4125-a383-eabe05593355",
+                    "path": "<Keyboard>/w",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -237,8 +266,8 @@
                 },
                 {
                     "name": "down",
-                    "id": "32544b92-2f61-464b-9cdc-2455970353b1",
-                    "path": "<Keyboard>/shift",
+                    "id": "26b5ad0a-3283-4b99-9e7a-44d5217b5ef4",
+                    "path": "<Keyboard>/s",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -248,7 +277,7 @@
                 },
                 {
                     "name": "left",
-                    "id": "f7e648da-fd67-46f4-a5a6-dbfeb4590c6b",
+                    "id": "b1fca369-c8db-4fc7-9310-51b77dc61e84",
                     "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "",
@@ -259,7 +288,7 @@
                 },
                 {
                     "name": "right",
-                    "id": "c519d4f2-cd09-4906-924a-bc64c6bfbe7c",
+                    "id": "027f5a2b-8f94-4631-bd01-cc83bd2febdd",
                     "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
@@ -269,24 +298,35 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "forward",
-                    "id": "6aae0846-5528-420e-909a-6f120131c2c5",
-                    "path": "<Keyboard>/w",
+                    "name": "1D Axis",
+                    "id": "3065cc28-8638-45cf-bfca-f8dcdb6dce1d",
+                    "path": "1DAxis",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Strafe",
+                    "action": "Thrust",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "2e602da3-b957-4b4c-9f44-9134f5f7d52f",
+                    "path": "<Keyboard>/ctrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Thrust",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "backward",
-                    "id": "f76b5e41-aaa4-4d15-b907-999ac017cc9c",
-                    "path": "<Keyboard>/s",
+                    "name": "positive",
+                    "id": "d21b4c80-15e9-4a71-b3eb-0e2f57091fde",
+                    "path": "<Keyboard>/shift",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Strafe",
+                    "action": "Thrust",
                     "isComposite": false,
                     "isPartOfComposite": true
                 }

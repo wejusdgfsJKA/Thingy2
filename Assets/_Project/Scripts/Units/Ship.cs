@@ -4,12 +4,12 @@ using UnityEngine;
 public class Ship : Unit
 {
     [SerializeField] protected float speed, rotationSpeed;
-    [SerializeField] protected TargetSelectionStrategy.Type targetSelectionType = TargetSelectionStrategy.Type.Nearest;
-    [field: SerializeField] public float MaxTargetDistance { get; protected set; } = GlobalSettings.MaxTargetDistance;
-    public Unit CurrentTarget => targetSelectionStrategy.CurrentTarget;
     public Navigation Navigation { get; protected set; }
     protected ShipBT behaviourTree;
+    [SerializeField] protected TargetSelectionStrategy.Type targetSelectionType = TargetSelectionStrategy.Type.Nearest;
+    [field: SerializeField] public float MaxTargetDistance { get; protected set; } = GlobalSettings.MaxTargetDistance;
     protected TargetSelectionStrategy targetSelectionStrategy;
+    public override Unit CurrentTarget => targetSelectionStrategy.CurrentTarget;
     protected override void Awake()
     {
         base.Awake();
@@ -32,7 +32,7 @@ public class Ship : Unit
     }
     protected override void OnTarget(Unit target, DetectionState detectionState = DetectionState.Identified)
     {
-        Debug.Log(targetSelectionStrategy.ConsiderTarget(target, detectionState));
+        targetSelectionStrategy.ConsiderTarget(target, detectionState);
 
     }
 }

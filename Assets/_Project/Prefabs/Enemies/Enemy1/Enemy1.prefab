@@ -53,7 +53,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyShip
   <ID>k__BackingField: 4
   <Selectable>k__BackingField: 1
-  <Icon>k__BackingField: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  <Icon>k__BackingField: {fileID: 21300000, guid: 756defe621ce24443abe1ef1642556e6, type: 3}
   <Material>k__BackingField: {fileID: 2100000, guid: f712bd3b78c94b3428969e55491442f4, type: 2}
   <IconSizeCoefficient>k__BackingField: 5
   <IdentifiedRenderer>k__BackingField: {fileID: 3035678715630224028}
@@ -102,7 +102,7 @@ MonoBehaviour:
   rateOfFireRampUp: 0.1
   rateOfFireRampDown: 0.2
   minShotCooldown: 0.1
-  <Damage>k__BackingField: 1
+  <Damage>k__BackingField: 0
   <SignatureOnFire>k__BackingField: 1
   <SignatureDecrease>k__BackingField: 0.5
   damageType: 1
