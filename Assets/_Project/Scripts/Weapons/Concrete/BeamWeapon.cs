@@ -14,7 +14,7 @@ namespace Weapons
         }
         protected override void ActuallyShoot(Unit target)
         {
-            var beam = RandomShitManager.Instance.SpawnObject(RandomShit.Beam, transform.position) as Beam;
+            var beam = WeaponManager.Instance.SpawnObject(RandomShit.Beam, transform.position) as Beam;
             beam.LineRenderer.material = material;
             beam.LineRenderer.startWidth = beam.LineRenderer.endWidth = lineThickness;
             beam.LineRenderer.SetPosition(0, transform.position);

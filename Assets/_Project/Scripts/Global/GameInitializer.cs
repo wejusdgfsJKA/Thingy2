@@ -11,7 +11,7 @@ public class GameInitializer : MonoBehaviour
             GameManager.StartMission();
         };
         var t1 = ObjectManager.LoadAssets();
-        var t2 = Weapons.RandomShitManager.LoadAssets();
+        var t2 = Weapons.WeaponManager.LoadAssets();
         await Task.WhenAll(t1, t2);
         SceneManager.LoadScene(1);
     }

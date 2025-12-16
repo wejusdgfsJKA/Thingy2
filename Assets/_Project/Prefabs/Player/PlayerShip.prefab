@@ -48,7 +48,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4811831962167616583}
   m_Layer: 8
-  m_Name: ReticleParent
+  m_Name: BoundingBoxParent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -258,8 +258,8 @@ MonoBehaviour:
   rateOfFireRampUp: 0
   rateOfFireRampDown: 0
   minShotCooldown: 2
-  <Damage>k__BackingField: 1
-  <SignatureOnFire>k__BackingField: 1
+  <Damage>k__BackingField: 0
+  <SignatureIncreaseOnFire>k__BackingField: 1
   <SignatureDecrease>k__BackingField: 0.5
   damageType: 0
   onFire:
@@ -426,7 +426,7 @@ MonoBehaviour:
   minTextScale: 15
   maxTextScale: 20
   selectedMaterial: {fileID: 2100000, guid: f98510dbb3d0744489dcc780e5727f95, type: 2}
-  reticleParent: {fileID: 4811831962167616583}
+  boundingBoxParent: {fileID: 4811831962167616583}
 --- !u!114 &6915140122644198231
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1108,8 +1108,8 @@ MonoBehaviour:
   rateOfFireRampUp: 0.1
   rateOfFireRampDown: 0.2
   minShotCooldown: 0.1
-  <Damage>k__BackingField: 1
-  <SignatureOnFire>k__BackingField: 1
+  <Damage>k__BackingField: 0
+  <SignatureIncreaseOnFire>k__BackingField: 1
   <SignatureDecrease>k__BackingField: 0.5
   damageType: 1
   onFire:

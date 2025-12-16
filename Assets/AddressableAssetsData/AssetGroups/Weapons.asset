@@ -18,7 +18,8 @@ MonoBehaviour:
   - m_GUID: 1880d5764595cfe449577c91dcba8ad0
     m_Address: Beam
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - Weapon
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: ac0e09ab6d8f0f9448726279c34b302c, type: 2}

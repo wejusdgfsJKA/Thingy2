@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c700b6833fd364440afcc4f2d17db191, type: 3}
+  m_Script: {fileID: 11500000, guid: f7975c18e60d33f428f3fca073c80af1, type: 3}
   m_Name: Beam
   m_EditorClassIdentifier: Assembly-CSharp::Weapons.RandomShitData
   Prefab: {fileID: 6634943813334706988, guid: 04f38c56677b6974581ee00b480f463f, type: 3}

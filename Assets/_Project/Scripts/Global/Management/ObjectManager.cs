@@ -13,29 +13,20 @@ public class ObjectManager : MultiManager<ObjectType>
 {
     #region Fields
     static readonly Dictionary<ObjectType, UnitData> assets = new();
-    static readonly List<string> addresses = new()
-    {
-        "Player",
-        "Enemy1"
-    };
     public static ObjectManager Instance { get; protected set; }
+    static string shipGroupLabel = "Ships";
     #endregion
     #region Setup
+    static void LoadAsset(UnitData data)
+    {
+        assets.Add(data.ID, data);
+    }
     public async static Task LoadAssets()
     {
         if (assets.Count > 0) return;
-        Task<UnitData>[] tasks = new Task<UnitData>[addresses.Count];
-        for (int i = 0; i < addresses.Count; i++)
-        {
-            tasks[i] = Addressables.LoadAssetAsync<UnitData>(addresses[i]).Task;
-        }
-        await Task.WhenAll(tasks);
-        for (int i = 0; i < tasks.Length; i++)
-        {
-            var result = tasks[i].Result;
-            assets.Add(result.ID, result);
-        }
-        Debug.Log("Assets loaded successfully.");
+
+        await Addressables.LoadAssetsAsync<UnitData>(shipGroupLabel, LoadAsset).Task;
+        Debug.Log("Ships loaded successfully.");
     }
     private void Awake()
     {

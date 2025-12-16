@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: 662fe28b198b5204da662a95043e5df1
   m_currentHash:
     serializedVersion: 2
-    Hash: e0b2a3aa3038706ee4653553c10cda78
+    Hash: df4a994224066c0184ec7a162a0e6b1b
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_CatalogRequestsTimeout: 0
@@ -103,6 +103,8 @@ MonoBehaviour:
   m_LabelTable:
     m_LabelNames:
     - default
+    - Ships
+    - Weapon
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: d684d7c66e8eefa4dbd493445d157e35, type: 2}
