@@ -355,7 +355,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player.CameraController
   cameraZoomSpeed: 1
-  cameraDefaultRotSpeed: 50
+  cameraDefaultRotSpeed: 25
   cameraRotSpeed: 50
   defaultCamPos: {x: 0, y: 1, z: -2}
   smoothCameraRotation: 0
@@ -402,6 +402,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89b11ce814b115846b17268e472f7bb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player.ShipController
+  cam: {fileID: 6728637190885341191}
+  rotationSpeed: 1
+  unlockedRotationSpeed: 30
   maxThrust: 10
   minThrust: -1
   thrustChangeRate: 0.1

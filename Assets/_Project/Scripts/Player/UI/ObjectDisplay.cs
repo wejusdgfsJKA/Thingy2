@@ -244,8 +244,8 @@ namespace Player
             var list = toTrack.Values.ToList();
             list.Sort((a, b) =>
             {
-                float distA = Vector3.Distance(Camera.main.transform.position, a.Object.transform.position);
-                float distB = Vector3.Distance(Camera.main.transform.position, b.Object.transform.position);
+                float distA = Vector3.Distance(cam.transform.position, a.Object.transform.position);
+                float distB = Vector3.Distance(cam.transform.position, b.Object.transform.position);
                 return distB.CompareTo(distA);
             });
             for (int i = 0; i < list.Count; i++)

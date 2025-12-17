@@ -9,6 +9,7 @@ namespace Player
         public event System.Action<Vector2> Strafe;
         public event System.Action<Vector3> Rotate;
         public event System.Action<float> Thrust;
+        public event System.Action FollowCameraToggle;
         public override void EnablePlayerActions()
         {
             base.EnablePlayerActions();
@@ -20,6 +21,7 @@ namespace Player
             Strafe = null;
             Rotate = null;
             Thrust = null;
+            FollowCameraToggle = null;
             inputActions?.Movement.SetCallbacks(null);
         }
         public void OnRotate(InputAction.CallbackContext context)
@@ -35,6 +37,11 @@ namespace Player
         public void OnThrust(InputAction.CallbackContext context)
         {
             Thrust?.Invoke(context.ReadValue<float>());
+        }
+
+        public void OnFollowCameraToggle(InputAction.CallbackContext context)
+        {
+            FollowCameraToggle?.Invoke();
         }
     }
 }

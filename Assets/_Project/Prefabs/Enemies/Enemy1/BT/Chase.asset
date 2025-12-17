@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1542148857abf340861cff67826d5a4, type: 3}
+  m_Name: Chase
+  m_EditorClassIdentifier: Assembly-CSharp::HybridBT.Template.MoveToPoint
+  myName: 
+  Conditions:
+  - {fileID: 11400000, guid: 8b3d3c9d7b8aedd4d8b0e06209c73680, type: 2}
+  Services: []
+  stopDistance: 15
+  chaseErrorThreshold: 0.1

@@ -148,7 +148,7 @@ GameObject:
   - component: {fileID: 2450536617232050476}
   - component: {fileID: 4506050267897901990}
   m_Layer: 0
-  m_Name: IconPrefab
+  m_Name: BoundingBoxPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

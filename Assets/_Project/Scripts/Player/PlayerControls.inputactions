@@ -34,15 +34,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "EnableCursor",
-                    "type": "Button",
-                    "id": "4699fd67-73ca-4b7c-83b1-2dbbda94640b",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "SelectTarget",
                     "type": "Button",
                     "id": "7b4398d5-b0db-4c18-bb58-4bccf90298a0",
@@ -110,19 +101,8 @@
                 },
                 {
                     "name": "",
-                    "id": "bfc4293a-4a65-4344-8f4a-f51e026f349f",
-                    "path": "<Mouse>/rightButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "EnableCursor",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "6295b4e3-9114-49ff-af90-ab216d2d4254",
-                    "path": "<Mouse>/leftButton",
+                    "path": "<Keyboard>/t",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -162,6 +142,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "FollowCameraToggle",
+                    "type": "Button",
+                    "id": "2a7c0039-5a01-4b92-9f1b-346647cde6c0",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -329,6 +318,17 @@
                     "action": "Thrust",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "efef7e1e-9699-4c82-a9a8-0eaa951e1a31",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "FollowCameraToggle",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

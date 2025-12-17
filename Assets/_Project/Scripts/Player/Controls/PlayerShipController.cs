@@ -5,6 +5,9 @@ namespace Player
     [RequireComponent(typeof(LineRenderer))]
     public class PlayerShipController : MonoBehaviour
     {
+        [Header("Rotation")]
+        [SerializeField] Transform cam;
+        [SerializeField] float rotationSpeed = 1, unlockedRotationSpeed = 10;
         [Header("Movement")]
         [SerializeField] int maxThrust = 10, minThrust = -1;
         [SerializeField] float thrustChangeRate = 0.1f;
@@ -18,6 +21,7 @@ namespace Player
         Vector3 rotateVector;
         float currentThrust;
         float thrustInput;
+        bool followCamera = true;
         public float CurrentThrust
         {
             get => currentThrust;
@@ -26,23 +30,25 @@ namespace Player
                 currentThrust = Mathf.Clamp(value, minThrust, maxThrust);
             }
         }
-        Quaternion targetRotation;
         LineRenderer lineRenderer;
         private void Awake()
         {
             lineRenderer = GetComponent<LineRenderer>();
             lineRenderer.positionCount = 2;
             if (!shipBody) shipBody = transform.root;
+            if (!cam) cam = GetComponentInChildren<Camera>().transform;
         }
         private void OnEnable()
         {
+            thrustDisplay.text = $"Thrust: {CurrentThrust:F1}";
+            followCamera = true;
             strafeVector = rotateVector = Vector3.zero;
             CurrentThrust = 0;
             moveInputReader.EnablePlayerActions();
             moveInputReader.Strafe += OnStrafe;
             moveInputReader.Rotate += OnRotate;
             moveInputReader.Thrust += OnThrust;
-            targetRotation = transform.rotation;
+            moveInputReader.FollowCameraToggle += OnFollowCameraToggle;
         }
         private void OnDisable()
         {
@@ -60,11 +66,18 @@ namespace Player
         {
             thrustInput = thrust;
         }
+        void OnFollowCameraToggle()
+        {
+            followCamera = !followCamera;
+        }
         private void FixedUpdate()
         {
             #region Movement
-            CurrentThrust += thrustInput * thrustChangeRate;
-            thrustDisplay.text = $"Thrust: {CurrentThrust:F1}";
+            if (thrustInput != 0)
+            {
+                CurrentThrust += thrustInput * thrustChangeRate;
+                thrustDisplay.text = $"Thrust: {CurrentThrust:F1}";
+            }
             Vector3 velocity = strafeSpeed * (shipBody.up * strafeVector.y + shipBody.right * strafeVector.x).normalized
                 + CurrentThrust * shipBody.forward;
             transform.Translate(velocity * Time.fixedDeltaTime, Space.World);
@@ -72,15 +85,24 @@ namespace Player
             lineRenderer.SetPosition(0, transform.position);
             lineRenderer.SetPosition(1, transform.position + velocity * directionLineMultiplier);
             #endregion
-            #region Rotate
-            //Quaternion yaw = Quaternion.AngleAxis(rotateVector.y, Vector3.up);
-            //Quaternion pitch = Quaternion.AngleAxis(rotateVector.x, Vector3.right);
-            //Quaternion roll = Quaternion.AngleAxis(rotateVector.z, Vector3.forward);
 
-            //// Combine them in the right order: roll, then pitch, then yaw
-            //targetRotation = targetRotation * yaw * pitch * roll;
+            #region Rotation
+            if (followCamera)
+            {
+                shipBody.rotation = Quaternion.Slerp(shipBody.rotation, cam.rotation, rotationSpeed * Time.fixedDeltaTime);
+            }
+            else
+            {
+                Quaternion yaw = Quaternion.AngleAxis(rotateVector.y, Vector3.up);
+                Quaternion pitch = Quaternion.AngleAxis(rotateVector.x, Vector3.right);
+                Quaternion roll = Quaternion.AngleAxis(rotateVector.z, Vector3.forward);
 
-            //transform.localRotation = targetRotation;
+                //// Combine them in the right order: roll, then pitch, then yaw
+                //targetRotation = targetRotation * yaw * pitch * roll;
+                shipBody.localRotation = Quaternion.Slerp(shipBody.localRotation, shipBody.localRotation
+                    * yaw * pitch * roll, unlockedRotationSpeed * Time.fixedDeltaTime);
+                //transform.localRotation = targetRotation;
+            }
             #endregion
         }
     }

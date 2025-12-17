@@ -120,15 +120,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""EnableCursor"",
-                    ""type"": ""Button"",
-                    ""id"": ""4699fd67-73ca-4b7c-83b1-2dbbda94640b"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""SelectTarget"",
                     ""type"": ""Button"",
                     ""id"": ""7b4398d5-b0db-4c18-bb58-4bccf90298a0"",
@@ -196,19 +187,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""bfc4293a-4a65-4344-8f4a-f51e026f349f"",
-                    ""path"": ""<Mouse>/rightButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""EnableCursor"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""6295b4e3-9114-49ff-af90-ab216d2d4254"",
-                    ""path"": ""<Mouse>/leftButton"",
+                    ""path"": ""<Keyboard>/t"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -248,6 +228,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""FollowCameraToggle"",
+                    ""type"": ""Button"",
+                    ""id"": ""2a7c0039-5a01-4b92-9f1b-346647cde6c0"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -415,6 +404,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""Thrust"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""efef7e1e-9699-4c82-a9a8-0eaa951e1a31"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""FollowCameraToggle"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -426,13 +426,13 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Camera_Look = m_Camera.FindAction("Look", throwIfNotFound: true);
         m_Camera_Zoom = m_Camera.FindAction("Zoom", throwIfNotFound: true);
         m_Camera_Reset = m_Camera.FindAction("Reset", throwIfNotFound: true);
-        m_Camera_EnableCursor = m_Camera.FindAction("EnableCursor", throwIfNotFound: true);
         m_Camera_SelectTarget = m_Camera.FindAction("SelectTarget", throwIfNotFound: true);
         // Movement
         m_Movement = asset.FindActionMap("Movement", throwIfNotFound: true);
         m_Movement_Rotate = m_Movement.FindAction("Rotate", throwIfNotFound: true);
         m_Movement_Strafe = m_Movement.FindAction("Strafe", throwIfNotFound: true);
         m_Movement_Thrust = m_Movement.FindAction("Thrust", throwIfNotFound: true);
+        m_Movement_FollowCameraToggle = m_Movement.FindAction("FollowCameraToggle", throwIfNotFound: true);
     }
 
     ~@PlayerControls()
@@ -517,7 +517,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Camera_Look;
     private readonly InputAction m_Camera_Zoom;
     private readonly InputAction m_Camera_Reset;
-    private readonly InputAction m_Camera_EnableCursor;
     private readonly InputAction m_Camera_SelectTarget;
     /// <summary>
     /// Provides access to input actions defined in input action map "Camera".
@@ -542,10 +541,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Camera/Reset".
         /// </summary>
         public InputAction @Reset => m_Wrapper.m_Camera_Reset;
-        /// <summary>
-        /// Provides access to the underlying input action "Camera/EnableCursor".
-        /// </summary>
-        public InputAction @EnableCursor => m_Wrapper.m_Camera_EnableCursor;
         /// <summary>
         /// Provides access to the underlying input action "Camera/SelectTarget".
         /// </summary>
@@ -585,9 +580,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Reset.started += instance.OnReset;
             @Reset.performed += instance.OnReset;
             @Reset.canceled += instance.OnReset;
-            @EnableCursor.started += instance.OnEnableCursor;
-            @EnableCursor.performed += instance.OnEnableCursor;
-            @EnableCursor.canceled += instance.OnEnableCursor;
             @SelectTarget.started += instance.OnSelectTarget;
             @SelectTarget.performed += instance.OnSelectTarget;
             @SelectTarget.canceled += instance.OnSelectTarget;
@@ -611,9 +603,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Reset.started -= instance.OnReset;
             @Reset.performed -= instance.OnReset;
             @Reset.canceled -= instance.OnReset;
-            @EnableCursor.started -= instance.OnEnableCursor;
-            @EnableCursor.performed -= instance.OnEnableCursor;
-            @EnableCursor.canceled -= instance.OnEnableCursor;
             @SelectTarget.started -= instance.OnSelectTarget;
             @SelectTarget.performed -= instance.OnSelectTarget;
             @SelectTarget.canceled -= instance.OnSelectTarget;
@@ -657,6 +646,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Movement_Rotate;
     private readonly InputAction m_Movement_Strafe;
     private readonly InputAction m_Movement_Thrust;
+    private readonly InputAction m_Movement_FollowCameraToggle;
     /// <summary>
     /// Provides access to input actions defined in input action map "Movement".
     /// </summary>
@@ -680,6 +670,10 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Movement/Thrust".
         /// </summary>
         public InputAction @Thrust => m_Wrapper.m_Movement_Thrust;
+        /// <summary>
+        /// Provides access to the underlying input action "Movement/FollowCameraToggle".
+        /// </summary>
+        public InputAction @FollowCameraToggle => m_Wrapper.m_Movement_FollowCameraToggle;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -715,6 +709,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Thrust.started += instance.OnThrust;
             @Thrust.performed += instance.OnThrust;
             @Thrust.canceled += instance.OnThrust;
+            @FollowCameraToggle.started += instance.OnFollowCameraToggle;
+            @FollowCameraToggle.performed += instance.OnFollowCameraToggle;
+            @FollowCameraToggle.canceled += instance.OnFollowCameraToggle;
         }
 
         /// <summary>
@@ -735,6 +732,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Thrust.started -= instance.OnThrust;
             @Thrust.performed -= instance.OnThrust;
             @Thrust.canceled -= instance.OnThrust;
+            @FollowCameraToggle.started -= instance.OnFollowCameraToggle;
+            @FollowCameraToggle.performed -= instance.OnFollowCameraToggle;
+            @FollowCameraToggle.canceled -= instance.OnFollowCameraToggle;
         }
 
         /// <summary>
@@ -797,13 +797,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnReset(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "EnableCursor" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnEnableCursor(InputAction.CallbackContext context);
-        /// <summary>
         /// Method invoked when associated input action "SelectTarget" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
@@ -839,5 +832,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnThrust(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "FollowCameraToggle" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnFollowCameraToggle(InputAction.CallbackContext context);
     }
 }

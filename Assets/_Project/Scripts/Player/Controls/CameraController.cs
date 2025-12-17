@@ -8,7 +8,7 @@ namespace Player
         float currentXAngle;
         float currentYAngle;
 
-        [SerializeField] protected float cameraZoomSpeed = 1, cameraDefaultRotSpeed = 50f;
+        [SerializeField] protected float cameraZoomSpeed = 1, cameraDefaultRotSpeed = 30f;
         [SerializeField] protected float cameraRotSpeed;
         public Vector3 defaultCamPos = new(0, 0, 1);
         public bool smoothCameraRotation;
@@ -46,7 +46,6 @@ namespace Player
         }
         void EnableCursor()
         {
-            cameraRotSpeed = 0;
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }

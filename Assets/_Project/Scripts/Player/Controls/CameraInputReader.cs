@@ -18,13 +18,9 @@ namespace Player
         {
             base.EnablePlayerActions();
             inputActions.Camera.SetCallbacks(this);
-            inputActions.Camera.EnableCursor.performed += EnableCursor;
-            inputActions.Camera.EnableCursor.canceled += DisableCursor;
         }
         public override void DisablePlayerActions()
         {
-            inputActions.Camera.EnableCursor.performed -= EnableCursor;
-            inputActions.Camera.EnableCursor.canceled -= DisableCursor;
             OnCursorEnabled = OnCursorDisabled = Reset = OnTargetSelect = null;
             Zoom = null;
             Move = null;
