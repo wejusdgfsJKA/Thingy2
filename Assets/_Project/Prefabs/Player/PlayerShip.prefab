@@ -1005,7 +1005,7 @@ Canvas:
   m_GameObject: {fileID: 4357487717180483712}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
+  m_RenderMode: 1
   m_Camera: {fileID: 9022515306048372770}
   m_PlaneDistance: 1
   m_PixelPerfect: 0
@@ -1132,7 +1132,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Weapons.Turret
   targetStrategyType: 0
   <TypeOfAngle>k__BackingField: 1
-  <Angle>k__BackingField: 85
+  <Angle>k__BackingField: 110
   <Range>k__BackingField: 30
   <TargetPriorities>k__BackingField: []
   <RequiresLock>k__BackingField: 1

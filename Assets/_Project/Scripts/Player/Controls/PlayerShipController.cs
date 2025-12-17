@@ -32,7 +32,7 @@ namespace Player
         {
             lineRenderer = GetComponent<LineRenderer>();
             lineRenderer.positionCount = 2;
-            shipBody ??= transform.root;
+            if (!shipBody) shipBody = transform.root;
         }
         private void OnEnable()
         {

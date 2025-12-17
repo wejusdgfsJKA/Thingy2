@@ -201,7 +201,6 @@ namespace Player
                 if (a.Key == null) continue;
 
                 Vector3 worldPos = a.Value.Object.Transform.position;
-                Vector3 screenPos = cam.WorldToScreenPoint(worldPos);
 
                 Vector3 viewportPos = cam.WorldToViewportPoint(worldPos);
                 if (viewportPos.z <= 0)
@@ -209,11 +208,22 @@ namespace Player
                     a.Value.GameObject.SetActive(false);
                     continue;
                 }
-                a.Value.GameObject.SetActive(true);
 
-                RectTransformUtility.ScreenPointToLocalPointInRectangle(boundingBoxParent, screenPos, null, out var localPos);
+                Vector2 screenPos = new Vector2(
+                    viewportPos.x * Screen.width,
+                    viewportPos.y * Screen.height
+                );
+
+                RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                    boundingBoxParent,
+                    screenPos,
+                    cam,
+                    out Vector2 localPos
+                );
+
                 a.Value.RectTransform.localPosition = localPos;
 
+                #region Scaling
                 //scale based on distance
                 float dist = Vector3.Distance(cam.transform.position, worldPos);
                 var size = Mathf.Clamp(a.Value.Object.IconSizeCoefficient / (dist + 0.00001f),
@@ -221,6 +231,9 @@ namespace Player
                 a.Value.RectTransform.sizeDelta = new Vector2(20, 20) * size;
                 dist = Vector3.Distance(cam.transform.root.position, worldPos);
                 a.Value.DistanceText.text = dist.ToString("0.0");
+                #endregion
+
+                a.Value.GameObject.SetActive(true);
             }
         }
         /// <summary>
@@ -241,6 +254,7 @@ namespace Player
             }
         }
         #endregion
+        #region Target selection
         /// <summary>
         /// Cast a ray to find an image in front of the crosshair. If found, select the corresponding object 
         /// as the current target.
@@ -290,5 +304,6 @@ namespace Player
             }
             CurrentTarget = null;
         }
+        #endregion
     }
 }
