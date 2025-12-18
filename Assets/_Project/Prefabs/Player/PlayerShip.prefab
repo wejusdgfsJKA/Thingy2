@@ -362,6 +362,7 @@ MonoBehaviour:
   cameraSmoothingFactor: 25
   camPivot: {fileID: 6728637190885341191}
   cam: {fileID: 4898770786368013739}
+  shipBody: {fileID: 4840422241096263578}
   cameraInputReader: {fileID: 11400000, guid: 4d7486bb806760b43b6d0402945654bd, type: 2}
 --- !u!54 &980278194129036036
 Rigidbody:
@@ -1267,7 +1268,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 60}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -20, y: 13}
+  m_AnchoredPosition: {x: -12, y: 9}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1759682242497683610
@@ -1532,7 +1533,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -60}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 20, y: 13}
+  m_AnchoredPosition: {x: 12, y: 9}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4268776774210815691
@@ -1607,7 +1608,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -25}
+  m_AnchoredPosition: {x: 0, y: -15}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3173489091081098855

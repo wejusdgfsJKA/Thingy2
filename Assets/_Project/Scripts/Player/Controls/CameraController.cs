@@ -13,15 +13,15 @@ namespace Player
         public Vector3 defaultCamPos = new(0, 0, 1);
         public bool smoothCameraRotation;
         [Range(1f, 50f)] public float cameraSmoothingFactor = 25f;
-        [SerializeField] Transform camPivot, cam;
+        [SerializeField] Transform camPivot, cam, shipBody;
         [SerializeField] CameraInputReader cameraInputReader;
         protected ObjectDisplay objectDisplay;
         #endregion
 
         void Awake()
         {
-            currentXAngle = transform.localRotation.eulerAngles.x;
-            currentYAngle = transform.localRotation.eulerAngles.y;
+            currentXAngle = camPivot.localRotation.eulerAngles.x;
+            currentYAngle = camPivot.localRotation.eulerAngles.y;
             objectDisplay = GetComponent<ObjectDisplay>();
         }
         private void OnEnable()
@@ -59,11 +59,13 @@ namespace Player
 
         void OnReset()
         {
-            camPivot.localRotation = Quaternion.identity;
+            camPivot.localRotation = shipBody.localRotation;
+            currentXAngle = camPivot.localRotation.eulerAngles.x;
+            currentYAngle = camPivot.localRotation.eulerAngles.y;
             cam.localPosition = defaultCamPos;
         }
 
-        void Update()
+        void LateUpdate()
         {
             RotateCamera(cameraInputReader.LookDirection.x, -cameraInputReader.LookDirection.y);
         }

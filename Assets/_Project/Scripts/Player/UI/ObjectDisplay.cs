@@ -187,7 +187,7 @@ namespace Player
         }
         #endregion
         #region UI
-        private void LateUpdate()
+        private void Update()
         {
             HandleDisplay();
         }
