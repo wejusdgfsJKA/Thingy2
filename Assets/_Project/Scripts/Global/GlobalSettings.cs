@@ -33,7 +33,7 @@ public static class GlobalSettings
     }
     public static readonly string MainSceneAddress = "MainScene", IntermediateSceneAddress = "Intermediate";
     public static readonly float AITickCooldown = 0.05f;
-    public static readonly float DamageRenderTime = 0.1f;
+    public static readonly float DamageRenderTime = 0.2f;
     public static readonly float UIUpdateCooldown = 1f;
     public static readonly int MaxTargetDistance = 1000;
 }

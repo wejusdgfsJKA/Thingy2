@@ -17,7 +17,7 @@ namespace Player
         #region Parameters
         [SerializeField] Image iconPrefab;
         [SerializeField] float minTextScale, maxTextScale;
-        [Tooltip("IdentifiedMaterial to use for the selected target.")]
+        [Tooltip("IconIdentifiedMaterial to use for the selected target.")]
         [SerializeField] Material selectedMaterial, hullDamageMaterial, shieldDamageMaterial;
         #endregion
         #region Implementation
@@ -115,7 +115,7 @@ namespace Player
             }
             data.BoundingBox.raycastTarget = false;
             if (CurrentTarget == obj) ClearTarget();
-            data.BoundingBox.material = obj.TrackedMaterial;
+            data.BoundingBox.material = obj.IconTrackedMaterial;
         }
         public void AddIdentified(SpecialObjectAdded objectAdded) => AddIdentified(objectAdded.SpecialObject);
         /// <summary>
@@ -142,7 +142,7 @@ namespace Player
                 images.Add(img.gameObject, data);
             }
             data.BoundingBox.raycastTarget = obj.Selectable;
-            if (obj != CurrentTarget) data.BoundingBox.material = obj.IdentifiedMaterial;
+            if (obj != CurrentTarget) data.BoundingBox.material = obj.IconIdentifiedMaterial;
         }
         /// <summary>
         /// Does nothing for the player object.
@@ -291,7 +291,7 @@ namespace Player
         {
             if (CurrentTarget != null && toTrack.TryGetValue(CurrentTarget, out var previousData))
             {
-                if (previousData.Object.IdentifiedRenderer.enabled) previousData.BoundingBox.material = previousData.Object.IdentifiedMaterial;
+                if (previousData.Object.IdentifiedRenderer.enabled) previousData.BoundingBox.material = previousData.Object.IconIdentifiedMaterial;
             }
             CurrentTarget = data.Object;
             data.BoundingBox.material = selectedMaterial;
@@ -304,7 +304,7 @@ namespace Player
             if (CurrentTarget == null) return;
             if (toTrack.TryGetValue(CurrentTarget, out var data))
             {
-                if (data.Object.IdentifiedRenderer.enabled) data.BoundingBox.material = data.Object.IdentifiedMaterial;
+                if (data.Object.IdentifiedRenderer.enabled) data.BoundingBox.material = data.Object.IconIdentifiedMaterial;
             }
             CurrentTarget = null;
         }

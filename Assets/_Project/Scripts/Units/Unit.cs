@@ -12,11 +12,12 @@ public abstract class Unit : IDPoolable<ObjectType>
     #region UI stuff
     [field: SerializeField] public bool Selectable { get; set; } = true;
     [field: SerializeField] public Sprite Icon { get; protected set; }
-    [field: SerializeField] public Material IdentifiedMaterial { get; protected set; }
-    [field: SerializeField] public Material TrackedMaterial { get; protected set; }
+    [field: SerializeField] public Material IconIdentifiedMaterial { get; protected set; }
+    [field: SerializeField] public Material IconTrackedMaterial { get; protected set; }
     [field: SerializeField] public float IconSizeCoefficient { get; protected set; } = 5;
     [field: SerializeField] public MeshRenderer IdentifiedRenderer { get; protected set; }
     [field: SerializeField] public MeshRenderer TrackedRenderer { get; protected set; }
+    protected Material defaultIdentifiedRendererMaterial;
     #endregion
     #region Parameters
     [SerializeField] protected float defaultSignature = 10;
@@ -67,17 +68,18 @@ public abstract class Unit : IDPoolable<ObjectType>
 
         #region UI stuff
         if (!IdentifiedRenderer) IdentifiedRenderer = GetComponent<MeshRenderer>();
-        if (!IdentifiedMaterial && IdentifiedRenderer)
+        defaultIdentifiedRendererMaterial = IdentifiedRenderer.material;
+        if (!IconIdentifiedMaterial && IdentifiedRenderer)
         {
-            IdentifiedMaterial = IdentifiedRenderer.material;
+            IconIdentifiedMaterial = IdentifiedRenderer.material;
         }
         if (!TrackedRenderer && Transform.childCount > 0)
         {
             TrackedRenderer = Transform.GetChild(0).GetComponent<MeshRenderer>();
         }
-        if (!TrackedMaterial && TrackedRenderer)
+        if (!IconTrackedMaterial && TrackedRenderer)
         {
-            TrackedMaterial = TrackedRenderer.material;
+            IconTrackedMaterial = TrackedRenderer.material;
         }
         #endregion
 
@@ -137,7 +139,7 @@ public abstract class Unit : IDPoolable<ObjectType>
     }
     protected void ResetMaterials()
     {
-        IdentifiedRenderer.material = IdentifiedMaterial;
+        IdentifiedRenderer.material = defaultIdentifiedRendererMaterial;
     }
     protected virtual void Tick(float deltaTime)
     {
@@ -171,6 +173,7 @@ public abstract class Unit : IDPoolable<ObjectType>
             }
         }
     }
+    #region Targeting
     protected virtual void IterateOverTargets()
     {
         var enemyTeam = Team == 0 ? GameManager.Teams[1] : GameManager.Teams[0];
@@ -214,5 +217,6 @@ public abstract class Unit : IDPoolable<ObjectType>
             if (Turrets[i].ConsiderTarget(@object, detectionState)) TurretsHaveTarget = true;
         }
     }
+    #endregion
     #endregion
 }
