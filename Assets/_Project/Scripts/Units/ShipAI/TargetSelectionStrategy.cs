@@ -18,6 +18,8 @@ public abstract class TargetSelectionStrategy
         return type switch
         {
             Type.Nearest => new NearestTargetSelectionStrategy(ship)
+            ,
+            _ => null
         };
     }
     public void Clear()

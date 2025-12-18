@@ -11,12 +11,14 @@ namespace Player
     [RequireComponent(typeof(PlayerShip))]
     public class ObjectDisplay : MonoBehaviour
     {
+        public static Material HullDamageMaterial { get; private set; }
+        public static Material ShieldDamageMaterial { get; private set; }
         #region Fields
         #region Parameters
         [SerializeField] Image iconPrefab;
         [SerializeField] float minTextScale, maxTextScale;
-        [Tooltip("Material to use for the selected target.")]
-        [SerializeField] Material selectedMaterial;
+        [Tooltip("IdentifiedMaterial to use for the selected target.")]
+        [SerializeField] Material selectedMaterial, hullDamageMaterial, shieldDamageMaterial;
         #endregion
         #region Implementation
         protected readonly struct ObjectUIData
@@ -58,6 +60,8 @@ namespace Player
         #region Setup
         protected void Awake()
         {
+            HullDamageMaterial = hullDamageMaterial;
+            ShieldDamageMaterial = shieldDamageMaterial;
             cam = GetComponentInChildren<Camera>();
             EventBus<SpecialObjectAdded>.AddActions(AddIdentified);
             GameManager.Teams[0].OnMemberAdded += AddIdentified;
@@ -111,7 +115,7 @@ namespace Player
             }
             data.BoundingBox.raycastTarget = false;
             if (CurrentTarget == obj) ClearTarget();
-            data.BoundingBox.material = obj.TrackedRenderer.material;
+            data.BoundingBox.material = obj.TrackedMaterial;
         }
         public void AddIdentified(SpecialObjectAdded objectAdded) => AddIdentified(objectAdded.SpecialObject);
         /// <summary>
@@ -138,7 +142,7 @@ namespace Player
                 images.Add(img.gameObject, data);
             }
             data.BoundingBox.raycastTarget = obj.Selectable;
-            if (obj != CurrentTarget) data.BoundingBox.material = obj.Material;
+            if (obj != CurrentTarget) data.BoundingBox.material = obj.IdentifiedMaterial;
         }
         /// <summary>
         /// Does nothing for the player object.
@@ -287,7 +291,7 @@ namespace Player
         {
             if (CurrentTarget != null && toTrack.TryGetValue(CurrentTarget, out var previousData))
             {
-                if (previousData.Object.IdentifiedRenderer.enabled) previousData.BoundingBox.material = previousData.Object.Material;
+                if (previousData.Object.IdentifiedRenderer.enabled) previousData.BoundingBox.material = previousData.Object.IdentifiedMaterial;
             }
             CurrentTarget = data.Object;
             data.BoundingBox.material = selectedMaterial;
@@ -300,7 +304,7 @@ namespace Player
             if (CurrentTarget == null) return;
             if (toTrack.TryGetValue(CurrentTarget, out var data))
             {
-                if (data.Object.IdentifiedRenderer.enabled) data.BoundingBox.material = data.Object.Material;
+                if (data.Object.IdentifiedRenderer.enabled) data.BoundingBox.material = data.Object.IdentifiedMaterial;
             }
             CurrentTarget = null;
         }

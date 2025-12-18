@@ -33,6 +33,5 @@ public class Ship : Unit
     protected override void OnTarget(Unit target, DetectionState detectionState = DetectionState.Identified)
     {
         targetSelectionStrategy.ConsiderTarget(target, detectionState);
-
     }
 }

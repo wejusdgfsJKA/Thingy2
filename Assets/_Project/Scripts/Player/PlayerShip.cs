@@ -1,8 +1,11 @@
+using TMPro;
+using UnityEngine;
 namespace Player
 {
     [UnityEngine.RequireComponent(typeof(ObjectDisplay))]
     public class PlayerShip : Unit
     {
+        [SerializeField] TextMeshProUGUI signatureText;
         protected ObjectDisplay display;
         public override Unit CurrentTarget => display.CurrentTarget;
         protected override void Awake()
@@ -31,6 +34,11 @@ namespace Player
                     display.AddTracked(target);
                     break;
             }
+        }
+        protected override void Tick(float deltaTime)
+        {
+            base.Tick(deltaTime);
+            signatureText.text = "Signature: " + Signature.ToString("F1");
         }
     }
 }

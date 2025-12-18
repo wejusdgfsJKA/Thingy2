@@ -1,4 +1,5 @@
 using HP;
+using Player;
 using Spawning.Pooling;
 using System.Collections.Generic;
 using Timers;
@@ -11,7 +12,8 @@ public abstract class Unit : IDPoolable<ObjectType>
     #region UI stuff
     [field: SerializeField] public bool Selectable { get; set; } = true;
     [field: SerializeField] public Sprite Icon { get; protected set; }
-    [field: SerializeField] public Material Material { get; protected set; }
+    [field: SerializeField] public Material IdentifiedMaterial { get; protected set; }
+    [field: SerializeField] public Material TrackedMaterial { get; protected set; }
     [field: SerializeField] public float IconSizeCoefficient { get; protected set; } = 5;
     [field: SerializeField] public MeshRenderer IdentifiedRenderer { get; protected set; }
     [field: SerializeField] public MeshRenderer TrackedRenderer { get; protected set; }
@@ -45,7 +47,7 @@ public abstract class Unit : IDPoolable<ObjectType>
     /// True if any turret has a target this tick.
     /// </summary>
     public bool TurretsHaveTarget { get; protected set; }
-    protected CountdownTimer tickTimer;
+    protected CountdownTimer tickTimer, damageRenderTimer;
     public readonly Dictionary<DetectionState, HashSet<Unit>> Targets = new() {
         {DetectionState.Identified, new HashSet<Unit>() },
         {DetectionState.Tracked, new HashSet<Unit>() }
@@ -64,10 +66,18 @@ public abstract class Unit : IDPoolable<ObjectType>
         shieldComponent = GetComponent<ShieldComponent>();
 
         #region UI stuff
-        if (IdentifiedRenderer == null) IdentifiedRenderer = GetComponent<MeshRenderer>();
-        if (TrackedRenderer == null && Transform.childCount > 0)
+        if (!IdentifiedRenderer) IdentifiedRenderer = GetComponent<MeshRenderer>();
+        if (!IdentifiedMaterial && IdentifiedRenderer)
+        {
+            IdentifiedMaterial = IdentifiedRenderer.material;
+        }
+        if (!TrackedRenderer && Transform.childCount > 0)
         {
             TrackedRenderer = Transform.GetChild(0).GetComponent<MeshRenderer>();
+        }
+        if (!TrackedMaterial && TrackedRenderer)
+        {
+            TrackedMaterial = TrackedRenderer.material;
         }
         #endregion
 
@@ -78,10 +88,13 @@ public abstract class Unit : IDPoolable<ObjectType>
             tickTimer.Start();
             Tick(GlobalSettings.AITickCooldown);
         };
+        damageRenderTimer = new CountdownTimer(GlobalSettings.DamageRenderTime);
+        damageRenderTimer.OnTimerStop += ResetMaterials;
         #endregion
     }
     protected virtual void OnEnable()
     {
+        ResetMaterials();
         Signature = defaultSignature;
         Targets[DetectionState.Identified].Clear();
         Targets[DetectionState.Tracked].Clear();
@@ -117,7 +130,14 @@ public abstract class Unit : IDPoolable<ObjectType>
         if (takeDamage.Damage > 0)
         {
             hullComponent.TakeDamage(takeDamage);
+            IdentifiedRenderer.material = ObjectDisplay.HullDamageMaterial;
         }
+        else IdentifiedRenderer.material = ObjectDisplay.ShieldDamageMaterial;
+        damageRenderTimer.Start();
+    }
+    protected void ResetMaterials()
+    {
+        IdentifiedRenderer.material = IdentifiedMaterial;
     }
     protected virtual void Tick(float deltaTime)
     {
@@ -132,11 +152,11 @@ public abstract class Unit : IDPoolable<ObjectType>
         {
             ConsiderTargetForTurrets(target, DetectionState.Tracked);
         }
-
         for (int i = 0; i < Turrets.Count; i++)
         {
             Turrets[i].Tick();
         }
+
         RecalculateSignature();
     }
     protected void RecalculateSignature()
