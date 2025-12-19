@@ -9,11 +9,9 @@ namespace Player
     {
         public event UnityAction<Vector2> Move;
         public event UnityAction<float> Zoom;
-        public event UnityAction Reset;
+        public event UnityAction Reset, ToggleMenu;
         public Vector2 LookDirection => inputActions.Camera.Look.ReadValue<Vector2>();
         public event UnityAction OnTargetSelect;
-        public event UnityAction OnCursorEnabled;
-        public event UnityAction OnCursorDisabled;
         public override void EnablePlayerActions()
         {
             base.EnablePlayerActions();
@@ -21,14 +19,12 @@ namespace Player
         }
         public override void DisablePlayerActions()
         {
-            OnCursorEnabled = OnCursorDisabled = Reset = OnTargetSelect = null;
+            Reset = OnTargetSelect = ToggleMenu = null;
             Zoom = null;
             Move = null;
             inputActions?.Camera.SetCallbacks(null);
             base.DisablePlayerActions();
         }
-        public void EnableCursor(InputAction.CallbackContext ctx) => OnCursorEnabled?.Invoke();
-        public void DisableCursor(InputAction.CallbackContext ctx) => OnCursorDisabled?.Invoke();
         public void OnReset(InputAction.CallbackContext context)
         {
             Reset?.Invoke();
@@ -41,15 +37,13 @@ namespace Player
         {
             Zoom?.Invoke(context.ReadValue<float>());
         }
-
-        public void OnEnableCursor(InputAction.CallbackContext context)
-        {
-
-        }
-
         public void OnSelectTarget(InputAction.CallbackContext context)
         {
             OnTargetSelect?.Invoke();
+        }
+        public void OnToggleMenu(InputAction.CallbackContext context)
+        {
+            ToggleMenu?.Invoke();
         }
     }
 }

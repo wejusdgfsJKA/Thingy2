@@ -1,3 +1,4 @@
+using Player.UI;
 using TMPro;
 using UnityEngine;
 namespace Player
@@ -34,11 +35,6 @@ namespace Player
                     display.AddTracked(target);
                     break;
             }
-        }
-        protected override void Tick(float deltaTime)
-        {
-            base.Tick(deltaTime);
-            signatureText.text = "Signature: " + Signature.ToString("F1");
         }
     }
 }

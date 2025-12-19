@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Weapons
 {
     [CreateAssetMenu(menuName = "ScriptableObjects/WeaponData")]
-    public class WeaponData : IDPoolableData<RandomShit>
+    public class WeaponData : IDPoolableData<WeaponType>
     {
 
     }

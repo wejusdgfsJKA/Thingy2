@@ -6,7 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-namespace Player
+namespace Player.UI
 {
     [RequireComponent(typeof(PlayerShip))]
     public class ObjectDisplay : MonoBehaviour
@@ -100,8 +100,7 @@ namespace Player
         public void AddTracked(Unit obj)
         {
             if (obj == GameManager.Player) return;
-            obj.IdentifiedRenderer.enabled = false;
-            obj.TrackedRenderer.enabled = true;
+            obj.EnableTrackedRenderer();
             if (obj.Icon == null) return;
             if (!toTrack.TryGetValue(obj, out var data))
             {
@@ -127,8 +126,7 @@ namespace Player
         public void AddIdentified(Unit obj)
         {
             if (obj.ID == ObjectType.Player) return;
-            obj.IdentifiedRenderer.enabled = true;
-            obj.TrackedRenderer.enabled = false;
+            obj.EnableIdentifiedRenderer();
             if (obj.Icon == null) return;
             if (!toTrack.TryGetValue(obj, out var data))
             {
@@ -154,7 +152,6 @@ namespace Player
         {
             if (obj.ID == ObjectType.Player) return;
             obj.OnDespawn -= RemoveObject;
-            obj.IdentifiedRenderer.enabled = obj.TrackedRenderer.enabled = false;
             if (CurrentTarget == obj) ClearTarget();
             if (toTrack.TryGetValue(obj, out var data))
             {
@@ -289,9 +286,10 @@ namespace Player
         /// <param name="data">The data of the target object.</param>
         void TargetSelected(ObjectUIData data)
         {
+            if (GameManager.IsPaused) return;
             if (CurrentTarget != null && toTrack.TryGetValue(CurrentTarget, out var previousData))
             {
-                if (previousData.Object.IdentifiedRenderer.enabled) previousData.BoundingBox.material = previousData.Object.IconIdentifiedMaterial;
+                if (previousData.Object.Identified) previousData.BoundingBox.material = previousData.Object.IconIdentifiedMaterial;
             }
             CurrentTarget = data.Object;
             data.BoundingBox.material = selectedMaterial;
@@ -304,7 +302,7 @@ namespace Player
             if (CurrentTarget == null) return;
             if (toTrack.TryGetValue(CurrentTarget, out var data))
             {
-                if (data.Object.IdentifiedRenderer.enabled) data.BoundingBox.material = data.Object.IconIdentifiedMaterial;
+                if (data.Object.Identified) data.BoundingBox.material = data.Object.IconIdentifiedMaterial;
             }
             CurrentTarget = null;
         }

@@ -3,15 +3,15 @@ using Timers;
 using UnityEngine;
 namespace Weapons
 {
-    public enum RandomShit
+    public enum WeaponType
     {
         Beam
     }
     [RequireComponent(typeof(LineRenderer))]
-    public class Beam : IDPoolable<RandomShit>
+    public class Beam : IDPoolable<WeaponType>
     {
         [field: SerializeField] public LineRenderer LineRenderer { get; protected set; }
-        CountdownTimer timer = new CountdownTimer(.1f);
+        readonly CountdownTimer timer = new(GlobalSettings.BeamRenderTime);
         private void Awake()
         {
             timer.OnTimerStop += () => gameObject.SetActive(false);

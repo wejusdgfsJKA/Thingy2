@@ -14,18 +14,13 @@ public class ObjectManager : MultiManager<ObjectType>
     #region Fields
     static readonly Dictionary<ObjectType, UnitData> assets = new();
     public static ObjectManager Instance { get; protected set; }
-    static string shipGroupLabel = "Ships";
+    static readonly string shipGroupLabel = "Ships";
     #endregion
     #region Setup
-    static void LoadAsset(UnitData data)
-    {
-        assets.Add(data.ID, data);
-    }
     public async static Task LoadAssets()
     {
         if (assets.Count > 0) return;
-
-        await Addressables.LoadAssetsAsync<UnitData>(shipGroupLabel, LoadAsset).Task;
+        await Addressables.LoadAssetsAsync<UnitData>(shipGroupLabel, (data) => assets.Add(data.ID, data)).Task;
         Debug.Log("Ships loaded successfully.");
     }
     private void Awake()

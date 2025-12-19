@@ -4,7 +4,7 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.SceneManagement;
 namespace Player.UI
 {
-    public class IntermediateSceneManager : MonoBehaviour
+    public class IntermediateSceneManager : MenuManager
     {
         [SerializeField] TextMeshProUGUI scoreText;
         private void OnEnable()
@@ -13,7 +13,7 @@ namespace Player.UI
         }
         public void OnBeginMission()
         {
-            GameManager.CurrentMission = new FleetBattleMission(2);
+            GameManager.CurrentMission = new FleetBattleMission(1);
             Addressables.LoadSceneAsync(GlobalSettings.MainSceneAddress);
         }
         public void OnExit()

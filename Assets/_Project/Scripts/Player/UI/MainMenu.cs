@@ -4,7 +4,7 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.SceneManagement;
 namespace Player.UI
 {
-    public class MainMenu : MonoBehaviour
+    public class MainMenu : MenuManager
     {
         [SerializeField] Canvas mainMenuCanvas, loadingCanvas;
         private async void Start()

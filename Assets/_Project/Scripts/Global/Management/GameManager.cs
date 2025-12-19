@@ -43,5 +43,18 @@ public static class GameManager
         Teams[0] = Teams[1] = null;
         Addressables.LoadSceneAsync(GlobalSettings.IntermediateSceneAddress);
     }
-    static void AutoResolve() => EndMission();
+    public static void AutoResolve() => EndMission();
+    public static bool IsPaused => Time.timeScale == 0f;
+    public static void TogglePause()
+    {
+        Cursor.visible = !Cursor.visible;
+        Cursor.lockState = IsPaused ? CursorLockMode.Locked : CursorLockMode.None;
+        Time.timeScale = IsPaused ? 1f : 0f;
+    }
+    public static void ResumeGame()
+    {
+        Time.timeScale = 1f;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
 }

@@ -1,5 +1,5 @@
 using HP;
-using Player;
+using Player.UI;
 using Spawning.Pooling;
 using System.Collections.Generic;
 using Timers;
@@ -15,9 +15,9 @@ public abstract class Unit : IDPoolable<ObjectType>
     [field: SerializeField] public Material IconIdentifiedMaterial { get; protected set; }
     [field: SerializeField] public Material IconTrackedMaterial { get; protected set; }
     [field: SerializeField] public float IconSizeCoefficient { get; protected set; } = 5;
-    [field: SerializeField] public MeshRenderer IdentifiedRenderer { get; protected set; }
-    [field: SerializeField] public MeshRenderer TrackedRenderer { get; protected set; }
+    [SerializeField] protected MeshRenderer identifiedRenderer, trackedRenderer;
     protected Material defaultIdentifiedRendererMaterial;
+    public bool Identified => identifiedRenderer.gameObject.activeSelf;
     #endregion
     #region Parameters
     [SerializeField] protected float defaultSignature = 10;
@@ -67,19 +67,19 @@ public abstract class Unit : IDPoolable<ObjectType>
         shieldComponent = GetComponent<ShieldComponent>();
 
         #region UI stuff
-        if (!IdentifiedRenderer) IdentifiedRenderer = GetComponent<MeshRenderer>();
-        defaultIdentifiedRendererMaterial = IdentifiedRenderer.material;
-        if (!IconIdentifiedMaterial && IdentifiedRenderer)
+        if (!identifiedRenderer) identifiedRenderer = GetComponent<MeshRenderer>();
+        defaultIdentifiedRendererMaterial = identifiedRenderer.material;
+        if (!IconIdentifiedMaterial && identifiedRenderer)
         {
-            IconIdentifiedMaterial = IdentifiedRenderer.material;
+            IconIdentifiedMaterial = identifiedRenderer.material;
         }
-        if (!TrackedRenderer && Transform.childCount > 0)
+        if (!trackedRenderer && Transform.childCount > 0)
         {
-            TrackedRenderer = Transform.GetChild(0).GetComponent<MeshRenderer>();
+            trackedRenderer = Transform.GetChild(0).GetComponent<MeshRenderer>();
         }
-        if (!IconTrackedMaterial && TrackedRenderer)
+        if (!IconTrackedMaterial && trackedRenderer)
         {
-            IconTrackedMaterial = TrackedRenderer.material;
+            IconTrackedMaterial = trackedRenderer.material;
         }
         #endregion
 
@@ -102,8 +102,7 @@ public abstract class Unit : IDPoolable<ObjectType>
         Targets[DetectionState.Tracked].Clear();
         if (ID != ObjectType.Player)
         {
-            IdentifiedRenderer.enabled = false;
-            if (TrackedRenderer != null) TrackedRenderer.enabled = false;
+            EnableTrackedRenderer();
         }
         tickTimer.Start();
     }
@@ -132,14 +131,24 @@ public abstract class Unit : IDPoolable<ObjectType>
         if (takeDamage.Damage > 0)
         {
             hullComponent.TakeDamage(takeDamage);
-            IdentifiedRenderer.material = ObjectDisplay.HullDamageMaterial;
+            identifiedRenderer.material = ObjectDisplay.HullDamageMaterial;
         }
-        else IdentifiedRenderer.material = ObjectDisplay.ShieldDamageMaterial;
+        else identifiedRenderer.material = ObjectDisplay.ShieldDamageMaterial;
         damageRenderTimer.Start();
     }
     protected void ResetMaterials()
     {
-        IdentifiedRenderer.material = defaultIdentifiedRendererMaterial;
+        identifiedRenderer.material = defaultIdentifiedRendererMaterial;
+    }
+    public virtual void EnableTrackedRenderer()
+    {
+        identifiedRenderer.gameObject.SetActive(false);
+        trackedRenderer.enabled = true;
+    }
+    public virtual void EnableIdentifiedRenderer()
+    {
+        identifiedRenderer.gameObject.SetActive(true);
+        trackedRenderer.enabled = false;
     }
     protected virtual void Tick(float deltaTime)
     {
@@ -201,6 +210,7 @@ public abstract class Unit : IDPoolable<ObjectType>
     protected void RemoveTarget(Unit unit)
     {
         unit.OnDespawn -= RemoveTarget;
+        if (Targets.Count == 0) return;
         if (Targets[DetectionState.Identified].Remove(unit) || Targets[DetectionState.Tracked].Remove(unit))
         {
 

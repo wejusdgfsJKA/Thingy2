@@ -26,6 +26,8 @@ namespace Weapons
         [field: SerializeField] public float CurrentTargetModifier { get; protected set; } = 2f;
         public bool HasTarget => targetStrategy.CurrentTarget != null;
         public float Signature { get; protected set; }
+        public bool Fired { get; protected set; }
+        public float Charge => weapon.Charge;
         private void Awake()
         {
             weapon = GetComponent<WeaponBase>();
@@ -33,6 +35,7 @@ namespace Weapons
         }
         private void OnEnable()
         {
+            Fired = false;
             Signature = 0;
             targetStrategy?.Clear();
         }
@@ -47,10 +50,15 @@ namespace Weapons
             if (!@object)
             {
                 Signature = Mathf.Max(0, Signature - weapon.SignatureDecrease * GlobalSettings.AITickCooldown);
-                if (weapon.CanFire) weapon.DecreaseRateOfFire();
+                if (weapon.CanFire)
+                {
+                    weapon.DecreaseRateOfFire();
+                    Fired = false;
+                }
             }
             else
             {
+                Fired = true;
                 weapon.Fire(@object);
                 Signature = weapon.SignatureIncreaseOnFire;
             }
@@ -92,6 +100,11 @@ namespace Weapons
                     }
             }
             return false;
+        }
+        public override string ToString()
+        {
+            string color = !gameObject.activeSelf ? "grey" : Fired ? "green" : "red";
+            return $"<color={color}>{gameObject.name}</color>";
         }
     }
 }
