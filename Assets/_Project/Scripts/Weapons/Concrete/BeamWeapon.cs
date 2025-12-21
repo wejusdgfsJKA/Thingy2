@@ -20,10 +20,10 @@ namespace Weapons
             beam.LineRenderer.SetPosition(0, transform.position);
             if (arc)
             {
+                float dist = Vector3.Distance(transform.position, target.Transform.position);
                 beam.LineRenderer.positionCount = 3;
-                var normal = target.Position - transform.position;
-                var midPoint = transform.position + normal / 4;
-                beam.LineRenderer.SetPosition(1, midPoint + Random.onUnitSphere);
+                var midPoint = (transform.position + target.Position) / 2;
+                beam.LineRenderer.SetPosition(1, midPoint + Random.onUnitSphere * (dist / 10));
                 beam.LineRenderer.SetPosition(2, target.Transform.position);
             }
             else
