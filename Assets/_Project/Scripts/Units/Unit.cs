@@ -19,6 +19,7 @@ public abstract class Unit : IDPoolable<ObjectType>
     protected Material defaultIdentifiedRendererMaterial;
     public bool Identified => identifiedRenderer.gameObject.activeSelf;
     #endregion
+
     #region Parameters
     [SerializeField] protected float defaultSignature = 10;
     [field: SerializeField] public float ScanRange { get; protected set; }
@@ -38,6 +39,7 @@ public abstract class Unit : IDPoolable<ObjectType>
     public float ShieldPoints => shieldComponent.ShieldPoints;
     public float Signature { get; protected set; }
     #endregion   
+
     protected HullComponent hullComponent;
     protected ShieldComponent shieldComponent;
     /// <summary>
@@ -59,6 +61,7 @@ public abstract class Unit : IDPoolable<ObjectType>
     public event System.Action<Unit> OnDespawn;
     public abstract Unit CurrentTarget { get; }
     #endregion
+
     #region Setup
     protected virtual void Awake()
     {
@@ -119,6 +122,7 @@ public abstract class Unit : IDPoolable<ObjectType>
         tickTimer.Dispose();
     }
     #endregion
+
     #region Functionality
     public void TakeDamage(TakeDamage takeDamage)
     {
@@ -168,19 +172,20 @@ public abstract class Unit : IDPoolable<ObjectType>
             Turrets[i].Tick();
         }
 
-        RecalculateSignature();
+        Signature = RecalculateSignature();
     }
-    protected void RecalculateSignature()
+    protected virtual float RecalculateSignature()
     {
-        Signature = defaultSignature;
+        var s = defaultSignature;
         for (int i = 0; i < Turrets.Count; i++)
         {
             var turret = Turrets[i];
             if (turret != null)
             {
-                Signature += turret.Signature;
+                s += turret.Signature;
             }
         }
+        return s;
     }
     #region Targeting
     protected virtual void IterateOverTargets()

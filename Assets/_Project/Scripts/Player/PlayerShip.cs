@@ -3,15 +3,19 @@ using TMPro;
 using UnityEngine;
 namespace Player
 {
-    [UnityEngine.RequireComponent(typeof(ObjectDisplay))]
+    [RequireComponent(typeof(ObjectDisplay))]
+    [RequireComponent(typeof(Rigidbody))]
     public class PlayerShip : Unit
     {
         [SerializeField] TextMeshProUGUI signatureText;
+        [SerializeField] float engineSignatureModifier = 1;
+        Rigidbody rb;
         protected ObjectDisplay display;
         public override Unit CurrentTarget => display.CurrentTarget;
         protected override void Awake()
         {
             base.Awake();
+            rb = GetComponent<Rigidbody>();
             display = GetComponent<ObjectDisplay>();
         }
         protected override void OnEnable()
@@ -35,6 +39,12 @@ namespace Player
                     display.AddTracked(target);
                     break;
             }
+        }
+        protected override float RecalculateSignature()
+        {
+            var s = base.RecalculateSignature() + rb.linearVelocity.magnitude * engineSignatureModifier;
+            signatureText.text = $"Signature: {s:F1}";
+            return s;
         }
     }
 }

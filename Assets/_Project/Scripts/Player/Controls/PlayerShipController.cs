@@ -3,6 +3,7 @@ using UnityEngine;
 namespace Player
 {
     [RequireComponent(typeof(LineRenderer))]
+    [RequireComponent(typeof(Rigidbody))]
     public class PlayerShipController : MonoBehaviour
     {
         [Header("Rotation")]
@@ -31,8 +32,11 @@ namespace Player
             }
         }
         LineRenderer lineRenderer;
+        Rigidbody rb;
         private void Awake()
         {
+            rb = GetComponent<Rigidbody>();
+            rb.useGravity = false;
             lineRenderer = GetComponent<LineRenderer>();
             lineRenderer.positionCount = 2;
             if (!shipBody) shipBody = transform.root;
@@ -78,12 +82,12 @@ namespace Player
                 CurrentThrust += thrustInput * thrustChangeRate;
                 thrustDisplay.text = $"Thrust: {CurrentThrust:F1}";
             }
-            Vector3 velocity = strafeSpeed * (shipBody.up * strafeVector.y + shipBody.right * strafeVector.x).normalized
+            Vector3 velocity = strafeSpeed * (shipBody.up * strafeVector.y + shipBody.right * strafeVector.x)
                 + CurrentThrust * shipBody.forward;
-            transform.Translate(velocity * Time.fixedDeltaTime, Space.World);
+            rb.linearVelocity = velocity;
 
             lineRenderer.SetPosition(0, transform.position);
-            lineRenderer.SetPosition(1, transform.position + velocity * directionLineMultiplier);
+            lineRenderer.SetPosition(1, transform.position + rb.linearVelocity * directionLineMultiplier);
             #endregion
 
             #region Rotation

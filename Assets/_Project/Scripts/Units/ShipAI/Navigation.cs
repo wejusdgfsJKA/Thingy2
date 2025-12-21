@@ -31,7 +31,9 @@ public class Navigation
     }
     public bool UpdateRotation { get; set; } = true;
     public float DestinationSnapDistance { get; set; }
-    public Navigation(Transform tr, float speed, float rotationSpeed, float destinationSnapDistance = 0.1f)
+    readonly float signatureModifier;
+    public float Signature => Rigidbody.linearVelocity.magnitude * signatureModifier;
+    public Navigation(Transform tr, float speed, float rotationSpeed, float destinationSnapDistance = 0.1f, float signatureModifier = 1)
     {
         Transform = tr;
         Rigidbody = tr.GetComponent<Rigidbody>();
@@ -39,6 +41,7 @@ public class Navigation
         Speed = speed;
         RotationSpeed = rotationSpeed;
         DestinationSnapDistance = destinationSnapDistance;
+        this.signatureModifier = signatureModifier;
     }
     public void Rotate(Quaternion newRotation, float deltaTime)
     {
