@@ -16,22 +16,11 @@ namespace Player.UI
             var window = windows.Pop();
             window.SetActive(false);
         }
-        public void CloseWindow(GameObject window)
-        {
-            if (windows.Count == 0) return;
-            while (windows.Count > 0)
-            {
-                var currentWindow = windows.Pop();
-                currentWindow.SetActive(false);
-                if (currentWindow == window) break;
-            }
-        }
         public void CloseAllWindows()
         {
             while (windows.Count > 0)
             {
-                var window = windows.Pop();
-                window.SetActive(false);
+                CloseWindow();
             }
         }
     }

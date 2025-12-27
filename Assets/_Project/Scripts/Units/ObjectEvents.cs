@@ -1,6 +1,6 @@
 using EventBus;
+using Global;
 using UnityEngine;
-
 public struct SignatureIncreaseEvent : IEvent
 {
     public float Amount;

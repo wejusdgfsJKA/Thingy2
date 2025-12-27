@@ -1,6 +1,8 @@
+using Global;
 using Player;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.SceneManagement;
 public static class GameManager
 {
     public static float? Score { get; private set; } = null;
@@ -25,6 +27,7 @@ public static class GameManager
     /// Teams[0] is the player's team, Teams[1] is the enemy team.
     /// </summary>
     public static Team[] Teams { get; private set; } = new Team[2];
+    public static float CurrentPowerBalance { get; private set; } = 0;
     public static void StartMission()
     {
         if (CurrentMission != null)
@@ -34,11 +37,15 @@ public static class GameManager
             Score = null;
         }
     }
+    public static void BeginNewRun()
+    {
+        CurrentPowerBalance = 0;
+    }
     public static void EndMission()
     {
         if (CurrentMission == null) return;
         Score = CurrentMission.GetScore();
-        Debug.Log(Score);
+        CurrentPowerBalance += Score.GetValueOrDefault();
         CurrentMission = null;
         Teams[0] = Teams[1] = null;
         Addressables.LoadSceneAsync(GlobalSettings.IntermediateSceneAddress);
@@ -56,5 +63,25 @@ public static class GameManager
         Time.timeScale = 1f;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+    }
+    public static void Save(string fileName)
+    {
+        GameSave.Save(GlobalSettings.GetSaveFilePath(fileName));
+    }
+    public static bool Load(string fileName)
+    {
+        var save = GameSave.Load(GlobalSettings.GetSaveFilePath(fileName));
+        if (save != null)
+        {
+            CurrentPowerBalance = save.Value.PowerBalance;
+            return true;
+        }
+        return false;
+    }
+    public static void ExitToMenu()
+    {
+        ResumeGame();
+        CurrentMission = null;
+        SceneManager.LoadScene(0);
     }
 }

@@ -1,3 +1,4 @@
+using Global;
 using System;
 using UnityEngine;
 namespace HybridBT.Template

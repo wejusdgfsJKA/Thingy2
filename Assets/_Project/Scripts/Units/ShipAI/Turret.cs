@@ -1,6 +1,6 @@
+using Global;
 using System.Collections.Generic;
 using UnityEngine;
-
 namespace Weapons
 {
     public class Turret : MonoBehaviour

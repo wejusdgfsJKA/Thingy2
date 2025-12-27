@@ -8,7 +8,7 @@ namespace Player
     {
         [Header("Rotation")]
         [SerializeField] Transform cam;
-        [SerializeField] float rotationSpeed = 1, unlockedRotationSpeed = 10;
+        [SerializeField] float rotationSpeed = 1, unlockedRotationSpeedMultiplier = 10;
         [Header("Movement")]
         [SerializeField] int maxThrust = 10, minThrust = -1;
         [SerializeField] float thrustChangeRate = 0.1f;
@@ -104,7 +104,7 @@ namespace Player
                 //// Combine them in the right order: roll, then pitch, then yaw
                 //targetRotation = targetRotation * yaw * pitch * roll;
                 shipBody.localRotation = Quaternion.Slerp(shipBody.localRotation, shipBody.localRotation
-                    * yaw * pitch * roll, unlockedRotationSpeed * Time.fixedDeltaTime);
+                    * yaw * pitch * roll, unlockedRotationSpeedMultiplier * rotationSpeed * Time.fixedDeltaTime);
                 //transform.localRotation = targetRotation;
             }
             #endregion

@@ -1,3 +1,4 @@
+using Global;
 using UnityEngine;
 public abstract class Mission
 {

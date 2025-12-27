@@ -1,11 +1,11 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 namespace Player.UI
 {
     public class PauseMenuManager : MenuManager
     {
         [SerializeField] GameObject menu;
         [SerializeField] GameObject boundingBoxParent;
+        public int activeWindows => windows.Count;
         private void OnEnable()
         {
             menu.SetActive(false);
@@ -31,15 +31,9 @@ namespace Player.UI
                 OpenWindow(menu);
             }
         }
-        public void OnEndMission()
-        {
-            GameManager.ResumeGame();
-            GameManager.AutoResolve();
-        }
         public void OnExitToMenu()
         {
-            GameManager.ResumeGame();
-            SceneManager.LoadScene(0);
+            GameManager.ExitToMenu();
         }
     }
 }

@@ -1,7 +1,7 @@
+using Global;
 using Timers;
 using UnityEngine;
 using UnityEngine.Events;
-
 public class ShieldComponent : MonoBehaviour
 {
     [field: SerializeField] public float MaxShieldPoints { get; protected set; }

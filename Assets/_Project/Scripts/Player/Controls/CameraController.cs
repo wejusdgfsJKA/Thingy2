@@ -87,8 +87,12 @@ namespace Player
 
         public void OnMenu()
         {
-            GameManager.TogglePause();
-            pauseMenuManager.ToggleMenu();
+            if (pauseMenuManager.activeWindows == 0 || pauseMenuManager.activeWindows == 1)
+            {
+                GameManager.TogglePause();
+                pauseMenuManager.ToggleMenu();
+            }
+            else pauseMenuManager.CloseWindow();
         }
     }
 }

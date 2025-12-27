@@ -1,3 +1,4 @@
+using Global;
 using HybridBT.Template;
 using UnityEngine;
 [RequireComponent(typeof(ShipBT))]
