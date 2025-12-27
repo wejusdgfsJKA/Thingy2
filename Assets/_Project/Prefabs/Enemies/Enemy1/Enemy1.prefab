@@ -152,6 +152,7 @@ MonoBehaviour:
   <ScanRange>k__BackingField: 30
   <Turrets>k__BackingField:
   - {fileID: 6073887827518722397}
+  navigationSignatureModifier: 1
   speed: 1
   rotationSpeed: 0.5
   targetSelectionType: 0
@@ -168,7 +169,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af69b7e86ab945b4fa6c0bc813871986, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HP.HullComponent
-  <MaxHullPoints>k__BackingField: 200
+  <MaxHullPoints>k__BackingField: 10
   OnHullChanged:
     m_PersistentCalls:
       m_Calls: []

@@ -11,6 +11,7 @@ namespace Player.UI
         [SerializeField] RectTransform powerBarParent, playerPowerBar, enemyPowerBar;
         private void OnEnable()
         {
+            GameManager.Save(GlobalSettings.GetSaveFilePath());
             if (GameManager.Score != null) scoreText.text = GameManager.Score.ToString();
             float playerBarX = (GlobalSettings.PlayerWinThreshold + GameManager.CurrentPowerBalance) / (Mathf.Abs(GlobalSettings.PlayerLoseThreshold) + GlobalSettings.PlayerWinThreshold);
             float enemyBarX = (Mathf.Abs(GlobalSettings.PlayerLoseThreshold) - GameManager.CurrentPowerBalance) / (Mathf.Abs(GlobalSettings.PlayerLoseThreshold) + GlobalSettings.PlayerWinThreshold);

@@ -743,7 +743,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Player.ShipController
   cam: {fileID: 6728637190885341191}
   rotationSpeed: 1
-  unlockedRotationSpeed: 30
+  unlockedRotationSpeedMultiplier: 10
   maxThrust: 10
   minThrust: -1
   thrustChangeRate: 0.1
@@ -827,7 +827,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba654d87b78e5a44aac5feb81276829e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShieldComponent
-  <MaxShieldPoints>k__BackingField: 100
+  <MaxShieldPoints>k__BackingField: 10
   shieldPoints: 0
   shieldValueChanged:
     m_PersistentCalls:
