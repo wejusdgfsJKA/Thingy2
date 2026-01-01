@@ -7,6 +7,7 @@ namespace Global
     public struct GameSave
     {
         public float PowerBalance;
+        public int PlayerKills;
         public static GameSave? Load(string saveFilePath)
         {
             if (!File.Exists(saveFilePath))
@@ -19,12 +20,13 @@ namespace Global
         }
         public static void Save(string saveFilePath)
         {
-            string json = JsonUtility.ToJson(new GameSave(GameManager.CurrentPowerBalance));
+            string json = JsonUtility.ToJson(new GameSave(GameManager.CurrentPowerBalance, GameManager.PlayerKills));
             File.WriteAllText(saveFilePath, json);
         }
-        public GameSave(float currentPowerBalance)
+        public GameSave(float currentPowerBalance = 0, int playerKills = 0)
         {
             PowerBalance = currentPowerBalance;
+            PlayerKills = playerKills;
         }
     }
 }

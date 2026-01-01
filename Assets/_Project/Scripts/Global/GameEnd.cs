@@ -26,6 +26,7 @@ namespace Global
             {
                 endText.text = "Defeat!";
             }
+            endText.text += $"\nKills: {GameManager.PlayerKills}";
             endText.alpha = 0;
             mainMenuButton.gameObject.SetActive(false);
         }

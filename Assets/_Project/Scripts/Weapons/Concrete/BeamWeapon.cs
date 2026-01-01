@@ -7,11 +7,6 @@ namespace Weapons
         [SerializeField] Material material;
         [SerializeField] float lineThickness = .1f;
         [SerializeField] bool arc = true;
-        protected override void Awake()
-        {
-            base.Awake();
-            takeDamage = new TakeDamage(Damage, transform, damageType);
-        }
         protected override void ActuallyShoot(Unit target)
         {
             var beam = WeaponManager.Instance.SpawnObject(WeaponType.Beam, transform.position) as Beam;

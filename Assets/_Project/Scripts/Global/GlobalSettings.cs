@@ -15,7 +15,7 @@ namespace Global
     }
     public static class GlobalSettings
     {
-        public static readonly float PlayerWinThreshold = 50, PlayerLoseThreshold = -50;
+        #region Save file stuff
         public static string GetSaveFilePath(string fileName)
         {
             return Path.Combine(Application.persistentDataPath, fileName);
@@ -24,16 +24,18 @@ namespace Global
         {
             return Path.Combine(Application.persistentDataPath, "save.dat");
         }
+        #endregion
+        public static readonly float PlayerWinThreshold = 50, PlayerLoseThreshold = -50;
         static readonly Dictionary<(DamageType, TargetType), float> modifiers = new()
-    {
-        { (DamageType.Energy,TargetType.Hull),1.5f },
-        { (DamageType.Kinetic,TargetType.Shield),1.75f }
-    };
-        static readonly Dictionary<ObjectType, float> weights = new() { };
+        {
+            { (DamageType.Energy,TargetType.Hull),1.5f },
+            { (DamageType.Kinetic,TargetType.Shield),1.75f }
+        };
         public static float GetDamageModifier(DamageType damage, TargetType target)
         {
             return modifiers.GetValueOrDefault((damage, target), 1);
         }
+        static readonly Dictionary<ObjectType, float> weights = new() { };
         /// <summary>
         /// Get the weight for the given ObjectType in mission score.
         /// </summary>

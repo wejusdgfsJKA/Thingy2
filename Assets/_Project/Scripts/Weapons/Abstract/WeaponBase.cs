@@ -29,6 +29,7 @@ namespace Weapons
         protected virtual void Awake()
         {
             shotTimer = new(shotCooldown);
+            takeDamage = new(Damage, transform.root, damageType);
         }
         protected virtual void OnEnable()
         {

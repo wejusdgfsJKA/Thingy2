@@ -41,7 +41,11 @@ namespace HP
             if (finalDmg <= 0) return;
             CurrentHullPoints -= finalDmg;
             OnDamageTaken.Invoke(finalDmg);
-            if (CurrentHullPoints <= 0) gameObject.SetActive(false);
+            if (CurrentHullPoints <= 0)
+            {
+                if (dmg.Source == GameManager.Player.Transform) GameManager.AddPlayerKill(transform.root);
+                gameObject.SetActive(false);
+            }
         }
         public float CalculateDamage(TakeDamage dmg)
         {

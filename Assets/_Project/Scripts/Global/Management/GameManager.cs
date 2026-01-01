@@ -1,5 +1,6 @@
 using Global;
 using Player;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -28,9 +29,9 @@ public static class GameManager
     /// Teams[0] is the player's team, Teams[1] is the enemy team.
     /// </summary>
     public static Team[] Teams { get; private set; } = new Team[2];
-    public static float CurrentPowerBalance { get; private set; } = 0;
     public static void StartMission()
     {
+        kills.Clear();
         if (CurrentMission != null)
         {
             Teams[0] = new(0); Teams[1] = new(1);
@@ -38,15 +39,11 @@ public static class GameManager
             Score = null;
         }
     }
-    public static void BeginNewRun()
-    {
-        CurrentPowerBalance = 0;
-    }
     public static void EndMission()
     {
         if (CurrentMission == null) return;
         Score = CurrentMission.GetScore();
-        CurrentPowerBalance += Score.GetValueOrDefault() + 100;
+        CurrentPowerBalance += Score.GetValueOrDefault() + 25;
         CurrentMission = null;
         Teams[0] = Teams[1] = null;
         if (CurrentPowerBalance >= GlobalSettings.PlayerWinThreshold)
@@ -54,7 +51,7 @@ public static class GameManager
             Addressables.LoadSceneAsync(GlobalSettings.EndSceneAddress);
             //the player has won
         }
-        else if (CurrentPowerBalance <= GlobalSettings.PlayerWinThreshold)
+        else if (CurrentPowerBalance <= GlobalSettings.PlayerLoseThreshold)
         {
             Addressables.LoadSceneAsync(GlobalSettings.EndSceneAddress);
             //the player has lost
@@ -75,6 +72,36 @@ public static class GameManager
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
+    public static void ExitToMenu()
+    {
+        ResumeGame();
+        CurrentMission = null;
+        SceneManager.LoadScene(0);
+    }
+
+    #region Player progress
+    public static void BeginNewRun()
+    {
+        CurrentPowerBalance = 0;
+        PlayerKills = 0;
+    }
+    static HashSet<int> kills = new();
+    public static float CurrentPowerBalance { get; private set; } = 0;
+    public static int PlayerKills { get; private set; } = 0;
+    public static void ClearKill(Transform transform)
+    {
+        if (transform == null) return;
+        kills.Remove(transform.GetInstanceID());
+    }
+    public static void AddPlayerKill(Transform victim)
+    {
+        if (victim == null) return;
+        if (!kills.Contains(victim.GetInstanceID()))
+        {
+            PlayerKills++;
+            kills.Add(victim.GetInstanceID());
+        }
+    }
     public static void DeleteCurrentSave()
     {
         File.Delete(GlobalSettings.GetSaveFilePath());
@@ -89,14 +116,10 @@ public static class GameManager
         if (save != null)
         {
             CurrentPowerBalance = save.Value.PowerBalance;
+            PlayerKills = save.Value.PlayerKills;
             return true;
         }
         return false;
     }
-    public static void ExitToMenu()
-    {
-        ResumeGame();
-        CurrentMission = null;
-        SceneManager.LoadScene(0);
-    }
+    #endregion
 }
