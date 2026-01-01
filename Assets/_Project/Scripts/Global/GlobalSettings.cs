@@ -43,7 +43,7 @@ namespace Global
         {
             return weights.GetValueOrDefault(type, 1);
         }
-        public static readonly string MainSceneAddress = "MainScene", IntermediateSceneAddress = "Intermediate";
+        public static readonly string MainSceneAddress = "MainScene", IntermediateSceneAddress = "Intermediate", EndSceneAddress = "End";
         public static readonly float AITickCooldown = 0.05f, DamageRenderTime = 0.2f, UIUpdateCooldown = 1f, BeamRenderTime = 0.2f;
         public static readonly int MaxTargetDistance = 1000;
     }

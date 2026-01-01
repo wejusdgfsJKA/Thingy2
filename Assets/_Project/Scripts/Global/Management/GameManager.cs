@@ -1,5 +1,6 @@
 using Global;
 using Player;
+using System.IO;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.SceneManagement;
@@ -45,10 +46,20 @@ public static class GameManager
     {
         if (CurrentMission == null) return;
         Score = CurrentMission.GetScore();
-        CurrentPowerBalance += Score.GetValueOrDefault();
+        CurrentPowerBalance += Score.GetValueOrDefault() + 100;
         CurrentMission = null;
         Teams[0] = Teams[1] = null;
-        Addressables.LoadSceneAsync(GlobalSettings.IntermediateSceneAddress);
+        if (CurrentPowerBalance >= GlobalSettings.PlayerWinThreshold)
+        {
+            Addressables.LoadSceneAsync(GlobalSettings.EndSceneAddress);
+            //the player has won
+        }
+        else if (CurrentPowerBalance <= GlobalSettings.PlayerWinThreshold)
+        {
+            Addressables.LoadSceneAsync(GlobalSettings.EndSceneAddress);
+            //the player has lost
+        }
+        else Addressables.LoadSceneAsync(GlobalSettings.IntermediateSceneAddress);
     }
     public static void AutoResolve() => EndMission();
     public static bool IsPaused => Time.timeScale == 0f;
@@ -63,6 +74,10 @@ public static class GameManager
         Time.timeScale = 1f;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+    }
+    public static void DeleteCurrentSave()
+    {
+        File.Delete(GlobalSettings.GetSaveFilePath());
     }
     public static void Save(string fileName)
     {

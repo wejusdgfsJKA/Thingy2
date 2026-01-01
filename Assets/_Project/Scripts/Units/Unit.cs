@@ -143,7 +143,7 @@ public abstract class Unit : IDPoolable<ObjectType>
     }
     protected void ResetMaterials()
     {
-        identifiedRenderer.material = defaultIdentifiedRendererMaterial;
+        if (identifiedRenderer != null) identifiedRenderer.material = defaultIdentifiedRendererMaterial;
     }
     public virtual void EnableTrackedRenderer()
     {
@@ -192,6 +192,7 @@ public abstract class Unit : IDPoolable<ObjectType>
     protected virtual void IterateOverTargets()
     {
         var enemyTeam = Team == 0 ? GameManager.Teams[1] : GameManager.Teams[0];
+        if (enemyTeam == null || enemyTeam.Members == null) return;
         foreach (var obj in enemyTeam.Members)
         {
             if (!Targets[DetectionState.Identified].Contains(obj) && !Targets[DetectionState.Tracked].Contains(obj))

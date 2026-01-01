@@ -193,7 +193,7 @@ MonoBehaviour:
   rateOfFireRampUp: 0.25
   rateOfFireRampDown: 0.5
   minShotCooldown: 1
-  <Damage>k__BackingField: 0
+  <Damage>k__BackingField: 1
   <SignatureIncreaseOnFire>k__BackingField: 1
   <SignatureDecrease>k__BackingField: 0.5
   damageType: 1

@@ -19,14 +19,14 @@ public class FleetBattleMission : Mission
     }
     public override void Initialize()
     {
-        ObjectManager.Instance.SpawnPlayer();
+        UnitManager.Instance.SpawnPlayer();
 
         //pick a position for the bad guys
         var enemySpawnPos = Random.onUnitSphere * 12;
         //spawn enemy ships
         for (int i = 0; i < enemyShipCount; i++)
         {
-            var enemy = ObjectManager.Instance.SpawnShip(ObjectType.Enemy1, Teams.Enemy, enemySpawnPos + Random.onUnitSphere * 1);
+            var enemy = UnitManager.Instance.SpawnShip(ObjectType.Enemy1, Teams.Enemy, enemySpawnPos + Random.onUnitSphere * 1);
             enemy.OnDespawn += (o) =>
             {
                 EnemyDestroyed(o);

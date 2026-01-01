@@ -24,13 +24,13 @@ namespace Player
         #region Setup
         void Awake()
         {
-            currentXAngle = camPivot.localRotation.eulerAngles.x;
-            currentYAngle = camPivot.localRotation.eulerAngles.y;
             objectDisplay = GetComponent<ObjectDisplay>();
             pauseMenuManager = GetComponent<PauseMenuManager>();
         }
         private void OnEnable()
         {
+            currentXAngle = camPivot.localRotation.eulerAngles.x;
+            currentYAngle = camPivot.localRotation.eulerAngles.y;
             GameManager.ResumeGame();
             cameraInputReader.EnablePlayerActions();
             cameraInputReader.Zoom += OnZoom;

@@ -11,17 +11,15 @@ namespace Player.UI
         [SerializeField] Canvas mainMenuCanvas, loadingCanvas;
         [SerializeField] GameObject playMenu, newGameWarning;
         [SerializeField] Button continueButton;
-        private void OnEnable()
-        {
-            Debug.Log("Main menu");
-        }
         private async void Start()
         {
+            mainMenuCanvas.enabled = false;
+            loadingCanvas.enabled = true;
             SceneManager.sceneLoaded += (s1, s2) =>
             {
                 GameManager.StartMission();
             };
-            var t1 = ObjectManager.LoadAssets();
+            var t1 = UnitManager.LoadAssets();
             var t2 = Weapons.WeaponManager.LoadAssets();
             await Task.WhenAll(t1, t2);
             loadingCanvas.enabled = false;
