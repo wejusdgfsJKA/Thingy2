@@ -33,6 +33,7 @@ namespace HP
         protected virtual void OnEnable()
         {
             CurrentHullPoints = MaxHullPoints;
+            GameManager.ClearKill(transform.root);
         }
 
         public void TakeDamage(TakeDamage dmg)
