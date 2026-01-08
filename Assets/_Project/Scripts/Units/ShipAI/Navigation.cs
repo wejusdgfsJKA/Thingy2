@@ -11,10 +11,7 @@ public class Navigation
             if (destination != value)
             {
                 destination = value;
-                if (destination != null)
-                {
-                }
-                else Rigidbody.linearVelocity = Vector3.zero;
+                if (destination == null) Rigidbody.linearVelocity = Vector3.zero;
             }
         }
     }
@@ -30,10 +27,11 @@ public class Navigation
         }
     }
     public bool UpdateRotation { get; set; } = true;
+    /// <summary>
+    /// The distance at which the ship will snap to the destination
+    /// </summary>
     public float DestinationSnapDistance { get; set; }
-    readonly float signatureModifier;
-    public float Signature => Rigidbody.linearVelocity.magnitude * signatureModifier;
-    public Navigation(Transform tr, float speed, float rotationSpeed, float destinationSnapDistance = 0.1f, float signatureModifier = 1)
+    public Navigation(Transform tr, float speed, float rotationSpeed, float destinationSnapDistance = 0.1f)
     {
         Transform = tr;
         Rigidbody = tr.GetComponent<Rigidbody>();
@@ -41,7 +39,6 @@ public class Navigation
         Speed = speed;
         RotationSpeed = rotationSpeed;
         DestinationSnapDistance = destinationSnapDistance;
-        this.signatureModifier = signatureModifier;
     }
     public void Rotate(Quaternion newRotation, float deltaTime)
     {

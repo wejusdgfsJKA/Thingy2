@@ -2,30 +2,39 @@ using Global;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 namespace Player.UI
 {
-    public class IntermediateSceneManager : MenuManager
+    public class IntermediateSceneManager : MenuPDA
     {
-        [SerializeField] TextMeshProUGUI scoreText;
-        [SerializeField] RectTransform powerBarParent, playerPowerBar, enemyPowerBar;
+        Mission selectedMission = new FleetBattleMission(1);
+        [SerializeField] TextMeshProUGUI powerText;
+        [SerializeField] Window mainWindow;
         private void OnEnable()
         {
-            GameManager.Save(GlobalSettings.GetSaveFilePath());
-            if (GameManager.Score != null) scoreText.text = GameManager.Score.ToString();
-            float playerBarX = (GlobalSettings.PlayerWinThreshold + GameManager.CurrentPowerBalance) / (Mathf.Abs(GlobalSettings.PlayerLoseThreshold) + GlobalSettings.PlayerWinThreshold);
-            float enemyBarX = (Mathf.Abs(GlobalSettings.PlayerLoseThreshold) - GameManager.CurrentPowerBalance) / (Mathf.Abs(GlobalSettings.PlayerLoseThreshold) + GlobalSettings.PlayerWinThreshold);
-            playerPowerBar.localScale = new Vector3(playerBarX, playerPowerBar.localScale.y, playerPowerBar.localScale.z);
-            enemyPowerBar.localScale = new Vector3(enemyBarX, enemyPowerBar.localScale.y, enemyPowerBar.localScale.z);
+            powerText.text = $"Coalition Power: {GameManager.PlayerPower}/{GlobalSettings.PlayerWinThreshold}\nEnemy Power: {GameManager.EnemyPower}/{GlobalSettings.EnemyWinThreshold}";
+            OpenWindow(mainWindow);
         }
         public void OnBeginMission()
         {
-            GameManager.CurrentMission = new FleetBattleMission(1);
+            GameManager.CurrentMission = selectedMission;
             Addressables.LoadSceneAsync(GlobalSettings.MainSceneAddress);
         }
-        public void OnExit()
+        public void OnExitConfirmed()
         {
             SceneManager.LoadScene(0);
+        }
+        public void OnEscapeKey()
+        {
+            if (windows.Count > 0)
+            {
+                CloseWindow();
+            }
+        }
+        private void Update()
+        {
+            Debug.Log(EventSystem.current.currentSelectedGameObject);
         }
     }
 }

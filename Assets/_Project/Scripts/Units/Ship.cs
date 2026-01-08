@@ -4,7 +4,6 @@ using UnityEngine;
 [RequireComponent(typeof(ShipBT))]
 public class Ship : Unit
 {
-    [SerializeField] protected float navigationSignatureModifier = 1;
     [SerializeField] protected float speed, rotationSpeed;
     public Navigation Navigation { get; protected set; }
     protected ShipBT behaviourTree;
@@ -16,7 +15,7 @@ public class Ship : Unit
     {
         base.Awake();
         behaviourTree = GetComponent<ShipBT>();
-        Navigation = new(transform, speed, rotationSpeed, signatureModifier: navigationSignatureModifier);
+        Navigation = new(transform, speed, rotationSpeed);
         targetSelectionStrategy = TargetSelectionStrategy.Create(targetSelectionType, this);
     }
     protected override void OnEnable()
@@ -35,9 +34,5 @@ public class Ship : Unit
     protected override void OnTarget(Unit target, DetectionState detectionState = DetectionState.Identified)
     {
         targetSelectionStrategy.ConsiderTarget(target, detectionState);
-    }
-    protected override float RecalculateSignature()
-    {
-        return base.RecalculateSignature() + Navigation.Signature;
     }
 }

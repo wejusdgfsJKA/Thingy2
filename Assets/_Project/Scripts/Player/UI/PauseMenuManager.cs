@@ -1,26 +1,26 @@
 using UnityEngine;
 namespace Player.UI
 {
-    public class PauseMenuManager : MenuManager
+    public class PauseMenuManager : MenuPDA
     {
-        [SerializeField] GameObject menu;
+        [SerializeField] Window menu;
         [SerializeField] GameObject boundingBoxParent;
         public int activeWindows => windows.Count;
         private void OnEnable()
         {
-            menu.SetActive(false);
+            menu.Deactivate();
             boundingBoxParent.SetActive(true);
         }
         private void OnDisable()
         {
             CloseAllWindows();
-            menu.SetActive(false);
+            menu.Deactivate();
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
         public void ToggleMenu()
         {
-            if (menu.activeSelf)
+            if (menu.Active)
             {
                 CloseAllWindows();
                 if (boundingBoxParent) boundingBoxParent.SetActive(true);

@@ -156,10 +156,17 @@ namespace Player.UI
             if (CurrentTarget == obj) ClearTarget();
             if (toTrack.TryGetValue(obj, out var data))
             {
-                iconPool.Push((data.BoundingBox, data.DistanceText));
-                data.RectTransform.gameObject.SetActive(false);
-                toTrack.Remove(obj);
-                images.Remove(data.BoundingBox.gameObject);
+                try
+                {
+                    iconPool.Push((data.BoundingBox, data.DistanceText));
+                    data.RectTransform.gameObject.SetActive(false);
+                    toTrack.Remove(obj);
+                    images.Remove(data.BoundingBox.gameObject);
+                }
+                catch (System.Exception e)
+                {
+                    Debug.LogError($"Error removing object {obj.ID} from ObjectDisplay: {e.Message}");
+                }
             }
         }
         /// <summary>

@@ -43,20 +43,29 @@ public static class GameManager
     {
         if (CurrentMission == null) return;
         Score = CurrentMission.GetScore();
-        CurrentPowerBalance += Score.GetValueOrDefault() + 25;
+        if (Score > 0)
+        {
+            PlayerPower += Score.GetValueOrDefault();
+            EnemyPower = Mathf.Max(0, EnemyPower - Score.GetValueOrDefault() * GlobalSettings.PointsToSubtractModifier);
+        }
+        else
+        {
+            EnemyPower += Score.GetValueOrDefault();
+            PlayerPower = Mathf.Max(0, PlayerPower - Score.GetValueOrDefault() * GlobalSettings.PointsToSubtractModifier);
+        }
         CurrentMission = null;
         Teams[0] = Teams[1] = null;
-        if (CurrentPowerBalance >= GlobalSettings.PlayerWinThreshold)
+
+        if (PlayerPower >= GlobalSettings.PlayerWinThreshold || EnemyPower >= GlobalSettings.EnemyWinThreshold)
         {
             Addressables.LoadSceneAsync(GlobalSettings.EndSceneAddress);
-            //the player has won
+            //victory for one side
         }
-        else if (CurrentPowerBalance <= GlobalSettings.PlayerLoseThreshold)
+        else
         {
-            Addressables.LoadSceneAsync(GlobalSettings.EndSceneAddress);
-            //the player has lost
+            Save();
+            Addressables.LoadSceneAsync(GlobalSettings.IntermediateSceneAddress);
         }
-        else Addressables.LoadSceneAsync(GlobalSettings.IntermediateSceneAddress);
     }
     public static void AutoResolve() => EndMission();
     public static bool IsPaused => Time.timeScale == 0f;
@@ -82,11 +91,12 @@ public static class GameManager
     #region Player progress
     public static void BeginNewRun()
     {
-        CurrentPowerBalance = 0;
+        PlayerPower = EnemyPower = 0;
         PlayerKills = 0;
     }
     static HashSet<int> kills = new();
-    public static float CurrentPowerBalance { get; private set; } = 0;
+    public static float PlayerPower { get; private set; } = 0;
+    public static float EnemyPower { get; private set; } = 0;
     public static int PlayerKills { get; private set; } = 0;
     public static void ClearKill(Transform transform)
     {
@@ -106,6 +116,10 @@ public static class GameManager
     {
         File.Delete(GlobalSettings.GetSaveFilePath());
     }
+    public static void Save()
+    {
+        Save(GlobalSettings.GetSaveFilePath());
+    }
     public static void Save(string fileName)
     {
         GameSave.Save(GlobalSettings.GetSaveFilePath(fileName));
@@ -115,7 +129,8 @@ public static class GameManager
         var save = GameSave.Load(GlobalSettings.GetSaveFilePath(fileName));
         if (save != null)
         {
-            CurrentPowerBalance = save.Value.PowerBalance;
+            PlayerPower = save.Value.PlayerPower;
+            EnemyPower = save.Value.EnemyPower;
             PlayerKills = save.Value.PlayerKills;
             return true;
         }

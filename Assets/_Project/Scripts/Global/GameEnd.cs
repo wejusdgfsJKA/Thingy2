@@ -18,7 +18,7 @@ namespace Global
         }
         private void OnEnable()
         {
-            if (GameManager.CurrentPowerBalance >= GlobalSettings.PlayerWinThreshold)
+            if (GameManager.PlayerPower >= GlobalSettings.PlayerWinThreshold)
             {
                 endText.text = "Victory!";
             }

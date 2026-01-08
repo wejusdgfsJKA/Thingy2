@@ -25,7 +25,8 @@ namespace Global
             return Path.Combine(Application.persistentDataPath, "save.dat");
         }
         #endregion
-        public static readonly float PlayerWinThreshold = 50, PlayerLoseThreshold = -50;
+        public static readonly int PlayerWinThreshold = 50, EnemyWinThreshold = 50;
+        public static readonly float PointsToSubtractModifier = 0.5f;
         static readonly Dictionary<(DamageType, TargetType), float> modifiers = new()
         {
             { (DamageType.Energy,TargetType.Hull),1.5f },

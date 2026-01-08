@@ -6,10 +6,10 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 namespace Player.UI
 {
-    public class MainMenu : MenuManager
+    public class MainMenu : MenuPDA
     {
         [SerializeField] Canvas mainMenuCanvas, loadingCanvas;
-        [SerializeField] GameObject playMenu, newGameWarning;
+        [SerializeField] Window menu, newGameWarning;
         [SerializeField] Button continueButton;
         private async void Start()
         {
@@ -24,16 +24,12 @@ namespace Player.UI
             await Task.WhenAll(t1, t2);
             loadingCanvas.enabled = false;
             mainMenuCanvas.enabled = true;
-        }
-        public void OnPlay()
-        {
-            OpenWindow(playMenu);
-            continueButton.interactable = GameSave.Load(GlobalSettings.GetSaveFilePath()) != null;
+            OpenWindow(menu);
+            continueButton.interactable = GameManager.Load(GlobalSettings.GetSaveFilePath());
         }
         public void OnContinue()
         {
-            GameManager.Load(GlobalSettings.GetSaveFilePath());
-            StartGame();
+            if (GameManager.Load(GlobalSettings.GetSaveFilePath())) StartGame();
         }
         public void OnNewGame()
         {
@@ -42,9 +38,9 @@ namespace Player.UI
                 //display a warning
                 OpenWindow(newGameWarning);
             }
-            else StartNewGame();
+            else StartNewGameConfirmed();
         }
-        public void StartNewGame()
+        public void StartNewGameConfirmed()
         {
             GameManager.BeginNewRun();
             StartGame();
@@ -55,7 +51,17 @@ namespace Player.UI
         }
         public void OnExit()
         {
-            Application.Quit();
+            CloseAllWindows();
+        }
+        public override void CloseWindow()
+        {
+            if (windows.Count == 1)
+            {
+                //exiting the game
+                Application.Quit();
+                return;
+            }
+            base.CloseWindow();
         }
     }
 }

@@ -6,7 +6,7 @@ namespace Global
     [Serializable]
     public struct GameSave
     {
-        public float PowerBalance;
+        public float PlayerPower, EnemyPower;
         public int PlayerKills;
         public static GameSave? Load(string saveFilePath)
         {
@@ -20,12 +20,13 @@ namespace Global
         }
         public static void Save(string saveFilePath)
         {
-            string json = JsonUtility.ToJson(new GameSave(GameManager.CurrentPowerBalance, GameManager.PlayerKills));
+            string json = JsonUtility.ToJson(new GameSave(GameManager.PlayerPower, GameManager.EnemyPower, GameManager.PlayerKills));
             File.WriteAllText(saveFilePath, json);
         }
-        public GameSave(float currentPowerBalance = 0, int playerKills = 0)
+        public GameSave(float currentPlayerPower = 0, float currentEnemyPower = 0, int playerKills = 0)
         {
-            PowerBalance = currentPowerBalance;
+            PlayerPower = currentPlayerPower;
+            EnemyPower = currentEnemyPower;
             PlayerKills = playerKills;
         }
     }

@@ -8,7 +8,6 @@ namespace Player
     public class PlayerShip : Unit
     {
         [SerializeField] TextMeshProUGUI signatureText;
-        [SerializeField] float engineSignatureModifier = 1;
         Rigidbody rb;
         protected ObjectDisplay display;
         public override Unit CurrentTarget => display.CurrentTarget;
@@ -39,12 +38,6 @@ namespace Player
                     display.AddTracked(target);
                     break;
             }
-        }
-        protected override float RecalculateSignature()
-        {
-            var s = base.RecalculateSignature() + rb.linearVelocity.magnitude * engineSignatureModifier;
-            signatureText.text = $"Signature: {s:F1}";
-            return s;
         }
     }
 }
