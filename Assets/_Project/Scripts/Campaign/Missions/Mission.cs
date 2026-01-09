@@ -35,11 +35,7 @@ public class FleetBattleMission : Mission
     public override void Initialize()
     {
         UnitManager.Instance.SpawnPlayer();
-        SpawnEnemy(ObjectType.Enemy2, Vector3.forward * 40).OnDespawn += (o) =>
-        {
-            SubtractEnemy();
-        };
-        //SpawnEnemies();
+        SpawnEnemies();
     }
     void SpawnEnemies()
     {
