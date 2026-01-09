@@ -29,6 +29,11 @@ public class FleetBattleMission : Mission
     int enemyPoints, alliedPoints;
     public FleetBattleMission(int enemyPoints = 1, int alliedPoints = 0)
     {
+        if (enemyPoints < Global.GlobalSettings.MinEnemyPoints)
+        {
+            enemyPoints = Global.GlobalSettings.MinEnemyPoints;
+        }
+
         this.enemyPoints = enemyPoints;
         this.alliedPoints = alliedPoints;
     }
@@ -54,7 +59,8 @@ public class FleetBattleMission : Mission
                 continue;
             }
             retries = 0;
-            SpawnEnemy(chosenEnemyType, enemySpawnPos + spawnRadius * Random.onUnitSphere).OnDespawn += (o) =>
+            enemyCount++;
+            SpawnEnemy(chosenEnemyType, enemySpawnPos + spawnRadius * Random.insideUnitSphere).OnDespawn += (o) =>
             {
                 SubtractEnemy();
             };

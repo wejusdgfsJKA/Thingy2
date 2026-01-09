@@ -2,7 +2,6 @@ using Global;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 namespace Player.UI
 {
@@ -40,10 +39,6 @@ namespace Player.UI
             {
                 CloseWindow();
             }
-        }
-        private void Update()
-        {
-            Debug.Log(EventSystem.current.currentSelectedGameObject);
         }
     }
 }
