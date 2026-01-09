@@ -4,5 +4,6 @@ public enum ObjectType : byte
     FriendStation,
     Friend1,
     Enemy1,
-    Planet
+    Planet,
+    Enemy2
 }

@@ -21,6 +21,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Weapon
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7435bf6cc1f11ff4fbc596888801e427
+    m_Address: Torpedo
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Weapon
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: ac0e09ab6d8f0f9448726279c34b302c, type: 2}
   m_SchemaSet:

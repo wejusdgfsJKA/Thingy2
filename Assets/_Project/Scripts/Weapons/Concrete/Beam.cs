@@ -6,7 +6,8 @@ namespace Weapons
 {
     public enum WeaponType
     {
-        Beam
+        Beam,
+        Torpedo
     }
     [RequireComponent(typeof(LineRenderer))]
     public class Beam : IDPoolable<WeaponType>

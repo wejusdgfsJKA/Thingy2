@@ -1,51 +1,82 @@
-using Global;
+using System.Collections.Generic;
 using UnityEngine;
 public abstract class Mission
 {
-    public float EnemiesDestroyedScore { get; protected set; }
+    public float Score { get; protected set; }
     public abstract void Initialize();
     public abstract float GetScore();
     protected void EnemyDestroyed(Unit @object)
     {
-        EnemiesDestroyedScore += GlobalSettings.GetWeight(@object.ID);
+        Score += Global.GlobalSettings.GetWeight(@object.ID);
+    }
+    protected void AllyDestroyed(Unit @object)
+    {
+        Score -= Global.GlobalSettings.GetWeight(@object.ID);
+    }
+    public Unit SpawnEnemy(ObjectType type, Vector3 position)
+    {
+        var enemy = UnitManager.Instance.SpawnShip(type, Teams.Enemy, position);
+        enemy.OnDespawn += (o) =>
+        {
+            EnemyDestroyed(o);
+        };
+        return enemy;
     }
 }
 public class FleetBattleMission : Mission
 {
-    int enemyShipCount;
-    public FleetBattleMission(int enemyShipCount = 1)
+    int enemyCount;
+    int enemyPoints, alliedPoints;
+    public FleetBattleMission(int enemyPoints = 1, int alliedPoints = 0)
     {
-        this.enemyShipCount = enemyShipCount;
+        this.enemyPoints = enemyPoints;
+        this.alliedPoints = alliedPoints;
     }
     public override void Initialize()
     {
         UnitManager.Instance.SpawnPlayer();
-
-        //pick a position for the bad guys
-        var enemySpawnPos = Random.onUnitSphere * 12;
-        //spawn enemy ships
-        for (int i = 0; i < enemyShipCount; i++)
+        SpawnEnemy(ObjectType.Enemy2, Vector3.forward * 40).OnDespawn += (o) =>
         {
-            var enemy = UnitManager.Instance.SpawnShip(ObjectType.Enemy1, Teams.Enemy, enemySpawnPos + Random.onUnitSphere * 1);
-            enemy.OnDespawn += (o) =>
+            SubtractEnemy();
+        };
+        //SpawnEnemies();
+    }
+    void SpawnEnemies()
+    {
+        //pick a position for the bad guys
+        var enemySpawnPos = Random.onUnitSphere * 50;
+        var spawnRadius = enemyPoints;
+        var enemyOptions = new List<ObjectType>() { ObjectType.Enemy1, ObjectType.Enemy2 };
+        int retries = 0;
+        while (enemyPoints > 0 && retries < Global.GlobalSettings.MaxSpawnRetries)
+        {
+            var chosenEnemyType = enemyOptions[Random.Range(0, enemyOptions.Count)];
+            int weight = Global.GlobalSettings.GetWeight(chosenEnemyType);
+            if (weight > enemyPoints)
             {
-                EnemyDestroyed(o);
+                retries++;
+                continue;
+            }
+            retries = 0;
+            SpawnEnemy(chosenEnemyType, enemySpawnPos + spawnRadius * Random.onUnitSphere).OnDespawn += (o) =>
+            {
                 SubtractEnemy();
             };
+            enemyPoints -= weight;
         }
     }
     void SubtractEnemy()
     {
-        enemyShipCount--;
-        if (enemyShipCount <= 0)
+        enemyCount--;
+        if (enemyCount <= 0)
         {
             GameManager.EndMission();
         }
     }
     public override float GetScore()
     {
-        float score = EnemiesDestroyedScore;
-        if (GameManager.Player == null) score -= 0.5f;
+        float score = Score;
+        if (GameManager.Player == null) score -= Global.GlobalSettings.GetWeight(ObjectType.Player);
         return score;
     }
 }

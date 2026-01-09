@@ -36,18 +36,20 @@ namespace Global
         {
             return modifiers.GetValueOrDefault((damage, target), 1);
         }
-        static readonly Dictionary<ObjectType, float> weights = new() { };
+        static readonly Dictionary<ObjectType, int> weights = new() { };
         /// <summary>
         /// Get the weight for the given ObjectType in mission score.
         /// </summary>
         /// <param name="type">The type of SpecialObject to determine the weight for.</param>
         /// <returns>Weight for the given ObjectType. Default 1.</returns>
-        public static float GetWeight(ObjectType type)
+        public static int GetWeight(ObjectType type)
         {
             return weights.GetValueOrDefault(type, 1);
         }
         public static readonly string MainSceneAddress = "MainScene", IntermediateSceneAddress = "Intermediate", EndSceneAddress = "End";
         public static readonly float AITickCooldown = 0.05f, DamageRenderTime = 0.2f, UIUpdateCooldown = 1f, BeamRenderTime = 0.2f;
         public static readonly int MaxTargetDistance = 1000;
+        public static readonly float TorpedoHitRange = .5f;
+        public static readonly int MaxSpawnRetries = 50;
     }
 }

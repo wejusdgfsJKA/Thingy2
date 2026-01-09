@@ -5,7 +5,7 @@ using UnityEngine.Events;
 public class ShieldComponent : MonoBehaviour
 {
     [field: SerializeField] public float MaxShieldPoints { get; protected set; }
-    [SerializeField] protected float shieldPoints;
+    protected float shieldPoints;
     public float ShieldPoints
     {
         get => shieldPoints;

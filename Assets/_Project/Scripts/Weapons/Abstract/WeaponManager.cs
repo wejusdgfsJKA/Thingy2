@@ -26,7 +26,11 @@ namespace Weapons
         }
         public IDPoolable<WeaponType> SpawnObject(WeaponType id, Vector3 spawnPoint)
         {
-            return (IDPoolable<WeaponType>)Spawn(assets[id], spawnPoint);
+            return SpawnObject(id, spawnPoint, Quaternion.identity);
+        }
+        public IDPoolable<WeaponType> SpawnObject(WeaponType id, Vector3 spawnPoint, Quaternion rotation)
+        {
+            return (IDPoolable<WeaponType>)Spawn(assets[id], spawnPoint, rotation);
         }
     }
 }
