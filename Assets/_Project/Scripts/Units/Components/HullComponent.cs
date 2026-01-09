@@ -8,6 +8,7 @@ namespace HP
 {
     public class HullComponent : MonoBehaviour
     {
+        [SerializeField] bool disableObjectOnHealthDepleted = true;
         [field: SerializeField] public int MaxHullPoints { get; set; } = 5;
         protected float currentHullPoints;
         public float CurrentHullPoints
@@ -29,6 +30,7 @@ namespace HP
         [Tooltip("Fires when this entity's health value changes. Has as parameter the entity's current health percentage.")]
         public UnityEvent<float> OnHullChanged;
         public UnityEvent<float> OnDamageTaken;
+        public UnityEvent OnDeath;
         [field: SerializeField] public List<ArmorModifier> ArmorModifiers { get; private set; } = new();
         protected virtual void OnEnable()
         {
@@ -44,8 +46,9 @@ namespace HP
             OnDamageTaken.Invoke(finalDmg);
             if (CurrentHullPoints <= 0)
             {
+                OnDeath?.Invoke();
                 if (dmg.Source == GameManager.Player.Transform) GameManager.AddPlayerKill(transform.root);
-                gameObject.SetActive(false);
+                if (disableObjectOnHealthDepleted) gameObject.SetActive(false);
             }
         }
         public float CalculateDamage(TakeDamage dmg)

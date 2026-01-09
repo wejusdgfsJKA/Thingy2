@@ -61,6 +61,22 @@ public abstract class Unit : IDPoolable<ObjectType>
     /// </summary>
     public event System.Action<Unit> OnDespawn;
     public abstract Unit CurrentTarget { get; }
+
+    public bool PlayerIsTarget
+    {
+        get
+        {
+            if (GameManager.Player == null) return false;
+            if (Targets.TryGetValue(DetectionState.Identified, out var identifiedTargets))
+            {
+                if (identifiedTargets.Contains(GameManager.Player))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
     #endregion
 
     #region Setup

@@ -121,7 +121,7 @@ MonoBehaviour:
   targetStrategyType: 0
   <TypeOfAngle>k__BackingField: 0
   <Angle>k__BackingField: 170
-  <Range>k__BackingField: 30
+  <Range>k__BackingField: 20
   <TargetPriorities>k__BackingField: []
   <RequiresLock>k__BackingField: 1
   <CurrentTargetModifier>k__BackingField: 2
@@ -781,6 +781,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af69b7e86ab945b4fa6c0bc813871986, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HP.HullComponent
+  disableObjectOnHealthDepleted: 1
   <MaxHullPoints>k__BackingField: 10
   OnHullChanged:
     m_PersistentCalls:
@@ -812,6 +813,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  OnDeath:
+    m_PersistentCalls:
+      m_Calls: []
   <ArmorModifiers>k__BackingField: []
 --- !u!114 &7825883424872649121
 MonoBehaviour:
@@ -1685,7 +1689,7 @@ MonoBehaviour:
   targetStrategyType: 0
   <TypeOfAngle>k__BackingField: 0
   <Angle>k__BackingField: 170
-  <Range>k__BackingField: 30
+  <Range>k__BackingField: 20
   <TargetPriorities>k__BackingField: []
   <RequiresLock>k__BackingField: 1
   <CurrentTargetModifier>k__BackingField: 2
@@ -1899,7 +1903,7 @@ MonoBehaviour:
   targetStrategyType: 0
   <TypeOfAngle>k__BackingField: 0
   <Angle>k__BackingField: 170
-  <Range>k__BackingField: 30
+  <Range>k__BackingField: 20
   <TargetPriorities>k__BackingField: []
   <RequiresLock>k__BackingField: 1
   <CurrentTargetModifier>k__BackingField: 2
@@ -2234,7 +2238,7 @@ MonoBehaviour:
   targetStrategyType: 0
   <TypeOfAngle>k__BackingField: 0
   <Angle>k__BackingField: 170
-  <Range>k__BackingField: 30
+  <Range>k__BackingField: 20
   <TargetPriorities>k__BackingField: []
   <RequiresLock>k__BackingField: 1
   <CurrentTargetModifier>k__BackingField: 2
@@ -3568,7 +3572,7 @@ MonoBehaviour:
   targetStrategyType: 0
   <TypeOfAngle>k__BackingField: 0
   <Angle>k__BackingField: 170
-  <Range>k__BackingField: 30
+  <Range>k__BackingField: 20
   <TargetPriorities>k__BackingField: []
   <RequiresLock>k__BackingField: 1
   <CurrentTargetModifier>k__BackingField: 2

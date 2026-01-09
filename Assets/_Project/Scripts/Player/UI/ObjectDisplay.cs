@@ -239,8 +239,14 @@ namespace Player.UI
                     minTextScale, maxTextScale);
                 a.Value.RectTransform.sizeDelta = new Vector2(20, 20) * size;
                 dist = Vector3.Distance(cam.transform.root.position, worldPos);
-                a.Value.DistanceText.text = dist.ToString("0.0");
+
                 #endregion
+
+                if (a.Key.PlayerIsTarget)
+                {
+                    a.Value.DistanceText.text = $"<color=red>{dist:0.0}";
+                }
+                else a.Value.DistanceText.text = $"<color=blue>{dist:0.0}";
 
                 a.Value.GameObject.SetActive(true);
             }
