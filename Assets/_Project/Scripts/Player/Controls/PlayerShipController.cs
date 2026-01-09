@@ -10,7 +10,7 @@ namespace Player
         [SerializeField] Transform cam;
         [SerializeField] float rotationSpeed = 1, unlockedRotationSpeedMultiplier = 10;
         [Header("Movement")]
-        [SerializeField] int maxThrust = 10, minThrust = -1;
+        [SerializeField] float maxThrust = 2.5f, minThrust = -1;
         [SerializeField] float thrustChangeRate = 0.1f;
         [SerializeField] float strafeSpeed = 1;
         [SerializeField] MoveInputReader moveInputReader;

@@ -742,7 +742,7 @@ MonoBehaviour:
   cam: {fileID: 6728637190885341191}
   rotationSpeed: 1
   unlockedRotationSpeedMultiplier: 10
-  maxThrust: 10
+  maxThrust: 2.5
   minThrust: -1
   thrustChangeRate: 0.1
   strafeSpeed: 1
@@ -826,7 +826,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShieldComponent
   <MaxShieldPoints>k__BackingField: 10
-  shieldPoints: 0
   shieldValueChanged:
     m_PersistentCalls:
       m_Calls:
