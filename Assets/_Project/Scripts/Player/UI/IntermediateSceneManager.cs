@@ -21,7 +21,7 @@ namespace Player.UI
         }
         public int CalculateEnemyPoints()
         {
-            return (int)(((GameManager.PlayerPower + GameManager.EnemyPower) / 2) +
+            return 2 * (int)(((GameManager.PlayerPower + GameManager.EnemyPower) / 2) +
             Mathf.Max(GameManager.PlayerPower, GameManager.EnemyPower)) / 2;
         }
         public void OnBeginMission()

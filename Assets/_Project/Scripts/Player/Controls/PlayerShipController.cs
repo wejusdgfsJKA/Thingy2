@@ -1,4 +1,3 @@
-using TMPro;
 using UnityEngine;
 namespace Player
 {
@@ -10,27 +9,17 @@ namespace Player
         [SerializeField] Transform cam;
         [SerializeField] float rotationSpeed = 1, unlockedRotationSpeedMultiplier = 10;
         [Header("Movement")]
-        [SerializeField] float maxThrust = 2.5f, minThrust = -1;
-        [SerializeField] float thrustChangeRate = 0.1f;
+        [SerializeField] float thrust = 2, maxVelocityMagnitude = 2;
         [SerializeField] float strafeSpeed = 1;
         [SerializeField] MoveInputReader moveInputReader;
         [SerializeField] Transform shipBody;
         [Header("UI")]
         [SerializeField] float directionLineMultiplier = 10;
-        [SerializeField] TextMeshProUGUI thrustDisplay;
         Vector2 strafeVector;
         Vector3 rotateVector;
         float currentThrust;
         float thrustInput;
         bool followCamera = true;
-        public float CurrentThrust
-        {
-            get => currentThrust;
-            protected set
-            {
-                currentThrust = Mathf.Clamp(value, minThrust, maxThrust);
-            }
-        }
         LineRenderer lineRenderer;
         Rigidbody rb;
         private void Awake()
@@ -44,10 +33,8 @@ namespace Player
         }
         private void OnEnable()
         {
-            thrustDisplay.text = $"Thrust: {CurrentThrust:F1}";
             followCamera = true;
             strafeVector = rotateVector = Vector3.zero;
-            CurrentThrust = 0;
             moveInputReader.EnablePlayerActions();
             moveInputReader.Strafe += OnStrafe;
             moveInputReader.Rotate += OnRotate;
@@ -77,14 +64,14 @@ namespace Player
         private void FixedUpdate()
         {
             #region Movement
-            if (thrustInput != 0)
+
+            Vector3 velocity = strafeSpeed * Time.fixedDeltaTime * (shipBody.up * strafeVector.y + shipBody.right * strafeVector.x)
+                + thrust * thrustInput * shipBody.forward;
+            rb.linearVelocity += velocity;
+            if (rb.linearVelocity.magnitude > maxVelocityMagnitude)
             {
-                CurrentThrust += thrustInput * thrustChangeRate;
-                thrustDisplay.text = $"Thrust: {CurrentThrust:F1}";
+                rb.linearVelocity = maxVelocityMagnitude * rb.linearVelocity.normalized;
             }
-            Vector3 velocity = strafeSpeed * (shipBody.up * strafeVector.y + shipBody.right * strafeVector.x)
-                + CurrentThrust * shipBody.forward;
-            rb.linearVelocity = velocity;
 
             lineRenderer.SetPosition(0, transform.position);
             lineRenderer.SetPosition(1, transform.position + rb.linearVelocity * directionLineMultiplier);

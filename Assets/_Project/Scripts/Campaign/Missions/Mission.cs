@@ -79,6 +79,7 @@ public class FleetBattleMission : Mission
     {
         float score = Score;
         if (GameManager.Player == null) score -= Global.GlobalSettings.GetWeight(ObjectType.Player);
+        if (score == 0) score = -2;
         return score;
     }
 }

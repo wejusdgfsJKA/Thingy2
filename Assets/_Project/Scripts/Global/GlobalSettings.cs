@@ -36,7 +36,10 @@ namespace Global
         {
             return modifiers.GetValueOrDefault((damage, target), 1);
         }
-        static readonly Dictionary<ObjectType, int> weights = new() { };
+        static readonly Dictionary<ObjectType, int> weights = new() {
+            { ObjectType.Enemy1,2 },
+            { ObjectType.Enemy2,2 },
+        };
         /// <summary>
         /// Get the weight for the given ObjectType in mission score.
         /// </summary>
