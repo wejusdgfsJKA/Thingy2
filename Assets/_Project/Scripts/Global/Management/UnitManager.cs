@@ -58,9 +58,5 @@ public class UnitManager : MultiManager<ObjectType>
     {
         return (PlayerShip)SpawnShip(ObjectType.Player, Teams.Player, Vector3.zero);
     }
-    public Object SpawnPlanet(Vector3 position)
-    {
-        return (Object)Spawn(assets[ObjectType.Planet], position);
-    }
     #endregion
 }

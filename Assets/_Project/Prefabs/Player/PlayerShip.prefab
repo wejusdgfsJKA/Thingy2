@@ -121,7 +121,7 @@ MonoBehaviour:
   targetStrategyType: 0
   <TypeOfAngle>k__BackingField: 0
   <Angle>k__BackingField: 170
-  <Range>k__BackingField: 20
+  <Range>k__BackingField: 60
   <TargetPriorities>k__BackingField: []
   <RequiresLock>k__BackingField: 1
   <CurrentTargetModifier>k__BackingField: 2
@@ -142,7 +142,7 @@ MonoBehaviour:
   rateOfFireRampDown: 0.5
   minShotCooldown: 1
   <Damage>k__BackingField: 1
-  <SignatureIncreaseOnFire>k__BackingField: 1
+  <SignatureIncreaseOnFire>k__BackingField: 2
   <SignatureDecrease>k__BackingField: 0.5
   damageType: 1
   onFire:
@@ -743,11 +743,11 @@ MonoBehaviour:
   rotationSpeed: 1
   unlockedRotationSpeedMultiplier: 10
   thrust: 2
+  maxVelocityMagnitude: 2
   strafeSpeed: 1
   moveInputReader: {fileID: 11400000, guid: 742e25ece88ecb4499c2059bd354ddaa, type: 2}
   shipBody: {fileID: 4840422241096263578}
   directionLineMultiplier: 1
-  thrustDisplay: {fileID: 0}
 --- !u!114 &994382936165222397
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -866,7 +866,7 @@ MonoBehaviour:
   <IconSizeCoefficient>k__BackingField: 300
   identifiedRenderer: {fileID: 849524657201573272}
   trackedRenderer: {fileID: 0}
-  defaultSignature: 10
+  defaultSignature: 5
   <ScanRange>k__BackingField: 30
   <Turrets>k__BackingField:
   - {fileID: 2722137693059524490}
@@ -1551,7 +1551,7 @@ MonoBehaviour:
   targetStrategyType: 0
   <TypeOfAngle>k__BackingField: 0
   <Angle>k__BackingField: 170
-  <Range>k__BackingField: 20
+  <Range>k__BackingField: 60
   <TargetPriorities>k__BackingField: []
   <RequiresLock>k__BackingField: 1
   <CurrentTargetModifier>k__BackingField: 2
@@ -1572,7 +1572,7 @@ MonoBehaviour:
   rateOfFireRampDown: 0.5
   minShotCooldown: 1
   <Damage>k__BackingField: 1
-  <SignatureIncreaseOnFire>k__BackingField: 1
+  <SignatureIncreaseOnFire>k__BackingField: 2
   <SignatureDecrease>k__BackingField: 0.5
   damageType: 1
   onFire:
@@ -1765,7 +1765,7 @@ MonoBehaviour:
   targetStrategyType: 0
   <TypeOfAngle>k__BackingField: 0
   <Angle>k__BackingField: 170
-  <Range>k__BackingField: 20
+  <Range>k__BackingField: 60
   <TargetPriorities>k__BackingField: []
   <RequiresLock>k__BackingField: 1
   <CurrentTargetModifier>k__BackingField: 2
@@ -1786,7 +1786,7 @@ MonoBehaviour:
   rateOfFireRampDown: 0.5
   minShotCooldown: 1
   <Damage>k__BackingField: 1
-  <SignatureIncreaseOnFire>k__BackingField: 1
+  <SignatureIncreaseOnFire>k__BackingField: 2
   <SignatureDecrease>k__BackingField: 0.5
   damageType: 1
   onFire:
@@ -2100,7 +2100,7 @@ MonoBehaviour:
   targetStrategyType: 0
   <TypeOfAngle>k__BackingField: 0
   <Angle>k__BackingField: 170
-  <Range>k__BackingField: 20
+  <Range>k__BackingField: 60
   <TargetPriorities>k__BackingField: []
   <RequiresLock>k__BackingField: 1
   <CurrentTargetModifier>k__BackingField: 2
@@ -2121,7 +2121,7 @@ MonoBehaviour:
   rateOfFireRampDown: 0.5
   minShotCooldown: 1
   <Damage>k__BackingField: 1
-  <SignatureIncreaseOnFire>k__BackingField: 1
+  <SignatureIncreaseOnFire>k__BackingField: 2
   <SignatureDecrease>k__BackingField: 0.5
   damageType: 1
   onFire:
@@ -3433,7 +3433,7 @@ MonoBehaviour:
   targetStrategyType: 0
   <TypeOfAngle>k__BackingField: 0
   <Angle>k__BackingField: 170
-  <Range>k__BackingField: 20
+  <Range>k__BackingField: 60
   <TargetPriorities>k__BackingField: []
   <RequiresLock>k__BackingField: 1
   <CurrentTargetModifier>k__BackingField: 2
@@ -3454,7 +3454,7 @@ MonoBehaviour:
   rateOfFireRampDown: 0.5
   minShotCooldown: 1
   <Damage>k__BackingField: 1
-  <SignatureIncreaseOnFire>k__BackingField: 1
+  <SignatureIncreaseOnFire>k__BackingField: 2
   <SignatureDecrease>k__BackingField: 0.5
   damageType: 1
   onFire:

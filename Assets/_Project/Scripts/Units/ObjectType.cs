@@ -2,8 +2,6 @@ public enum ObjectType : byte
 {
     Player,
     FriendStation,
-    Friend1,
-    Enemy1,
-    Planet,
-    Enemy2
+    Friend1, Friend2,
+    Enemy1, Enemy2
 }

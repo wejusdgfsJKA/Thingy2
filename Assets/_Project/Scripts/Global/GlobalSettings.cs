@@ -54,6 +54,6 @@ namespace Global
         public static readonly int MaxTargetDistance = 1000;
         public static readonly float TorpedoHitRange = .5f;
         public static readonly int MaxSpawnRetries = 50;
-        public static readonly int MinEnemyPoints = 3;
+        public static readonly int MinEnemyPoints = 10;
     }
 }

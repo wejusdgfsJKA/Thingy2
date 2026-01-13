@@ -1,3 +1,4 @@
+using Global;
 using System.Collections.Generic;
 using UnityEngine;
 public abstract class Mission
@@ -13,19 +14,24 @@ public abstract class Mission
     {
         Score -= Global.GlobalSettings.GetWeight(@object.ID);
     }
+    public Unit SpawnAlly(ObjectType type, Vector3 position)
+    {
+        var ally = UnitManager.Instance.SpawnShip(type, Teams.Player, position);
+        ally.OnDespawn += AllyDestroyed;
+        return ally;
+    }
     public Unit SpawnEnemy(ObjectType type, Vector3 position)
     {
         var enemy = UnitManager.Instance.SpawnShip(type, Teams.Enemy, position);
-        enemy.OnDespawn += (o) =>
-        {
-            EnemyDestroyed(o);
-        };
+        enemy.OnDespawn += EnemyDestroyed;
         return enemy;
     }
+    public abstract void AutoResolve();
 }
 public class FleetBattleMission : Mission
 {
     int enemyCount;
+    int allyCount;
     int enemyPoints, alliedPoints;
     public FleetBattleMission(int enemyPoints = 1, int alliedPoints = 0)
     {
@@ -41,6 +47,7 @@ public class FleetBattleMission : Mission
     {
         UnitManager.Instance.SpawnPlayer();
         SpawnEnemies();
+        SpawnAllies();
     }
     void SpawnEnemies()
     {
@@ -59,20 +66,39 @@ public class FleetBattleMission : Mission
                 continue;
             }
             retries = 0;
-            enemyCount++;
+            enemyCount += weight;
             SpawnEnemy(chosenEnemyType, enemySpawnPos + spawnRadius * Random.insideUnitSphere).OnDespawn += (o) =>
             {
-                SubtractEnemy();
+                enemyCount -= GlobalSettings.GetWeight(o.ID);
+                if (enemyCount <= 0)
+                {
+                    GameManager.EndMission();
+                }
             };
             enemyPoints -= weight;
         }
     }
-    void SubtractEnemy()
+
+    void SpawnAllies()
     {
-        enemyCount--;
-        if (enemyCount <= 0)
+        var spawnRadius = alliedPoints;
+        var allyOptions = new List<ObjectType>() { ObjectType.Friend1, ObjectType.Friend2 };
+        int retries = 0;
+        while (alliedPoints > 0 && retries < Global.GlobalSettings.MaxSpawnRetries)
         {
-            GameManager.EndMission();
+            var chosenAllyType = allyOptions[Random.Range(0, allyOptions.Count)];
+            int weight = Global.GlobalSettings.GetWeight(chosenAllyType);
+            if (weight > alliedPoints)
+            {
+                retries++;
+                continue;
+            }
+            retries = 0;
+            SpawnAlly(chosenAllyType, spawnRadius * Random.insideUnitSphere).OnDespawn += (a) =>
+            {
+                allyCount -= GlobalSettings.GetWeight(a.ID);
+            };
+            alliedPoints -= weight;
         }
     }
     public override float GetScore()
@@ -81,5 +107,12 @@ public class FleetBattleMission : Mission
         if (GameManager.Player == null) score -= Global.GlobalSettings.GetWeight(ObjectType.Player);
         if (score == 0) score = -2;
         return score;
+    }
+    public override void AutoResolve()
+    {
+        var score = allyCount - enemyCount;
+        if (GameManager.Player == null) score -= Global.GlobalSettings.GetWeight(ObjectType.Player);
+        if (score == 0) score = -2;
+        Score = score;
     }
 }

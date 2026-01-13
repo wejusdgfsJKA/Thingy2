@@ -39,5 +39,11 @@ namespace Player
                     break;
             }
         }
+        protected override float RecalculateSignature()
+        {
+            var s = base.RecalculateSignature();
+            signatureText.text = $"Signature: {(int)s}";
+            return s;
+        }
     }
 }

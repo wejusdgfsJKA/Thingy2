@@ -12,7 +12,8 @@ namespace Player.UI
         [SerializeField] Window mainWindow;
         private void Awake()
         {
-            selectedMission = new FleetBattleMission(CalculateEnemyPoints(), 0);
+            var points = CalculateEnemyPoints();
+            selectedMission = new FleetBattleMission(points, points / 2);
         }
         private void OnEnable()
         {
