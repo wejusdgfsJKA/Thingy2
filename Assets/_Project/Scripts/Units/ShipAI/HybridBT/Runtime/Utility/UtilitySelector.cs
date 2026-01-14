@@ -8,7 +8,7 @@ namespace HybridBT
     {
         protected int prevChild = -1;
         protected List<UtilityWrapper<T>> children = new();
-        public UtilitySelector(string name, Action<Context<T>> onEnter = null, Action onExit = null) : base(name, onEnter, onExit)
+        public UtilitySelector(string name, Action<Context<T>> onEnter = null, Action<Context<T>> onExit = null) : base(name, onEnter, onExit)
         {
             onEnter += (_) => prevChild = -1;
         }
@@ -44,15 +44,15 @@ namespace HybridBT
                 {
                     if (count == children.Count - 1)
                     {
-                        State = NodeState.FAILURE;
+                        SetState(NodeState.FAILURE, context);
                         return;
                     }
-                    State = NodeState.RUNNING;
+                    SetState(NodeState.RUNNING, context);
                     continue;
                 }
-                State = child.State;
+                SetState(child.State, context);
                 {
-                    if (prevChild != -1 && prevChild != child.Index) children[prevChild].Abort();
+                    if (prevChild != -1 && prevChild != child.Index) children[prevChild].Abort(context);
                     prevChild = child.Index;
                 }
                 return;

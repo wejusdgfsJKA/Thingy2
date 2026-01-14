@@ -18,10 +18,10 @@ namespace HybridBT
             Name = name;
         }
         /// <summary>
-        /// Get the name of this SpecialObject, indented a certain nr of times.
+        /// Get the name of this object, indented a certain nr of times.
         /// </summary>
         /// <param name="indentation">How many times we should apply an indent.</param>
-        /// <returns>The name of the SpecialObject.</returns>
+        /// <returns>The name of the object.</returns>
         public virtual string GetInfo(int indentation)
         {
             return new string('\t', indentation) + Name;
@@ -38,7 +38,7 @@ namespace HybridBT
     public abstract class Node<T> : BaseElement
     {
         /// <summary>
-        /// Condition wrapper. Stores the last result and a name, together with the actual function.
+        /// HasTarget wrapper. Stores the last result and a name, together with the actual function.
         /// </summary>
         protected class Condition : BaseElement
         {
@@ -58,34 +58,35 @@ namespace HybridBT
         protected NodeState state = NodeState.FAILURE;
         /// <summary>
         /// Current state of the node. Initially set to FAILURE.
-        /// On change, if the new value is RUNNING, will connect Abort to parent's Abort.
+        /// </summary>
+        public NodeState State { get => state; }
+        /// <summary>
+        /// If the new value is RUNNING, will connect Abort to parent's Abort.
         /// Otherwise if the previous state was RUNNING, will disconnect Abort to parent's Abort and 
         /// invoke onExit.
         /// </summary>
-        public NodeState State
+        /// <param name="newValue"></param>
+        /// <param name="context"></param>
+        public void SetState(NodeState newValue, Context<T> context)
         {
-            get => state;
-            set
+            if (state != newValue)
             {
-                if (state != value)
+                if (newValue == NodeState.RUNNING)
                 {
-                    if (value == NodeState.RUNNING)
-                    {
-                        if (Parent != null) Parent.Abort += Abort;
-                    }
-                    else if (state == NodeState.RUNNING)
-                    {
-                        if (Parent != null) Parent.Abort -= Abort;
-                        onExit?.Invoke();
-                    }
-                    state = value;
+                    if (Parent != null) Parent.Abort += Abort;
                 }
+                else if (state == NodeState.RUNNING)
+                {
+                    if (Parent != null) Parent.Abort -= Abort;
+                    onExit?.Invoke(context);
+                }
+                state = newValue;
             }
         }
         /// <summary>
         /// Gets invoked when the node was previously RUNNING and either has blocking decorators or its parent aborted.
         /// </summary>
-        public Action Abort { get; set; }
+        public Action<Context<T>> Abort { get; set; }
         protected Node<T> parent;
         public Node<T> Parent
         {
@@ -98,18 +99,18 @@ namespace HybridBT
         /// <summary>
         /// Fires when the node exits RUNNING status.
         /// </summary>
-        protected Action onExit;
+        protected Action<Context<T>> onExit;
         /// <summary>
         /// Fires when the node is evaluated and not RUNNING.
         /// </summary>
         protected Action<Context<T>> onEnter;
         protected readonly List<Condition> conditions = new();
         protected readonly List<Action<Context<T>>> services = new();
-        public Node(string name, Action<Context<T>> onEnter, Action onExit) : base(name)
+        public Node(string name, Action<Context<T>> onEnter, Action<Context<T>> onExit) : base(name)
         {
             this.onEnter = onEnter;
             this.onExit = onExit;
-            Abort += () => State = NodeState.FAILURE;
+            Abort += (ctx) => SetState(NodeState.FAILURE, ctx);
         }
         /// <summary>
         /// Evaluates all conditions. If one fails, invokes Abort and stops execution.
@@ -123,8 +124,7 @@ namespace HybridBT
             {
                 if (!conditions[i].Evaluate(context))
                 {
-                    if (State == NodeState.RUNNING) Abort();
-                    State = NodeState.FAILURE;
+                    if (State == NodeState.RUNNING) Abort(context);
                     return;
                 }
             }
@@ -132,7 +132,7 @@ namespace HybridBT
             if (State != NodeState.RUNNING)
             {
                 onEnter?.Invoke(context);
-                State = NodeState.RUNNING;
+                SetState(NodeState.RUNNING, context);
             }
             Execute(context);
         }
@@ -170,7 +170,7 @@ namespace HybridBT
     public abstract class NodeData<T> : BaseElementData
     {
         protected virtual Action<Context<T>> onEnter { get => null; }
-        protected virtual Action onExit { get => null; }
+        protected virtual Action<Context<T>> onExit { get => null; }
         public List<ConditionData<T>> Conditions = new();
         public List<ServiceData<T>> Services = new();
         protected abstract Node<T> GetNode(Context<T> context);

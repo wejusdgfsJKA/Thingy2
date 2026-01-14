@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c19d7967ef197db4ead22126af3c5a04, type: 3}
+  m_Name: MeleeWrapper
+  m_EditorClassIdentifier: Assembly-CSharp::Sample.TestUtilityWrapper
+  Name: MeleeWrapper
+  Conditions: []
+  Services: []
+  Consideration: {fileID: 11400000, guid: 361b53e99f8fed84c871238df7e75f6e, type: 2}
+  Child: {fileID: 11400000, guid: dbd43a497bcd5a842a461a8d9fc0336e, type: 2}

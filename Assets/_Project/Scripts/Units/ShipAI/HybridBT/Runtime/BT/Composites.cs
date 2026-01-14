@@ -6,14 +6,14 @@ namespace HybridBT
     public abstract class Composite<T> : Node<T>
     {
         public Composite(string name, Action<Context<T>> onEnter = null,
-            Action onExit = null) : base(name, onEnter, onExit) { }
+            Action<Context<T>> onExit = null) : base(name, onEnter, onExit) { }
         public abstract void AddChild(Node<T> child);
     }
     public abstract class RegularComposite<T> : Composite<T>
     {
         protected List<Node<T>> children = new();
         public RegularComposite(string name, Action<Context<T>> onEnter = null,
-            Action onExit = null) : base(name, onEnter, onExit)
+            Action<Context<T>> onExit = null) : base(name, onEnter, onExit)
         {
 
         }
@@ -57,7 +57,7 @@ namespace HybridBT
     public class Sequence<T> : RegularComposite<T>
     {
         protected int currentChild = 0;
-        public Sequence(string name, Action<Context<T>> onEnter = null, Action onExit = null) : base(name, onEnter, onExit)
+        public Sequence(string name, Action<Context<T>> onEnter = null, Action<Context<T>> onExit = null) : base(name, onEnter, onExit)
         {
             onEnter += (_) => currentChild = 0;
         }
@@ -71,13 +71,14 @@ namespace HybridBT
             switch (children[currentChild].State)
             {
                 case NodeState.FAILURE:
-                    Abort();
+                    Abort(context);
                     break;
                 case NodeState.RUNNING:
-                    State = NodeState.RUNNING;
+                    SetState(NodeState.RUNNING, context);
                     break;
                 case NodeState.SUCCESS:
-                    State = currentChild == children.Count - 1 ? NodeState.SUCCESS : NodeState.RUNNING;
+                    var newState = currentChild == children.Count - 1 ? NodeState.SUCCESS : NodeState.RUNNING;
+                    SetState(newState, context);
                     currentChild = Math.Min(currentChild + 1, children.Count - 1);
                     break;
             }
@@ -93,7 +94,7 @@ namespace HybridBT
     public class Selector<T> : RegularComposite<T>
     {
         protected int prevChild = -1;
-        public Selector(string name, Action<Context<T>> onEnter = null, Action onExit = null) : base(name, onEnter, onExit)
+        public Selector(string name, Action<Context<T>> onEnter = null, Action<Context<T>> onExit = null) : base(name, onEnter, onExit)
         {
             onEnter += (_) => prevChild = -1;
         }
@@ -114,12 +115,12 @@ namespace HybridBT
                         state = NodeState.FAILURE;
                         return;
                     }
-                    State = NodeState.RUNNING;
+                    SetState(NodeState.RUNNING, context);
                     continue;
                 }
-                if (prevChild != -1 && i > prevChild) children[prevChild].Abort();
+                if (prevChild != -1 && i > prevChild) children[prevChild].Abort(context);
                 prevChild = i;
-                State = children[i].State;
+                SetState(children[i].State, context);
                 return;
             }
         }
@@ -134,7 +135,7 @@ namespace HybridBT
     public class ParallelNode<T> : RegularComposite<T>
     {
         public ParallelNode(string name, Node<T> leftChild, Node<T> rightChild, Action<Context<T>> onEnter = null,
-            Action onExit = null) : base(name, onEnter, onExit)
+            Action<Context<T>> onExit = null) : base(name, onEnter, onExit)
         {
             AddChild(leftChild);
             AddChild(rightChild);
@@ -147,9 +148,9 @@ namespace HybridBT
         protected override void Execute(Context<T> context)
         {
             children[0].Evaluate(context);
-            State = children[0].State;
+            SetState(children[0].State, context);
             if (State != NodeState.FAILURE) children[1].Evaluate(context);
-            else if (children[1].State == NodeState.RUNNING) children[1].Abort();
+            else if (children[1].State == NodeState.RUNNING) children[1].Abort(context);
         }
     }
     public class ParallelNodeData<T> : NodeData<T>

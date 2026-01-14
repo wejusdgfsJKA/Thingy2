@@ -13,7 +13,7 @@ namespace HybridBT
         protected readonly Node<T> child;
         public float Score { get; protected set; }
         public UtilityWrapper(string name, Node<T> child, Consideration<T> consideration,
-            Action<Context<T>> onEnter, Action onExit) : base(name, onEnter, onExit)
+            Action<Context<T>> onEnter, Action<Context<T>> onExit) : base(name, onEnter, onExit)
         {
             this.child = child;
             child.Parent = this;
@@ -28,7 +28,7 @@ namespace HybridBT
         protected override void Execute(Context<T> context)
         {
             child.Evaluate(context);
-            State = child.State;
+            SetState(child.State, context);
         }
         /// <summary>
         /// Same as the one for node, but also returns the utility score and the child on a separate line below.

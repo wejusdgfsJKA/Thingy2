@@ -13,13 +13,9 @@ namespace HybridBT.Template
         {
             ctx.Navigation.Destination = Vector3.zero;
         };
-        protected override Node<ShipAIKeys> GetNode(Context<ShipAIKeys> context)
+        protected override Action<Context<ShipAIKeys>> onExit => (ctx) =>
         {
-            var navigation = context.Navigation;
-            return new LeafNode<ShipAIKeys>("Move to point", onEvaluate, onEnter, () =>
-            {
-                navigation.Stop();
-            });
-        }
+            ctx.Navigation.Stop();
+        };
     }
 }

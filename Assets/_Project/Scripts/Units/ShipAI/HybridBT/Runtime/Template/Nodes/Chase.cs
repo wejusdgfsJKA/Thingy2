@@ -30,14 +30,10 @@ namespace HybridBT.Template
                 ctx.SetData(ShipAIKeys.PrevTargetPos, obj.Position);
             }
         };
-        protected override Node<ShipAIKeys> GetNode(Context<ShipAIKeys> context)
+        protected override Action<Context<ShipAIKeys>> onExit => (context) =>
         {
-            var navigation = context.Navigation;
-            return new LeafNode<ShipAIKeys>("Move to point", onEvaluate, onEnter, () =>
-            {
-                navigation.UpdateRotation = true;
-                navigation.Stop();
-            });
-        }
+            context.Navigation.UpdateRotation = true;
+            context.Navigation.Stop();
+        };
     }
 }
