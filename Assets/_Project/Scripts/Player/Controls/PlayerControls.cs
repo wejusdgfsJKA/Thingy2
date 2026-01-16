@@ -257,6 +257,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""HoldFire"",
+                    ""type"": ""Button"",
+                    ""id"": ""522da4f0-75d3-4d8d-bb53-f140887f5e4f"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -435,6 +444,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""FollowCameraToggle"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1edd3255-ac74-4fc1-b3ce-35f477a79b5b"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""HoldFire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -454,6 +474,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Movement_Strafe = m_Movement.FindAction("Strafe", throwIfNotFound: true);
         m_Movement_Thrust = m_Movement.FindAction("Thrust", throwIfNotFound: true);
         m_Movement_FollowCameraToggle = m_Movement.FindAction("FollowCameraToggle", throwIfNotFound: true);
+        m_Movement_HoldFire = m_Movement.FindAction("HoldFire", throwIfNotFound: true);
     }
 
     ~@PlayerControls()
@@ -679,6 +700,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Movement_Strafe;
     private readonly InputAction m_Movement_Thrust;
     private readonly InputAction m_Movement_FollowCameraToggle;
+    private readonly InputAction m_Movement_HoldFire;
     /// <summary>
     /// Provides access to input actions defined in input action map "Movement".
     /// </summary>
@@ -706,6 +728,10 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Movement/FollowCameraToggle".
         /// </summary>
         public InputAction @FollowCameraToggle => m_Wrapper.m_Movement_FollowCameraToggle;
+        /// <summary>
+        /// Provides access to the underlying input action "Movement/HoldFire".
+        /// </summary>
+        public InputAction @HoldFire => m_Wrapper.m_Movement_HoldFire;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -744,6 +770,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @FollowCameraToggle.started += instance.OnFollowCameraToggle;
             @FollowCameraToggle.performed += instance.OnFollowCameraToggle;
             @FollowCameraToggle.canceled += instance.OnFollowCameraToggle;
+            @HoldFire.started += instance.OnHoldFire;
+            @HoldFire.performed += instance.OnHoldFire;
+            @HoldFire.canceled += instance.OnHoldFire;
         }
 
         /// <summary>
@@ -767,6 +796,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @FollowCameraToggle.started -= instance.OnFollowCameraToggle;
             @FollowCameraToggle.performed -= instance.OnFollowCameraToggle;
             @FollowCameraToggle.canceled -= instance.OnFollowCameraToggle;
+            @HoldFire.started -= instance.OnHoldFire;
+            @HoldFire.performed -= instance.OnHoldFire;
+            @HoldFire.canceled -= instance.OnHoldFire;
         }
 
         /// <summary>
@@ -878,5 +910,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnFollowCameraToggle(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "HoldFire" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnHoldFire(InputAction.CallbackContext context);
     }
 }

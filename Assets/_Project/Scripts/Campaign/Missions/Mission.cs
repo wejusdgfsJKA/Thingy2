@@ -1,6 +1,11 @@
+using EventBus;
 using Global;
 using System.Collections.Generic;
 using UnityEngine;
+public struct AllEnemiesEliminated : IEvent
+{
+
+}
 public abstract class Mission
 {
     public float Score { get; protected set; }
@@ -20,9 +25,9 @@ public abstract class Mission
         ally.OnDespawn += AllyDestroyed;
         return ally;
     }
-    public Unit SpawnEnemy(ObjectType type, Vector3 position)
+    public Unit SpawnEnemy(ObjectType type, Vector3 position, Quaternion rotation)
     {
-        var enemy = UnitManager.Instance.SpawnShip(type, Teams.Enemy, position);
+        var enemy = UnitManager.Instance.SpawnShip(type, Teams.Enemy, position, rotation);
         enemy.OnDespawn += EnemyDestroyed;
         return enemy;
     }
@@ -52,9 +57,12 @@ public class FleetBattleMission : Mission
     void SpawnEnemies()
     {
         //pick a position for the bad guys
-        var enemySpawnPos = Random.onUnitSphere * 50;
+        var enemySpawnPos = (enemyPoints + 50) * Vector3.forward;
         var spawnRadius = enemyPoints;
-        var enemyOptions = new List<ObjectType>() { ObjectType.Enemy1, ObjectType.Enemy2 };
+        var enemyOptions = new List<ObjectType>() {
+            ObjectType.Enemy1,
+            ObjectType.Enemy3,
+            ObjectType.Enemy2 };
         int retries = 0;
         while (enemyPoints > 0 && retries < Global.GlobalSettings.MaxSpawnRetries)
         {
@@ -67,12 +75,12 @@ public class FleetBattleMission : Mission
             }
             retries = 0;
             enemyCount += weight;
-            SpawnEnemy(chosenEnemyType, enemySpawnPos + spawnRadius * Random.insideUnitSphere).OnDespawn += (o) =>
+            SpawnEnemy(chosenEnemyType, enemySpawnPos + spawnRadius * Random.insideUnitSphere, Quaternion.Euler(0, 180, 0)).OnDespawn += (o) =>
             {
                 enemyCount -= GlobalSettings.GetWeight(o.ID);
                 if (enemyCount <= 0)
                 {
-                    GameManager.EndMission();
+                    EventBus<AllEnemiesEliminated>.Raise(new AllEnemiesEliminated());
                 }
             };
             enemyPoints -= weight;
@@ -110,9 +118,6 @@ public class FleetBattleMission : Mission
     }
     public override void AutoResolve()
     {
-        var score = allyCount - enemyCount;
-        if (GameManager.Player == null) score -= Global.GlobalSettings.GetWeight(ObjectType.Player);
-        if (score == 0) score = -2;
-        Score = score;
+        Score = allyCount - enemyCount;
     }
 }

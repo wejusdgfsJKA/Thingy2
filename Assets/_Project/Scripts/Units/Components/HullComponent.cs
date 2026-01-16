@@ -47,7 +47,7 @@ namespace HP
             if (CurrentHullPoints <= 0)
             {
                 OnDeath?.Invoke();
-                if (dmg.Source == GameManager.Player.Transform) GameManager.AddPlayerKill(transform.root);
+                if (GameManager.Player && dmg.Source == GameManager.Player.Transform) GameManager.AddPlayerKill(transform.root);
                 if (disableObjectOnHealthDepleted) gameObject.SetActive(false);
             }
         }

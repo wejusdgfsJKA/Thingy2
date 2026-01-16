@@ -3,6 +3,7 @@ namespace Player
 {
     [RequireComponent(typeof(LineRenderer))]
     [RequireComponent(typeof(Rigidbody))]
+    [RequireComponent(typeof(PlayerShip))]
     public class PlayerShipController : MonoBehaviour
     {
         [Header("Rotation")]
@@ -17,13 +18,14 @@ namespace Player
         [SerializeField] float directionLineMultiplier = 10;
         Vector2 strafeVector;
         Vector3 rotateVector;
-        float currentThrust;
         float thrustInput;
         bool followCamera = true;
         LineRenderer lineRenderer;
         Rigidbody rb;
+        PlayerShip ship;
         private void Awake()
         {
+            ship = GetComponent<PlayerShip>();
             rb = GetComponent<Rigidbody>();
             rb.useGravity = false;
             lineRenderer = GetComponent<LineRenderer>();
@@ -39,11 +41,16 @@ namespace Player
             moveInputReader.Strafe += OnStrafe;
             moveInputReader.Rotate += OnRotate;
             moveInputReader.Thrust += OnThrust;
+            moveInputReader.HoldFireToggle += OnHoldFireToggle;
             moveInputReader.FollowCameraToggle += OnFollowCameraToggle;
         }
         private void OnDisable()
         {
             moveInputReader.DisablePlayerActions();
+        }
+        void OnHoldFireToggle()
+        {
+            ship.ToggleHoldFire();
         }
         void OnRotate(Vector3 vector3)
         {

@@ -17,7 +17,7 @@ namespace Player.UI
         }
         private void OnEnable()
         {
-            powerText.text = $"Coalition Power: {GameManager.PlayerPower}/{GlobalSettings.PlayerWinThreshold}\nEnemy Power: {GameManager.EnemyPower}/{GlobalSettings.EnemyWinThreshold}";
+            powerText.text = $"Enemy war exhaustion: {GameManager.PlayerPower}/{GlobalSettings.PlayerWinThreshold}\nWar exhaustion: {GameManager.EnemyPower}/{GlobalSettings.EnemyWinThreshold}";
             OpenWindow(mainWindow);
         }
         public int CalculateEnemyPoints()

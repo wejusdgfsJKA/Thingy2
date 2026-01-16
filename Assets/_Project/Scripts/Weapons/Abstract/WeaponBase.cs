@@ -15,7 +15,7 @@ namespace Weapons
         [SerializeField] protected float minShotCooldown = 0.1f;
         [field: SerializeField] public float Damage { get; protected set; } = 1;
         [field: SerializeField] public float SignatureIncreaseOnFire { get; protected set; } = 1;
-        [Tooltip("By how much should the signature decrease every tick the weapon is not firing.")]
+        [Tooltip("By how much should the signature decrease every tick the Weapon is not firing.")]
         [field: SerializeField] public float SignatureDecrease { get; protected set; } = .5f;
         [SerializeField] protected DamageType damageType = DamageType.Energy;
         #endregion

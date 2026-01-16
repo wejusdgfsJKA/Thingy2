@@ -8,22 +8,7 @@ using UnityEngine.SceneManagement;
 public static class GameManager
 {
     public static float? Score { get; private set; } = null;
-    static PlayerShip player;
-    public static PlayerShip Player
-    {
-        get => player;
-        set
-        {
-            if (player != value)
-            {
-                player = value;
-                if (player == null && CurrentMission != null)
-                {
-                    AutoResolve();
-                }
-            }
-        }
-    }
+    public static PlayerShip Player { get; set; }
     public static Mission CurrentMission { get; set; }
     /// <summary>
     /// Teams[0] is the player's team, Teams[1] is the enemy team.
@@ -42,6 +27,7 @@ public static class GameManager
     public static void EndMission()
     {
         if (CurrentMission == null) return;
+        if (Player == null) CurrentMission.AutoResolve();
         Score = CurrentMission.GetScore();
         if (Score > 0)
         {
@@ -50,22 +36,11 @@ public static class GameManager
         }
         else
         {
-            EnemyPower += Score.GetValueOrDefault();
-            PlayerPower = Mathf.Max(0, PlayerPower - Score.GetValueOrDefault() * GlobalSettings.PointsToSubtractModifier);
+            EnemyPower -= Score.GetValueOrDefault();
+            PlayerPower = Mathf.Max(0, PlayerPower + Score.GetValueOrDefault() * GlobalSettings.PointsToSubtractModifier);
         }
         CurrentMission = null;
         Teams[0] = Teams[1] = null;
-
-        if (PlayerPower >= GlobalSettings.PlayerWinThreshold || EnemyPower >= GlobalSettings.EnemyWinThreshold)
-        {
-            Addressables.LoadSceneAsync(GlobalSettings.EndSceneAddress);
-            //victory for one side
-        }
-        else
-        {
-            Save();
-            Addressables.LoadSceneAsync(GlobalSettings.IntermediateSceneAddress);
-        }
     }
     public static void AutoResolve() => EndMission();
     public static bool IsPaused => Time.timeScale == 0f;
@@ -135,6 +110,19 @@ public static class GameManager
             return true;
         }
         return false;
+    }
+    public static void ChangeSceneOnMissionEnd()
+    {
+        if (PlayerPower >= GlobalSettings.PlayerWinThreshold || EnemyPower >= GlobalSettings.EnemyWinThreshold)
+        {
+            Addressables.LoadSceneAsync(GlobalSettings.EndSceneAddress);
+            //victory for one side
+        }
+        else
+        {
+            Save();
+            Addressables.LoadSceneAsync(GlobalSettings.IntermediateSceneAddress);
+        }
     }
     #endregion
 }

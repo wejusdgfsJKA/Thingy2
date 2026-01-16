@@ -14,7 +14,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
   m_GroupName: Environment
   m_GUID: 662fe28b198b5204da662a95043e5df1
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 6e081592f76ecf84cad9acdd849cf170
+    m_Address: Assets/_Project/Prefabs/Enemies/Enemy3/Enemy3.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Ships
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ae8ffcb20c152b648b56f9e23651e93c
+    m_Address: Assets/_Project/Prefabs/Allies/Ally2/Ally2.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Ships
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: de783a515befbb5419da23878e8e6bd5
+    m_Address: Assets/_Project/Prefabs/Allies/Ally1/Ally1.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Ships
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: ac0e09ab6d8f0f9448726279c34b302c, type: 2}
   m_SchemaSet:

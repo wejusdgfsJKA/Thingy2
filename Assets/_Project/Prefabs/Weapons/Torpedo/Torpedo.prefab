@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Weapons.PlasmaTorpedo
   <ID>k__BackingField: 0
+  render: {fileID: 1174055893784627573}
 --- !u!1001 &543387703423407601
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -122,5 +123,10 @@ PrefabInstance:
 --- !u!4 &62954613731866 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4add3f8642b0b3f4eb46d5cd38d19ecb, type: 3}
+  m_PrefabInstance: {fileID: 543387703423407601}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &1174055893784627573 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 4add3f8642b0b3f4eb46d5cd38d19ecb, type: 3}
   m_PrefabInstance: {fileID: 543387703423407601}
   m_PrefabAsset: {fileID: 0}

@@ -16,5 +16,6 @@ MonoBehaviour:
   Conditions:
   - {fileID: 11400000, guid: 8b3d3c9d7b8aedd4d8b0e06209c73680, type: 2}
   Services: []
-  stopDistance: 5
+  maxDistance: 5
+  minDistance: 0
   chaseErrorThreshold: 0.1

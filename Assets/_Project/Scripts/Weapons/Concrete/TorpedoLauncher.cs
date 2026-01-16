@@ -7,10 +7,11 @@ namespace Weapons
         [SerializeField] float speed = 10f;
         [SerializeField] float trackingSpeed = 5f;
         [SerializeField] float lifeTime = 20f;
+        [SerializeField] Material material;
         protected override void ActuallyShoot(Unit target)
         {
             var torpedo = WeaponManager.Instance.SpawnObject(WeaponType.Torpedo, transform.position, transform.rotation) as PlasmaTorpedo;
-            torpedo.Initialize(target, takeDamage, lifeTime, speed, trackingSpeed);
+            torpedo.Initialize(target, takeDamage, lifeTime, speed, trackingSpeed, material);
         }
     }
 }

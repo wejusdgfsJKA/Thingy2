@@ -9,7 +9,7 @@ namespace Player
         public event System.Action<Vector2> Strafe;
         public event System.Action<Vector3> Rotate;
         public event System.Action<float> Thrust;
-        public event System.Action FollowCameraToggle;
+        public event System.Action FollowCameraToggle, HoldFireToggle;
         public override void EnablePlayerActions()
         {
             base.EnablePlayerActions();
@@ -42,6 +42,11 @@ namespace Player
         public void OnFollowCameraToggle(InputAction.CallbackContext context)
         {
             FollowCameraToggle?.Invoke();
+        }
+
+        public void OnHoldFire(InputAction.CallbackContext context)
+        {
+            HoldFireToggle?.Invoke();
         }
     }
 }

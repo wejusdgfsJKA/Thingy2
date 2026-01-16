@@ -8,33 +8,37 @@ namespace Weapons
         TakeDamage damage;
         Unit target;
         float speed, trackingSpeed, lifeTime;
-        public void Initialize(Unit target, TakeDamage damage, float lifeTime, float speed, float trackingSpeed)
+        [SerializeField] Renderer render;
+        public void Initialize(Unit target, TakeDamage damage, float lifeTime, float speed, float trackingSpeed, Material material)
         {
             this.damage = damage;
             this.target = target;
             this.lifeTime = lifeTime;
             this.speed = speed;
             this.trackingSpeed = trackingSpeed;
+            render.material = material;
         }
         void Update()
         {
-            if (target == null || lifeTime <= 0)
+            if (lifeTime <= 0)
             {
                 target = null;
                 gameObject.SetActive(false);
                 return;
             }
-
-            if (Vector3.Distance(transform.position, target.Position) <= GlobalSettings.TorpedoHitRange)
+            if (target != null)
             {
-                target.TakeDamage(damage);
-                target = null;
-                gameObject.SetActive(false);
-                return;
-            }
+                if (Vector3.Distance(transform.position, target.Position) <= GlobalSettings.TorpedoHitRange)
+                {
+                    target.TakeDamage(damage);
+                    target = null;
+                    gameObject.SetActive(false);
+                    return;
+                }
 
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(
-                target.Position - transform.position), trackingSpeed * Time.deltaTime);
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(
+                    target.Position - transform.position), trackingSpeed * Time.deltaTime);
+            }
             lifeTime -= Time.deltaTime;
             transform.position += speed * Time.deltaTime * transform.forward;
         }

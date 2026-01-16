@@ -93,8 +93,8 @@ namespace Player.UI
         #region Object management
         /// <summary>
         /// Does nothing for the player object.
-        /// Add an object to be tracked and displayed on the UI. Disables identified renderer and 
-        /// enables tracked renderer.
+        /// Add an object to be tracked and displayed on the UI. Disables identified render and 
+        /// enables tracked render.
         /// Disables raycast target.
         /// </summary>
         /// <param name="obj">The object to keep track of.</param>
@@ -120,7 +120,7 @@ namespace Player.UI
         public void AddIdentified(SpecialObjectAdded objectAdded) => AddIdentified(objectAdded.SpecialObject);
         /// <summary>
         /// Does nothing for the player object.
-        /// Add an object to be tracked and displayed on the UI. Enables identified renderer and disables tracked renderer.
+        /// Add an object to be tracked and displayed on the UI. Enables identified render and disables tracked render.
         /// Disables raycast target if the object is not selectable.
         /// </summary>
         /// <param name="obj"></param>

@@ -347,11 +347,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af69b7e86ab945b4fa6c0bc813871986, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HP.HullComponent
+  disableObjectOnHealthDepleted: 1
   <MaxHullPoints>k__BackingField: 10
   OnHullChanged:
     m_PersistentCalls:
       m_Calls: []
   OnDamageTaken:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDeath:
     m_PersistentCalls:
       m_Calls: []
   <ArmorModifiers>k__BackingField: []
@@ -394,6 +398,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa63681f9d36e0e44818dc0c2bef4133, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Weapons.Turret
+  weapon: {fileID: 0}
   targetStrategyType: 0
   <TypeOfAngle>k__BackingField: 0
   <Angle>k__BackingField: 360
@@ -429,10 +434,10 @@ MonoBehaviour:
   shotCooldown: 2
   rateOfFireRampUp: 0
   rateOfFireRampDown: 0
-  minShotCooldown: 0.1
-  <Damage>k__BackingField: 1
-  <SignatureIncreaseOnFire>k__BackingField: 0.25
-  <SignatureDecrease>k__BackingField: 0.5
+  minShotCooldown: 2
+  <Damage>k__BackingField: 2
+  <SignatureIncreaseOnFire>k__BackingField: 0
+  <SignatureDecrease>k__BackingField: 0
   damageType: 0
   onFire:
     m_PersistentCalls:
@@ -440,6 +445,7 @@ MonoBehaviour:
   speed: 10
   trackingSpeed: 5
   lifeTime: 20
+  material: {fileID: 2100000, guid: e2d9c2f272aec5d4abdca1b33333f664, type: 2}
 --- !u!114 &1383212715593684582
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -625,10 +631,10 @@ PrefabInstance:
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: b6a88d7431fc5f8419abbde8acc207ef, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7442865467005123378}
+      addedObject: {fileID: 7526063592710282373}
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: b6a88d7431fc5f8419abbde8acc207ef, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7526063592710282373}
+      addedObject: {fileID: 7442865467005123378}
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: b6a88d7431fc5f8419abbde8acc207ef, type: 3}
       insertIndex: -1
       addedObject: {fileID: 745764917759920764}

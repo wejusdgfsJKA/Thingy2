@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e5b6f4ba77ed5a7429b88c2e18bac375, type: 3}
-  m_Name: Enemy1
-  m_EditorClassIdentifier: Assembly-CSharp::ObjectData
-  Prefab: {fileID: 2524300982238176342, guid: c3117c3ac336b9e4089ff658d2196a84, type: 3}
-  ID: 4
+  m_Name: Ally2
+  m_EditorClassIdentifier: Assembly-CSharp::UnitData
+  Prefab: {fileID: 8494263976655705094, guid: ae819a3006bcf954e9e5be79cdb68774, type: 3}
+  ID: 3

@@ -11,13 +11,13 @@ namespace Weapons
             Side
         }
         TurretTargetStrategy targetStrategy;
-        WeaponBase weapon;
+        [field: SerializeField] public WeaponBase Weapon { get; protected set; }
         [Tooltip("What targeting strategy should this turret employ. Defaults to closest target.")]
         [SerializeField] TargetStrategyType targetStrategyType;
         [Tooltip("What type of angle should the turret have. Side is the opposite of forward arc, takes everything except forward and backward.")]
         [field: SerializeField] public AngleType TypeOfAngle { get; protected set; } = AngleType.ForwardArc;
         [field: SerializeField] public float Angle { get; protected set; } = 360;
-        [Tooltip("The range at which this weapon can fire.")]
+        [Tooltip("The range at which this Weapon can fire.")]
         [field: SerializeField] public float Range { get; protected set; }
         [field: SerializeField] public List<TargetPriority> TargetPriorities { get; protected set; } = new();
         [Tooltip("If true, this turret will only fire at identified targets.")]
@@ -27,21 +27,28 @@ namespace Weapons
         public bool HasTarget => targetStrategy.CurrentTarget != null;
         public float Signature { get; protected set; }
         public bool Fired { get; protected set; }
-        public float Charge => weapon.Charge;
+        public float Charge => Weapon.Charge;
+        bool shouldFire = true;
         private void Awake()
         {
-            weapon = GetComponent<WeaponBase>();
-            targetStrategy = TurretTargetStrategy.Create(targetStrategyType, this);
+            Weapon ??= GetComponent<WeaponBase>();
+            targetStrategy ??= TurretTargetStrategy.Create(targetStrategyType, this);
         }
         private void OnEnable()
         {
             Fired = false;
             Signature = 0;
+            shouldFire = true;
             targetStrategy?.Clear();
+        }
+        public void ToggleHoldFire()
+        {
+            shouldFire = !shouldFire;
         }
         public bool ConsiderTarget(Unit @object, DetectionState detectionState = DetectionState.Identified)
         {
             if (@object == null) throw new System.ArgumentNullException($"{this} received null target for evaluation.");
+            targetStrategy ??= TurretTargetStrategy.Create(targetStrategyType, this);
             return targetStrategy.ConsiderTarget(@object, detectionState);
         }
         public bool Tick()
@@ -49,18 +56,19 @@ namespace Weapons
             var @object = CanFire();
             if (!@object)
             {
-                Signature = Mathf.Max(0, Signature - weapon.SignatureDecrease * GlobalSettings.AITickCooldown);
-                if (weapon.CanFire)
+                if (Weapon == null) Signature = 0;
+                else Signature = Mathf.Max(0, Signature - Weapon.SignatureDecrease * GlobalSettings.AITickCooldown);
+                if (Weapon.CanFire)
                 {
-                    weapon.DecreaseRateOfFire();
+                    Weapon.DecreaseRateOfFire();
                     Fired = false;
                 }
             }
-            else
+            else if (shouldFire)
             {
                 Fired = true;
-                weapon.Fire(@object);
-                Signature = weapon.SignatureIncreaseOnFire;
+                Weapon.Fire(@object);
+                Signature = Weapon.SignatureIncreaseOnFire;
             }
             targetStrategy.Clear();
             return @object != null;
@@ -71,7 +79,7 @@ namespace Weapons
             {
                 Unit target = targetStrategy.CurrentTarget;
                 //check cooldown
-                if (!weapon.CanFire) return null;
+                if (!Weapon.CanFire) return null;
                 //check range
                 if (Vector3.Distance(transform.position, target.Transform.position) > Range) return null;
                 //check angle
