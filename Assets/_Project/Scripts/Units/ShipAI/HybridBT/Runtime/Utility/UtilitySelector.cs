@@ -82,7 +82,7 @@ namespace HybridBT
         }
         public override Node<T> ObtainNode(Context<T> context)
         {
-            var node = (UtilitySelector<T>)GetNode(context);
+            var node = (UtilitySelector<T>)base.ObtainNode(context);
             foreach (var item in Children) node.AddChild(item.ObtainNode(context));
             return node;
         }
